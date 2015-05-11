@@ -22,7 +22,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   
   <body>
     <div style='width:440px;height:200px;margin :200px auto;background:darkblue;'>
-		不是中文  not china
+		不是中文  not china  not my maind
 	</div>
   </body>
 </html>
