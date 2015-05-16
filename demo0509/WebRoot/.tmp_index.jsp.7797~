@@ -21,6 +21,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </head>
   
   <body>
-    This is my JSP page. <br>
+    <div style='width:440px;height:200px;margin :200px auto;background:darkblue;'>
+		不是中文  not china
+	</div>
   </body>
 </html>
