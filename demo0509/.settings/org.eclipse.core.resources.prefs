@@ -1,4 +1,11 @@
+<<<<<<< Updated upstream
 #Mon May 11 23:12:52 CST 2015
 eclipse.preferences.version=1
 encoding//WebRoot/index.jsp=UTF-8
 encoding/WebRoot=UTF-8
+=======
+#Tue May 12 12:01:32 CST 2015
+eclipse.preferences.version=1
+encoding//WebRoot/index.jsp=UTF-8
+encoding/<project>=UTF-8
+>>>>>>> Stashed changes
