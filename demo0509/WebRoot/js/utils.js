@@ -14,6 +14,41 @@ window.cdnPath = window.cdnPath || (function(){
 	return 'http://' + window.location.host+'/'+window.location.pathname.split('/')[1]+'/';
 })();
 
+
+
+
+
+//seajs.use('jquery-1.10.2.min.js');
+//console.log(11);
+
+
+
+
+(function(url){
+
+	var fileref = document.createElement('script'); 
+		fileref.setAttribute("type","text/javascript"); 
+		fileref.setAttribute("src",url);  
+		
+		console.log(22);
+
+	// $(function(){
+	// 	var fileref = document.createElement('script'); 
+	// 	fileref.setAttribute("type","text/javascript"); 
+	// 	fileref.setAttribute("src",url);  
+		
+	// 	console.log(22);
+		
+	// });
+	
+
+})('jquery-1.10.2.min.js');
+
+
+
+
+
+
 var ut = {};
 
 (function(){
@@ -26,7 +61,7 @@ var ut = {};
 	
 	window.lay = new (function(){
 		var that = this;
-		this.gifHref = window.Path||'.'+'/img/new/load.gif';
+		//this.gifHref = window.Path||'.'+'/img/new/load.gif';
 		this.size = '25px';
 		this.size2 = '70px;'
 		this.ctrl = 'expandTp';
@@ -74,141 +109,6 @@ var ut = {};
 			}
 		});
 	};
-	
-	//显示一个弹窗
-	ut.showMsg = function(msg){
-		//return false;
-		if(!$('#msgModal').length)
-			$('<div id="msgModal" class="reveal-modal text-center small" data-reveal><p>'+msg+'</p></div>').appendTo('body');
-		else
-			$('#msgModal p').text(msg);
-		
-		$('#msgModal').foundation('reveal', 'open');
-	}
-	
-	//上传图片，会弹出一个图片选择框
-	//需要引入js/lib/jquery.form.min.js
-//	ut.showImgUpload = function(cb){
-//		
-//		var callback = cb;
-//		
-//		if(!$('#imgUploadPanel').length){
-//			$('<div id="imgUploadPanel" class="reveal-modal text-center" data-reveal><form id="imgUploadForm" method="POST" enctype="multipart/form-data"><div class="row"><div class="column small-3 inline">上传图片</div><div class="column small-6"><input type="text" readonly="true"></div><div class="column small-3 end"><label><div class="button tiny radius">选择图片</div><input type="file" accept="image/*" name="upfile" style="display:none;"></input></label></div></div></form><div class="row" style="margin-top:20px;"><div class="column small-4 small-centered"><div class="button radius" id="submitImg">确定</div></div></div></div>').appendTo('body');
-//			
-//			$('#imgUploadPanel [type=file]').on('change',function(){
-//				$('#imgUploadPanel [type=text]').val($(this).fieldValue()[0]);
-//			});
-//			
-//			
-//		}
-//		
-//		$('#imgUploadPanel #submitImg').off('click').on('click',function(){
-//			if($('#imgUploadPanel [type=file]').fieldValue()[0]){
-//				$('#imgUploadForm').ajaxSubmit({
-//					url: serverHost+'jsp/controller.jsp?action=uploadimage',
-//					success: function(resp){
-//						console.info(serverHost + JSON.parse(resp).url);
-//						callback && callback(serverHost + JSON.parse(resp).url);
-//						$('#imgUploadPanel').foundation('reveal', 'close');
-//						$('#imgUploadForm').resetForm();
-//						
-//					},
-//				});
-//			}else{
-//				alert('请选择图片');
-//			}
-//			
-//		});
-//		
-//		$('#imgUploadPanel').foundation('reveal', 'open');
-//	}
-	
-	
-	//显示通用图片上传框
-	ut.showImgUpload = function(callback){
-		
-		if(!$('#imgUploadPanel').length){
-			$('<div id="imgUploadPanel" class="reveal-modal text-center" data-reveal></div>').appendTo('body');
-		}
-		
-		$('#imgUploadPanel').foundation('reveal', 'open', serverHost + 'admin/imgUpload.htm');
-		
-		//清除上一次调用时的绑定
-		$('#imgUploadPanel').off();
-		
-		//绑定选择本地图片按钮
-		$('#imgUploadPanel').on('change','[type=file]',function(){
-			$('#imgUploadPanel [type=text]').val($(this).fieldValue()[0]);
-		});
-		
-		
-		var submitImg = function(url){
-			console.info(url);
-			callback && callback(url);
-			$('#imgUploadPanel').foundation('reveal', 'close');
-			$('#imgUploadForm').resetForm();
-		}
-		
-		//绑定tab1提交按钮
-		$('#imgUploadPanel').on('click','#submitImg',function(){
-			if($('#imgUploadPanel [type=file]').fieldValue()[0]){
-				$('#imgUploadForm').ajaxSubmit({
-					url: imgRoot+'jsp/controller.jsp?action=uploadimage',
-					success: function(resp){
-						var res = eval('('+resp+')');
-						if(res.state == 'SUCCESS'){
-							submitImg(serverHost + JSON.parse(resp).url);
-						}else{
-							alert(res.state);
-						}
-					},
-				});
-			}else{
-				alert('请选择图片');
-			}
-		});
-		
-		
-		//绑定选择图片
-		$('#imgUploadPanel').on('click','#selImgs>li',function(){
-			$('#selImgs img').removeClass('imgSelected');
-			$(this).find('img').addClass('imgSelected');
-		});
-		
-		//绑定切换tab2按钮
-		$('#imgUploadPanel').on('click','[href=#panel2]',function(){
-			$.ajax({
-				method :'POST',
-				url: imgRoot+'jsp/controller.jsp?action=listimage',
-				success: function(imgs){
-					$('#selImgs').empty();
-					
-					var list = eval('('+imgs+')').list.reverse();
-//					console.info(list)
-					$.each(list||[],function(i,v){
-						$('<li><img src='+imgRoot+v.url+'></li>').appendTo('#selImgs');
-					});
-					
-					$(document).foundation('reveal', 'reflow');
-				},
-				
-				contentType: "application/x-www-form-urlencoded",
-				
-			});
-		});
-		
-		//绑定tab2选择图片按钮
-		$('#imgUploadPanel').on('click','#submitImg2',function(){
-			var selected = $('.imgSelected');
-			if(selected.length){
-//				console.info(selected[0])
-				submitImg(selected.attr('src'));
-			}else{
-				alert('请选择图片');
-			}
-		});
-		
-	}
 	
 	 $.fn.initTmpl = function(data){
 			return this.html(function(){
@@ -276,13 +176,7 @@ var ut = {};
         	
             var obj = {
                 'gradegrade': {
-                    'sss': 1,
-                    'ss': 2,
-                    's': 3,
-                    'a': 4,
-                    'b': 5,
-                    'c': 6,
-                    'd': 7
+                   
                 }
             };
             
@@ -321,33 +215,92 @@ var ut = {};
     };
 	
 	
-	//显示一个顶部下拉菜单
-	//使用示例：ut.showDropMenu([{text:'1F',url:'act/view.page'},{text:'2F',url:'inquiry/index.page'},{text:'3F',url:'inquiry/index.page'},{text:'4F',url:'inquiry/index.page'},{text:'5F',url:'inquiry/index.page'},{text:'6F',url:'inquiry/index.page'},{text:'7F',url:'inquiry/index.page'}]);
-	ut.showDropMenu = function(menus,switchText){
-		$('#topDropMenu,#topDropMenuMask').remove();
-		$('<div id="topDropMenu" open="0" style="z-index:100;background:white;width:100%;position:absolute;bottom:100%;left:0%;width:100%;color:white;text-align:center;"><div style="width:100%;bottom:0px;height:2px;position:absolute;left:0px;background:#b3b3b5;"></div><div id="topDrawMenuSwitch" style="position:absolute;left:6%;top:98%;width:80px;width:6rem;background:url(img/downArrow.png);background-size:100% 100%;"><div style="min-height:50px;padding-top:15px;box-sizing:border-box;">'+(switchText||'请选择')+'</div><div style="width: 0;height: 0;border-style: solid;border-width: 24px 40px 0px 40px;border-color:transparent;"></div></div></div>').appendTo('body');
-		
-		$.each(menus||{},function(i,v){
-			$('<div style="width:25%;min-height:50px;line-height:50px;text-align:center;float:left;color:black;position:relative;">'+v.text+(i%4==3?'':'<div style="height:60%;top:20%;width:1px;position:absolute;right:0px;background:#b3b3b5;"></div>')+'<div style="width:100%;bottom:0px;position:absolute;left:0px;height:1px;background:#b3b3b5;"></div></div>').appendTo('#topDropMenu').bind('click',function(){
-				window.location.href = (v.url || (window.location.href+'#'));
-			});
-			
-		});
-		
-		$('#topDrawMenuSwitch').bind('click',function(){
-			if($('#topDropMenu').attr('isopen') == 1){
-				$('#topDropMenu').css({bottom:'100%',top:'auto'});
-				$('#topDropMenu').attr('isopen','0');
-				$('#topDropMenuMask').remove();
-			}else{
-				$('#topDropMenu').css({bottom:'auto',top:'0px'});
-				$('#topDropMenu').attr('isopen','1');
-				$('<div id="topDropMenuMask" style="width:100%;height:100%;top:0px;left:0px;position:absolute;background:rgba(0,0,0,0.5);z-index:99;"></div>').appendTo('body');
-			}
-			
-		});
-	}
-	
-	
 	
 })();
+
+
+
+
+
+ut.client = (function(){
+	client = {};
+	client.modeH = 960;
+	client.modeW = 640;
+	
+	client.w = window.innerWidth;
+	client.h = window.innerHeight;
+	//正确屏幕的宽高比
+	client.ratio = client.modeW/client.modeH;
+	client.error = 1.2;
+	
+	client.init = function(){
+		this.w = window.innerWidth;
+		this.h = window.innerHeight;
+		
+		
+		//屏幕宽度失调率
+		this.imbalance = this.w/(this.h*this.ratio);
+		this.isBalance = this.imbalance>this.error?false:true;
+		
+		
+		this.seeH = this.h;
+		this.seeW = this.isBalance ? this.w : this.h*this.ratio;
+		
+		this.scaleW = this.seeW/this.modeW;
+		this.scaleH = this.seeH/this.modeH;
+		
+	};
+	
+	client.gbox = $("<div class='gbox'></div>");
+
+	client.setBox = function(){
+
+		if(!window.gbox){
+			this.gbox.append($('body').html()).wrap("<div></div>").parent().appendTo($('body').empty());
+			window.gbox = this.gbox ;
+		}
+
+
+		this.init();
+
+		this.gbox.parent().css({
+
+			width : this.seeW + 'px',
+			height : this.seeH + 'px',
+
+			margin : 'auto',
+			overflow : 'hidden',
+			position : 'absolute',
+			top : '0',
+			left : '0',
+			right : '0'
+
+		});
+
+		this.gbox.css({
+
+			width : this.modeW + 'px',
+			height : this.modeH + 'px',
+			position : 'absolute',
+			overflow : 'hidden',
+			left : 0,
+			top : 0,
+
+			transformOrigin : '0 0',
+			transform : 'scale('+this.scaleW+','+this.scaleH+')'
+
+		});
+
+	};
+	
+	$(window).on('resize',function(){
+		client.setBox();
+	});
+	$(window).on('orientationchange',function(){
+		client.setBox();
+	});
+
+	return client;
+	
+})();
+
