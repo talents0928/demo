@@ -26,11 +26,49 @@ window.cdnPath = window.cdnPath || (function(){
 
 (function(url){
 
-	var fileref = document.createElement('script'); 
-		fileref.setAttribute("type","text/javascript"); 
-		fileref.setAttribute("src",url);  
+	//return ;
+
+	var node = document.createElement('script'); 
+		node.setAttribute("type","text/javascript"); 
+		node.setAttribute("src",url);  
 		
 		console.log(22);
+	var supportOnload = "onload" in node ;
+
+
+	if (supportOnload) {
+	    node.onload = function(){
+	    	console.log('magic');
+	    }
+	    node.onerror = function() {
+	      //emit("error", { uri: url, node: node })
+	      console.log('magic');
+	    }
+	 }
+	 else {
+		    node.onreadystatechange = function() {
+		      if (/loaded|complete/.test(node.readyState)) {
+		        console.log('magic');
+		      }
+		    }
+	  }
+
+	// node.onreadystatechange = function() {
+ //      if (/loaded|complete/.test(node.readyState)) {
+ //        //onload()
+ //        	console.log('magic');
+ //      }
+ //    }
+
+
+	var doc = document;
+	var head = doc.head || doc.getElementsByTagName("head")[0] || doc.documentElement ;
+	var baseElement = head.getElementsByTagName("base")[0] ;
+	baseElement ?
+      head.insertBefore(node, baseElement) :
+      head.appendChild(node) ;
+
+
 
 	// $(function(){
 	// 	var fileref = document.createElement('script'); 
@@ -42,12 +80,28 @@ window.cdnPath = window.cdnPath || (function(){
 	// });
 	
 
-})('jquery-1.10.2.min.js');
+})('js/jquery-1.10.2.min.js');
 
 
 
 
+function meke(){
 
+	var doc = document;
+	var head = doc.head || doc.getElementsByTagName("head")[0] || doc.documentElement
+	var baseElement = head.getElementsByTagName("base")[0]
+	baseElement ?
+      head.insertBefore(node, baseElement) :
+      head.appendChild(node)
+
+    node.onreadystatechange = function() {
+      if (/loaded|complete/.test(node.readyState)) {
+        //onload()
+      }
+    }
+
+
+};
 
 var ut = {};
 
