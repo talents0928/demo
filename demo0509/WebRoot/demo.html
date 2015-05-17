@@ -1,0 +1,145 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<meta http-equiv="x-dns-prefetch-control" content="on">
+
+	<title>demo 范例</title>
+	<script type="text/javascript" src='js/sea-debug.js'></script>
+	<script type="text/javascript" src='js/utils.js'></script>
+	<script type='text/javascript' >
+		seajs.use('./css/common.css',function(){
+			console.log(2323);
+		});
+		
+		
+		define(function(require,exports, module) {
+ 	
+			//seajs.require('./js/jquery-1.10.2.min.js');
+			
+			console.log(111);
+ 		});
+		
+		console.log('fuck2')
+		
+	</script>
+	<script type="text/javascript" src='js/utils.js'></script>
+</head>
+<style type="text/css">
+	.box{
+		
+		
+		
+	}
+	
+	body{
+		margin : 0 ;
+	}
+
+	.size{
+		width:640px;
+		height:960px;
+	}
+
+	.content{
+
+		width:100%;
+		overflow:hidden;
+		position: absolute;
+		top:0px;
+		left:0px;
+	}
+	.trans{
+		transition : 600ms top ease;
+		-webkit-transition : 600ms top ease;
+	}
+	.h-box{
+		width:400px;
+		height:200px;
+		background:drakblue;
+	}
+
+
+</style>
+<body>
+
+			<div class="contentTp content trans">
+				<div class="size" style='background:url(img/img1.jpg);background-size:100% 100%;'></div>
+				<div class="size" style='background:url(img/img2.jpg);background-size:100% 100%;'></div>
+				<div class="size" style='background:url(img/img3.jpg);background-size:100% 100%;'></div>
+				<div class="size" style='background:url(img/img4.jpg);background-size:100% 100%;'></div>
+			</div>
+		
+</body>
+
+	<script type="text/javascript">
+
+		
+
+
+		
+
+		$(function(){
+
+			ut.client.setBox();
+
+			//阻止屏幕滚动
+			$(document).on('touchmove',function(e){
+				e.preventDefault();
+			});
+
+			
+
+		});
+		seajs.use('touch-0.2.10.js',function(){
+			
+			var css = seajs.require('./css/common.css');
+			console.log('fuck232');
+			function setWipe($ele){
+				var size  = $ele.children().length;
+				var current = 0;
+	
+				function move(index){
+					var str = '-' + index*960 + 'px';
+					$ele.css('top',str);
+				}
+				
+				touch.on('.contentTp', 'swipeup', function(ev){
+	
+				   if( current == size-1 ){
+				   		return false;
+				   }
+				   current ++ ;
+	
+				   move(current)
+	
+				});
+	
+				touch.on('.contentTp', 'swipedown', function(ev){
+	
+				   if( current == 0 ){
+				   		return false;
+				   }
+				   current -- ;
+	
+				   move(current);
+	
+				});
+	
+				
+				//$ele.css();
+				
+			}
+			setWipe($('.contentTp'));
+		});
+	</script>
+</html>
+
+
+
+
+
