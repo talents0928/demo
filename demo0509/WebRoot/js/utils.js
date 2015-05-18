@@ -16,51 +16,22 @@ window.cdnPath = window.cdnPath || (function(){
 
 
 
-
-
-//seajs.use('jquery-1.10.2.min.js');
-//console.log(11);
+var ut = {};
 
 
 
 
-(function(url){
+
+(function(callback){
 
 	//return ;
+	var seajsPath = 'js/lib/sea.js'
 
 	var node = document.createElement('script'); 
 		node.setAttribute("type","text/javascript"); 
-		node.setAttribute("src",url);  
-		
-		console.log(22);
-	var supportOnload = "onload" in node ;
-
-
-	if (supportOnload) {
-	    node.onload = function(){
-	    	console.log('magic');
-	    }
-	    node.onerror = function() {
-	      //emit("error", { uri: url, node: node })
-	      console.log('magic');
-	    }
-	 }
-	 else {
-		    node.onreadystatechange = function() {
-		      if (/loaded|complete/.test(node.readyState)) {
-		        console.log('magic');
-		      }
-		    }
-	  }
-
-	// node.onreadystatechange = function() {
- //      if (/loaded|complete/.test(node.readyState)) {
- //        //onload()
- //        	console.log('magic');
- //      }
- //    }
-
-
+		node.setAttribute("src",seajsPath);  
+		addOnload(node,callback);
+	
 	var doc = document;
 	var head = doc.head || doc.getElementsByTagName("head")[0] || doc.documentElement ;
 	var baseElement = head.getElementsByTagName("base")[0] ;
@@ -69,41 +40,95 @@ window.cdnPath = window.cdnPath || (function(){
       head.appendChild(node) ;
 
 
+     function addOnload(node,callback) {
+		  var supportOnload = "onload" in node
+		  if (supportOnload) {
+		    node.onload = onload
+		    node.onerror = function() {
+		      console.error('load fail');
+		      onload()
+		    }
+		  }
+		  else {
+		    node.onreadystatechange = function() {
+		      if (/loaded|complete/.test(node.readyState)) {
+		        onload()
+		      }
+		    }
+		  }
+		 function onload() {
+		    // Ensure only run once and handle memory leak in IE
+		    node.onload = node.onerror = node.onreadystatechange = null
 
-	// $(function(){
-	// 	var fileref = document.createElement('script'); 
-	// 	fileref.setAttribute("type","text/javascript"); 
-	// 	fileref.setAttribute("src",url);  
-		
-	// 	console.log(22);
-		
+		    head.removeChild(node)
+		    // Dereference the node
+		    node = null
+
+		    callback()
+		 }
+	}
+
+
+})(function(){
+
+	// data.alias - An object containing shorthands of module id
+	// data.paths - An object containing path shorthands in module id
+	// data.vars - The {xxx} variables in module id
+	// data.map - An array containing rules to map module uri
+	// data.debug - Debug mode. The default value is false
+	seajs.config({
+		base: "./js/lib",
+		alias: {
+	    	"touchJs" : "touch-0.2.10.js",
+	    	"jquery" : "jquery-1.10.2.min.js",
+	    	"cookieJs" : "jquery.cookie.js"
+		},
+		//当目录比较深，或需要跨目录调用模块时，可以使用 paths 来简化书写
+		paths: {
+		    'gallery': 'https://a.alipayobjects.com/gallery',
+		    'app': 'path/to/app'
+		},
+		//map Array 开启后可对模块路径进行映射修改，可用于路径转换、在线调试等
+		// map: [
+		//     [ '.js', '-debug.js' ]
+		// ],
+		charset: 'utf-8'
+	});
+
+	//var $ = seajs.require('jquery');
+	// 加载入口模块
+	// console.log('需要执行');
+	// define(function(require,exports,module){
+	// 	var $ = require('jquery');
+	// 	console.log('可能没有执行2');
+	// 	ut._wait();
+	// 	//ut.initFunc();
+
 	// });
+	// console.log('可能没有执行');
+
+	seajs.use('jquery',function(){
+		$(function(){
+			while(ut._list.length){
+				ut._list.shift()();
+			}
+		});
+	});
 	
 
-})('js/jquery-1.10.2.min.js');
+});
+ut._list = [];
+ut.ready = function(callback){
 
-
-
-
-function meke(){
-
-	var doc = document;
-	var head = doc.head || doc.getElementsByTagName("head")[0] || doc.documentElement
-	var baseElement = head.getElementsByTagName("base")[0]
-	baseElement ?
-      head.insertBefore(node, baseElement) :
-      head.appendChild(node)
-
-    node.onreadystatechange = function() {
-      if (/loaded|complete/.test(node.readyState)) {
-        //onload()
-      }
-    }
-
+	this._list.push(callback);
 
 };
+ut.initFunc = function(){
 
-var ut = {};
+
+
+
+
 
 (function(){
 	
@@ -113,33 +138,33 @@ var ut = {};
 		return serverHost + cmd;
 	};
 	
-	window.lay = new (function(){
-		var that = this;
-		//this.gifHref = window.Path||'.'+'/img/new/load.gif';
-		this.size = '25px';
-		this.size2 = '70px;'
-		this.ctrl = 'expandTp';
-		this.autoStyle = "position:absolute;top:0;left:0;right:0;bottom:0;margin:auto;";
-		this.dom = "<div class='"+this.ctrl+"' style='position:fixed;width:100vw;height:100vh;top:0;left:0;z-index:99999;'>" +
-				"<div style='"+this.autoStyle+"width:"+this.size2+";height:"+this.size2+";display:none;background:rgba(0,0,0,0.5);border-radius:10px;'>"+
-				"<div style='"+this.autoStyle+"width:"+this.size+";height:"+this.size+";' >" +
-				"<img src='"+this.gifHref+"'></img></div></div>" +
-				"</div>";
-		this.ele = $(this.dom);
-		this.expand = function(){
-			$('.'+that.ctrl).remove();
-			that.ele.appendTo('body');
-			setTimeout(function(){
-				if($('.'+that.ctrl).length){
-					that.ele.find('div').show();
-				}
-			},600);
-		};
-		this.out = function(){
-			$('.'+that.ctrl).remove();
-		};
+	// window.lay = new (function(){
+	// 	var that = this;
+	// 	//this.gifHref = window.Path||'.'+'/img/new/load.gif';
+	// 	this.size = '25px';
+	// 	this.size2 = '70px;'
+	// 	this.ctrl = 'expandTp';
+	// 	this.autoStyle = "position:absolute;top:0;left:0;right:0;bottom:0;margin:auto;";
+	// 	this.dom = "<div class='"+this.ctrl+"' style='position:fixed;width:100vw;height:100vh;top:0;left:0;z-index:99999;'>" +
+	// 			"<div style='"+this.autoStyle+"width:"+this.size2+";height:"+this.size2+";display:none;background:rgba(0,0,0,0.5);border-radius:10px;'>"+
+	// 			"<div style='"+this.autoStyle+"width:"+this.size+";height:"+this.size+";' >" +
+	// 			"<img src='"+this.gifHref+"'></img></div></div>" +
+	// 			"</div>";
+	// 	this.ele = $(this.dom);
+	// 	this.expand = function(){
+	// 		$('.'+that.ctrl).remove();
+	// 		that.ele.appendTo('body');
+	// 		setTimeout(function(){
+	// 			if($('.'+that.ctrl).length){
+	// 				that.ele.find('div').show();
+	// 			}
+	// 		},600);
+	// 	};
+	// 	this.out = function(){
+	// 		$('.'+that.ctrl).remove();
+	// 	};
 		
-	});
+	// });
 	
 	//向后台发送ajax请求
 	ut.send = function(url,cb,options){
@@ -357,4 +382,7 @@ ut.client = (function(){
 	return client;
 	
 })();
+
+
+};
 

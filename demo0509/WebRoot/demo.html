@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -9,26 +10,60 @@
 	<meta http-equiv="x-dns-prefetch-control" content="on">
 
 	<title>demo 范例</title>
-	<script type="text/javascript" src='js/sea-debug.js'></script>
 	<script type="text/javascript" src='js/utils.js'></script>
+	<!-- <script type="text/javascript" src='js/lib/sea.js'></script> -->
 	<script type='text/javascript' >
-		seajs.use('./css/common.css',function(){
-			console.log(2323);
+		// seajs.require('js/lib/jquery-1.10.2.min.js',function(){
+			
+		// 	console.log("111");
+		// 	$(function(){
+			
+		// 	});
+		// });
+		// seajs.use('jquery-1.10.2.min.js',function(){
+			
+		// 	$(function(){
+		// 		console.log($());
+		// 	});
+		// });
+
+		// var cc = define(function(require,exports,module){
+
+		// 	console.log(require);
+
+		// 	exports.cons = function(){
+		// 		console.log('this is cs');
+		// 	};
+			
+		// });
+
+		// console.log(cc);
+		function test (){
+			console.log($);
+		};
+		var test2  = function(){
+			console.log($);
+		};
+		ut.ready(function(){
+		
+			console.log('可能这种方式比较难受');
+			test();
+			console.log('可能这种方式比较难受');
+			return ;
+		});
+		ut.ready(function(){
+		
+			return false;
+			console.log('K2');
+		});
+		ut.ready(function(){
+		
+			console.log('K3');
 		});
 		
-		
-		define(function(require,exports, module) {
- 	
-			//seajs.require('./js/jquery-1.10.2.min.js');
-			
-			console.log(111);
- 		});
-		
-		console.log('fuck2')
-		
 	</script>
-	<script type="text/javascript" src='js/utils.js'></script>
 </head>
+
 <style type="text/css">
 	.box{
 		
@@ -83,59 +118,61 @@
 
 		
 
-		$(function(){
+		// $(function(){
 
-			ut.client.setBox();
+		// 	ut.client.setBox();
 
-			//阻止屏幕滚动
-			$(document).on('touchmove',function(e){
-				e.preventDefault();
-			});
+		// 	//阻止屏幕滚动
+		// 	$(document).on('touchmove',function(e){
+		// 		e.preventDefault();
+		// 	});
 
 			
 
-		});
-		seajs.use('touch-0.2.10.js',function(){
+		// });
+		// seajs.use('touch-0.2.10.js',function(){
 			
-			var css = seajs.require('./css/common.css');
-			console.log('fuck232');
-			function setWipe($ele){
-				var size  = $ele.children().length;
-				var current = 0;
+		// 	var css = seajs.require('./css/common.css');
+		// 	console.log('fuck232');
+		// 	function setWipe($ele){
+		// 		var size  = $ele.children().length;
+		// 		var current = 0;
 	
-				function move(index){
-					var str = '-' + index*960 + 'px';
-					$ele.css('top',str);
-				}
+		// 		function move(index){
+		// 			var str = '-' + index*960 + 'px';
+		// 			$ele.css('top',str);
+		// 		}
 				
-				touch.on('.contentTp', 'swipeup', function(ev){
+		// 		touch.on('.contentTp', 'swipeup', function(ev){
 	
-				   if( current == size-1 ){
-				   		return false;
-				   }
-				   current ++ ;
+		// 		   if( current == size-1 ){
+		// 		   		return false;
+		// 		   }
+		// 		   current ++ ;
 	
-				   move(current)
+		// 		   move(current)
 	
-				});
+		// 		});
 	
-				touch.on('.contentTp', 'swipedown', function(ev){
+		// 		touch.on('.contentTp', 'swipedown', function(ev){
 	
-				   if( current == 0 ){
-				   		return false;
-				   }
-				   current -- ;
+		// 		   if( current == 0 ){
+		// 		   		return false;
+		// 		   }
+		// 		   current -- ;
 	
-				   move(current);
+		// 		   move(current);
 	
-				});
+		// 		});
 	
 				
-				//$ele.css();
+		// 		//$ele.css();
 				
-			}
-			setWipe($('.contentTp'));
-		});
+		// 	}
+		// 	setWipe($('.contentTp'));
+		// });
+
+
 	</script>
 </html>
 
