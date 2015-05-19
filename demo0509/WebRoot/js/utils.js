@@ -76,28 +76,29 @@ var ut = {};
 	// data.vars - The {xxx} variables in module id
 	// data.map - An array containing rules to map module uri
 	// data.debug - Debug mode. The default value is false
-	seajs.config({
-		base: "./js/lib",
-		alias: {
-	    	"touchJs" : "touch-0.2.10.js",
-	    	"jquery" : "jquery-1.10.2.min.js",
-	    	"cookieJs" : "jquery.cookie.js"
-		},
-		//当目录比较深，或需要跨目录调用模块时，可以使用 paths 来简化书写
-		paths: {
-		    'gallery': 'https://a.alipayobjects.com/gallery',
-		    'app': 'path/to/app'
-		},
-		//map Array 开启后可对模块路径进行映射修改，可用于路径转换、在线调试等
-		// map: [
-		//     [ '.js', '-debug.js' ]
-		// ],
-		charset: 'utf-8'
-	});
+	
+	// seajs.config({
+	// 	base: "./js/lib",
+	// 	alias: {
+	//     	"touchJs" : "touch-0.2.10.js",
+	//     	"jquery" : "jquery-1.10.2.min.js",
+	//     	"cookieJs" : "jquery.cookie.js"
+	// 	},
+	// 	//当目录比较深，或需要跨目录调用模块时，可以使用 paths 来简化书写
+	// 	paths: {
+	// 	    'gallery': 'https://a.alipayobjects.com/gallery',
+	// 	    'app': 'path/to/app'
+	// 	},
+	// 	//map Array 开启后可对模块路径进行映射修改，可用于路径转换、在线调试等
+	// 	// map: [
+	// 	//     [ '.js', '-debug.js' ]
+	// 	// ],
+	// 	charset: 'utf-8'
+	// });
 
-	//var $ = seajs.require('jquery');
+	// var $ = seajs.use('jquery');
 	// 加载入口模块
-	// console.log('需要执行');
+	// console.log($);
 	// define(function(require,exports,module){
 	// 	var $ = require('jquery');
 	// 	console.log('可能没有执行2');
@@ -107,14 +108,32 @@ var ut = {};
 	// });
 	// console.log('可能没有执行');
 
-	seajs.use('jquery',function(){
-		$(function(){
-			while(ut._list.length){
-				ut._list.shift()();
-			}
-		});
+	// seajs.use('jquery',function(){
+	// 	$(function(){
+	// 		while(ut._list.length){
+	// 			ut._list.shift()();
+	// 		}
+	// 	});
+	// });
+
+	define('1',['jquery'],function(require,exports,module){
+		console.log(3);
 	});
-	
+
+	// define('cookie',function(require,exports,module){
+	// 	console.log(222);
+	// 	var cookie = require('1');
+		
+	// 	console.log(cookie);
+
+	// 	return {
+	// 		a : 1
+	// 	};
+
+	// });
+	// var f = seajs.require('cookie');
+	//var d = seajs.require('cookie');
+	// console.log(f);
 
 });
 ut._list = [];
