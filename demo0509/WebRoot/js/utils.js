@@ -76,25 +76,26 @@ var ut = {};
 	// data.vars - The {xxx} variables in module id
 	// data.map - An array containing rules to map module uri
 	// data.debug - Debug mode. The default value is false
-	
-	// seajs.config({
-	// 	base: "./js/lib",
-	// 	alias: {
-	//     	"touchJs" : "touch-0.2.10.js",
-	//     	"jquery" : "jquery-1.10.2.min.js",
-	//     	"cookieJs" : "jquery.cookie.js"
-	// 	},
-	// 	//当目录比较深，或需要跨目录调用模块时，可以使用 paths 来简化书写
-	// 	paths: {
-	// 	    'gallery': 'https://a.alipayobjects.com/gallery',
-	// 	    'app': 'path/to/app'
-	// 	},
-	// 	//map Array 开启后可对模块路径进行映射修改，可用于路径转换、在线调试等
-	// 	// map: [
-	// 	//     [ '.js', '-debug.js' ]
-	// 	// ],
-	// 	charset: 'utf-8'
-	// });
+
+
+	seajs.config({
+		base: "./js/lib",
+		alias: {
+	    	"touchJs" : "touch-0.2.10.js",
+	    	"jqueryJs" : "jquery-1.10.2.min.js",
+	    	"cookieJs2" : "jquery.cookie.js"
+		},
+		//当目录比较深，或需要跨目录调用模块时，可以使用 paths 来简化书写
+		paths: {
+		    // 'gallery': 'https://a.alipayobjects.com/gallery',
+		    // 'app': 'path/to/app'
+		},
+		//map Array 开启后可对模块路径进行映射修改，可用于路径转换、在线调试等
+		// map: [
+		//     [ '.js', '-debug.js' ]
+		// ],
+		charset: 'utf-8'
+	});
 
 	// var $ = seajs.use('jquery');
 	// 加载入口模块
@@ -115,10 +116,34 @@ var ut = {};
 	// 		}
 	// 	});
 	// });
-
-	define('1',['jquery'],function(require,exports,module){
-		console.log(3);
+	
+	define('jquery1',['jqueryJs'],function(require,exports,module){
+		//console.log($);
+		
 	});
+
+	define(['touchJs'],function(require,exports,module){
+
+	});
+
+	define(['cookieJs2'],function(require,exports,module){
+
+	});
+
+
+	
+	
+	define('1',function(require,exports,module){
+		var $  = require('jquery1');
+		console.log($);
+		
+	});
+	
+	seajs.use('1',function(){
+		
+	});
+
+
 
 	// define('cookie',function(require,exports,module){
 	// 	console.log(222);
