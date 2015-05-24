@@ -25,7 +25,7 @@ var ut = {};
 (function(callback){
 
 	//return ;
-	var seajsPath = 'js/lib/sea.js'
+	var seajsPath = 'js/lib/require.js' ;
 
 	var node = document.createElement('script'); 
 		node.setAttribute("type","text/javascript"); 
@@ -60,7 +60,7 @@ var ut = {};
 		    // Ensure only run once and handle memory leak in IE
 		    node.onload = node.onerror = node.onreadystatechange = null
 
-		    head.removeChild(node)
+		    head.removeChild(node);
 		    // Dereference the node
 		    node = null
 
@@ -71,102 +71,96 @@ var ut = {};
 
 })(function(){
 
-	// data.alias - An object containing shorthands of module id
-	// data.paths - An object containing path shorthands in module id
-	// data.vars - The {xxx} variables in module id
-	// data.map - An array containing rules to map module uri
-	// data.debug - Debug mode. The default value is false
+		require.config({
+
+			baseUrl : './js/lib',
+
+			paths : {
+
+				cssPath : '../../css/',
+				
+
+				jquery : 'jquery-1.10.2.min',
+				touch : 'touch-0.2.10',
+				cookie : 'jquery.cookie'
+
+			},
+
+			map : {
+				'*' : {
+					css : 'css'
+				}
+			}
 
 
-	seajs.config({
-		base: "./js/lib",
-		alias: {
-	    	"touchJs" : "touch-0.2.10.js",
-	    	"jqueryJs" : "jquery-1.10.2.min.js",
-	    	"cookieJs2" : "jquery.cookie.js"
-		},
-		//当目录比较深，或需要跨目录调用模块时，可以使用 paths 来简化书写
-		paths: {
-		    // 'gallery': 'https://a.alipayobjects.com/gallery',
-		    // 'app': 'path/to/app'
-		},
-		//map Array 开启后可对模块路径进行映射修改，可用于路径转换、在线调试等
-		// map: [
-		//     [ '.js', '-debug.js' ]
-		// ],
-		charset: 'utf-8'
-	});
+		});
 
-	// var $ = seajs.use('jquery');
-	// 加载入口模块
-	// console.log($);
-	// define(function(require,exports,module){
-	// 	var $ = require('jquery');
-	// 	console.log('可能没有执行2');
-	// 	ut._wait();
-	// 	//ut.initFunc();
 
-	// });
-	// console.log('可能没有执行');
 
-	// seajs.use('jquery',function(){
-	// 	$(function(){
-	// 		while(ut._list.length){
-	// 			ut._list.shift()();
-	// 		}
-	// 	});
-	// });
+
+		require(['jquery'],function(){
+
+			$('script').each(function(index,value){
+
+
+					var arr = $(value).html().match(/(?:ut.)\w+(?:[.])/g);
+
+					console.log(arr);
+
+			});
+
+			$(function(){
+
+
+				var len  = ut._list.length ;
+				for(var i =0 ; i < len; i++){
+					ut._list.shift()();
+				}
+			});
+			
+
+		});
 	
-	define('jquery1',['jqueryJs'],function(require,exports,module){
-		//console.log($);
-		
-	});
-
-	define(['touchJs'],function(require,exports,module){
-
-	});
-
-	define(['cookieJs2'],function(require,exports,module){
-
-	});
-
-
-	
-	
-	define('1',function(require,exports,module){
-		var $  = require('jquery1');
-		console.log($);
-		
-	});
-	
-	seajs.use('1',function(){
-		
-	});
-
-
-
-	// define('cookie',function(require,exports,module){
-	// 	console.log(222);
-	// 	var cookie = require('1');
-		
-	// 	console.log(cookie);
-
-	// 	return {
-	// 		a : 1
-	// 	};
-
-	// });
-	// var f = seajs.require('cookie');
-	//var d = seajs.require('cookie');
-	// console.log(f);
 
 });
+
+
+
+
 ut._list = [];
 ut.ready = function(callback){
 
 	this._list.push(callback);
 
 };
+
+
+ut.map = {
+
+	getTouch : 1
+};
+
+
+ut.getTouch = function(){
+
+
+	define('1',['touch'],function(a){
+		console.log('funckkk');
+		return a;
+	});
+	define('2',function(){
+		return {
+			a : 1 ,
+			b : 2
+		}
+	});
+	obj = require(['2']);
+	//console.log(obj);
+	return obj;
+
+};
+
+
 ut.initFunc = function(){
 
 
