@@ -18,43 +18,58 @@ window.cdnPath = window.cdnPath || (function(){
 
 var ut = {};
 
-function getReqMap(){
 
-	var map = {};
-	var unMap = ['ut.ready','ut.reqCss'];
-	var needMap = ['cookie'];
 
-	$('script').each(function(index,value){
 
-		//加载ut.方法的自动引入
-		var html = $(value).html().replace(/\/\/.*\n/g,'');
-		var arr = html.match(/ut.(\w+)(?=[.\( \)])/g);
-		$.each(arr||[],function(index,value){
-			// map[value.split('.')[1]] = true;
-			map[value] = true;
-		});
 
-		//加载$.插件的自动引入
-		$.each(needMap||[],function(index,value){
-			var reg = new RegExp('\\$\.'+value,'g');
-			if(reg.test(html)){
-				map['$.'+value] = true;
-			};
-		});
+(function(callback){
 
-	});
-	for(var i=0;i<unMap.length;i++){
-		delete map[unMap[i]];
+	//return ;
+	var seajsPath = 'js/lib/require.js' ;
+
+	var node = document.createElement('script'); 
+		node.setAttribute("type","text/javascript"); 
+		node.setAttribute("src",seajsPath);  
+		addOnload(node,callback);
+	
+	var doc = document;
+	var head = doc.head || doc.getElementsByTagName("head")[0] || doc.documentElement ;
+	var baseElement = head.getElementsByTagName("base")[0] ;
+	baseElement ?
+      head.insertBefore(node, baseElement) :
+      head.appendChild(node) ;
+
+
+     function addOnload(node,callback) {
+		  var supportOnload = "onload" in node
+		  if (supportOnload) {
+		    node.onload = onload
+		    node.onerror = function() {
+		      console.error('load fail');
+		      onload()
+		    }
+		  }
+		  else {
+		    node.onreadystatechange = function() {
+		      if (/loaded|complete/.test(node.readyState)) {
+		        onload()
+		      }
+		    }
+		  }
+		 function onload() {
+		    // Ensure only run once and handle memory leak in IE
+		    node.onload = node.onerror = node.onreadystatechange = null
+
+		    head.removeChild(node);
+		    // Dereference the node
+		    node = null
+
+		    callback()
+		 }
 	}
-	return Object.keys(map);
-};
 
 
-(function(){
-
-
-
-		var cssPath = '../../css/';
+})(function(){
 
 		require.config({
 
@@ -62,7 +77,8 @@ function getReqMap(){
 
 			paths : {
 
-				common : cssPath+'/common',
+				cssPath : '../../css/',
+				
 
 				jquery : 'jquery-1.10.2.min',
 				touch : 'touch-0.2.10',
@@ -74,56 +90,56 @@ function getReqMap(){
 				'*' : {
 					css : 'css'
 				}
-			},
-
-			shim : {
-
-				touch : {
-					exports : 'touch'
-				},
-				cookie : {
-					exports : "cookie"
-				}
 			}
 
 
 		});
 
-		var baseAsset = (function(){
-			var arr = ['jquery','jquery'];
-			return arr;
-		})();
 
 
-		require(baseAsset,function(){
-			var arr = getReqMap();
+
+		require(['jquery'],function(){
+
+			var map = {};
+
+			$('script').each(function(index,value){
+
+					var arr = $(value).html().match(/(?:ut.)(\w+)(?=[.(])/g);
+
+					$.each(arr||[],function(index,value){
+						map[value.split('.')[1]] = true;
+					});
+
+			});
+			console.log(map);
+			var arr = Object.keys(map);
+
 			require(arr,function(){
+
 				$(function(){
 					var len  = ut._list.length ;
 					for(var i =0 ; i < len; i++){
 						ut._list.shift()();
 					}
 				});
+
 			});
+
+			
 		});
 	
-})();
-
-
-define('ut.touch',['touch'],function(touch){
-
-
-	ut.touch = touch ;
 
 });
 
-define('$.cookie',['cookie'],function(){
 
-	//console.log(cookie);
-});
+define('demo',['touch'],function(){
 
-define('commonCss',['css!common'],function(){
+	ui.demo = {} ;
+	ui.demo.getName = function(){
+		console.log('demo');
+	};
 
+	
 });
 
 
@@ -135,96 +151,31 @@ ut.ready = function(callback){
 
 };
 
-ut.reqCss = function(arr){
-	require(arr);
+
+ut.map = {
+
+	getTouch : 1
 };
 
 
+ut.getTouch = function(){
 
 
+	define('1',['touch'],function(a){
+		console.log('funckkk');
+		return a;
+	});
+	define('2',function(){
+		return {
+			a : 1 ,
+			b : 2
+		}
+	});
+	obj = require(['2']);
+	//console.log(obj);
+	return obj;
 
-
-
-define('ut.client',function(){
-
-	ut.client = (function(){
-		client = {};
-		client.modeH = 960;
-		client.modeW = 640;
-		
-		client.w = window.innerWidth;
-		client.h = window.innerHeight;
-		//正确屏幕的宽高比
-		client.ratio = client.modeW/client.modeH;
-		client.error = 1.2;
-		
-		client.init = function(){
-			this.w = window.innerWidth;
-			this.h = window.innerHeight;
-			//屏幕宽度失调率
-			this.imbalance = this.w/(this.h*this.ratio);
-			this.isBalance = this.imbalance>this.error?false:true;
-			this.seeH = this.h;
-			this.seeW = this.isBalance ? this.w : this.h*this.ratio;
-			
-			this.scaleW = this.seeW/this.modeW;
-			this.scaleH = this.seeH/this.modeH;
-		};
-		
-		client.gbox = $("<div class='gbox'></div>");
-
-		client.setBox = function(){
-
-			if(!window.gbox){
-				this.gbox.append($('body').html()).wrap("<div></div>").parent().appendTo($('body').empty());
-				window.gbox = this.gbox ;
-			}
-
-
-			this.init();
-
-			this.gbox.parent().css({
-
-				width : this.seeW + 'px',
-				height : this.seeH + 'px',
-
-				margin : 'auto',
-				overflow : 'hidden',
-				position : 'absolute',
-				top : '0',
-				left : '0',
-				right : '0'
-
-			});
-
-			this.gbox.css({
-
-				width : this.modeW + 'px',
-				height : this.modeH + 'px',
-				position : 'absolute',
-				overflow : 'hidden',
-				left : 0,
-				top : 0,
-
-				transformOrigin : '0 0',
-				transform : 'scale('+this.scaleW+','+this.scaleH+')'
-
-			});
-
-		};
-		
-		$(window).on('resize',function(){
-			client.setBox();
-		});
-		$(window).on('orientationchange',function(){
-			client.setBox();
-		});
-
-		return client;
-		
-	})();
-
-});
+};
 
 
 ut.initFunc = function(){
@@ -405,7 +356,87 @@ ut.initFunc = function(){
 
 
 
+ut.client = (function(){
+	client = {};
+	client.modeH = 960;
+	client.modeW = 640;
+	
+	client.w = window.innerWidth;
+	client.h = window.innerHeight;
+	//正确屏幕的宽高比
+	client.ratio = client.modeW/client.modeH;
+	client.error = 1.2;
+	
+	client.init = function(){
+		this.w = window.innerWidth;
+		this.h = window.innerHeight;
+		
+		
+		//屏幕宽度失调率
+		this.imbalance = this.w/(this.h*this.ratio);
+		this.isBalance = this.imbalance>this.error?false:true;
+		
+		
+		this.seeH = this.h;
+		this.seeW = this.isBalance ? this.w : this.h*this.ratio;
+		
+		this.scaleW = this.seeW/this.modeW;
+		this.scaleH = this.seeH/this.modeH;
+		
+	};
+	
+	client.gbox = $("<div class='gbox'></div>");
 
+	client.setBox = function(){
+
+		if(!window.gbox){
+			this.gbox.append($('body').html()).wrap("<div></div>").parent().appendTo($('body').empty());
+			window.gbox = this.gbox ;
+		}
+
+
+		this.init();
+
+		this.gbox.parent().css({
+
+			width : this.seeW + 'px',
+			height : this.seeH + 'px',
+
+			margin : 'auto',
+			overflow : 'hidden',
+			position : 'absolute',
+			top : '0',
+			left : '0',
+			right : '0'
+
+		});
+
+		this.gbox.css({
+
+			width : this.modeW + 'px',
+			height : this.modeH + 'px',
+			position : 'absolute',
+			overflow : 'hidden',
+			left : 0,
+			top : 0,
+
+			transformOrigin : '0 0',
+			transform : 'scale('+this.scaleW+','+this.scaleH+')'
+
+		});
+
+	};
+	
+	$(window).on('resize',function(){
+		client.setBox();
+	});
+	$(window).on('orientationchange',function(){
+		client.setBox();
+	});
+
+	return client;
+	
+})();
 
 
 };

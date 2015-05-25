@@ -10,17 +10,18 @@
 	<meta http-equiv="x-dns-prefetch-control" content="on">
 
 	<title>demo 范例</title>
+	<script type="text/javascript" src='js/lib/require.js'></script>
 	<script type="text/javascript" src='js/utils.js'></script>
-	<!-- <script type="text/javascript" src='js/require.js'></script> -->
+	<!--  -->
 	<script type='text/javascript' >
 		
+		ut.reqCss(['commonCss']);
+
 		ut.ready(function(){
-			console.log(1);
 
-			var touch  = ut.getTouch();
-			console.log(touch);
-
-			// ut.touch.on();
+			console.log(ut.touch);
+			console.log($.cookie);
+			//console.log(ut.client);
 
 		});
 
