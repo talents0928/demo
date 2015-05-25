@@ -20,7 +20,7 @@
 		ut.ready(function(){
 
 			console.log(ut.touch);
-			console.log($.cookie);
+			//console.log($.cookie);
 			//console.log(ut.client);
 
 		});
@@ -81,62 +81,52 @@
 	<script type="text/javascript">
 
 		
+		ut.ready(function(){
 
+			ut.client.setBox();
+
+			//阻止屏幕滚动
+			$(document).on('touchmove',function(e){
+				e.preventDefault();
+			});
+
+			function setWipe($ele){
+				var size  = $ele.children().length;
+				var current = 0;
+	
+				function move(index){
+					var str = '-' + index*960 + 'px';
+					$ele.css('top',str);
+				}
+				
+				touch.on('.contentTp', 'swipeup', function(ev){
+	
+				   if( current == size-1 ){
+				   		return false;
+				   }
+				   current ++ ;
+	
+				   move(current)
+	
+				});
+	
+				touch.on('.contentTp', 'swipedown', function(ev){
+	
+				   if( current == 0 ){
+				   		return false;
+				   }
+				   current -- ;
+	
+				   move(current);
+	
+				});
+				
+			}
+			setWipe($('.contentTp'));
+
+
+		});
 		
-
-		// $(function(){
-
-		// 	ut.client.setBox();
-
-		// 	//阻止屏幕滚动
-		// 	$(document).on('touchmove',function(e){
-		// 		e.preventDefault();
-		// 	});
-
-			
-
-		// });
-		// seajs.use('touch-0.2.10.js',function(){
-			
-		// 	var css = seajs.require('./css/common.css');
-		// 	console.log('fuck232');
-		// 	function setWipe($ele){
-		// 		var size  = $ele.children().length;
-		// 		var current = 0;
-	
-		// 		function move(index){
-		// 			var str = '-' + index*960 + 'px';
-		// 			$ele.css('top',str);
-		// 		}
-				
-		// 		touch.on('.contentTp', 'swipeup', function(ev){
-	
-		// 		   if( current == size-1 ){
-		// 		   		return false;
-		// 		   }
-		// 		   current ++ ;
-	
-		// 		   move(current)
-	
-		// 		});
-	
-		// 		touch.on('.contentTp', 'swipedown', function(ev){
-	
-		// 		   if( current == 0 ){
-		// 		   		return false;
-		// 		   }
-		// 		   current -- ;
-	
-		// 		   move(current);
-	
-		// 		});
-	
-				
-		// 		//$ele.css();
-				
-		// 	}
-		// 	setWipe($('.contentTp'));
-		// });
 
 
 	</script>

@@ -145,12 +145,12 @@ ut.reqCss = function(arr){
 
 
 
-define('ut.client',function(){
+define('ut.client',function(modeW,modeH){
 
 	ut.client = (function(){
 		client = {};
-		client.modeH = 960;
-		client.modeW = 640;
+		client.modeH = modeH || 960;
+		client.modeW = modeW || 640;
 		
 		client.w = window.innerWidth;
 		client.h = window.innerHeight;
