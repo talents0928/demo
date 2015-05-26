@@ -16,6 +16,10 @@ window.cdnPath = window.cdnPath || (function(){
 
 
 
+
+
+
+
 var ut = {};
 
 function getReqMap(){
@@ -49,7 +53,10 @@ function getReqMap(){
 	return Object.keys(map);
 };
 
-
+/**
+*	初始化requireJs 配置 
+*	加载基本资源
+**/
 (function(){
 
 
@@ -143,24 +150,39 @@ ut.reqCss = function(arr){
 
 
 
+/**
+	client 适配对象
+	调用方法 setBox();
+	@parse w 设计宽度
+	@parse h 设计高度
+**/
 
-
-define('ut.client',function(modeW,modeH){
+define('ut.client',function(){
 
 	ut.client = (function(){
 		client = {};
-		client.modeH = modeH || 960;
-		client.modeW = modeW || 640;
+		client.modeH = 960;
+		client.modeW = 640;
 		
-		client.w = window.innerWidth;
-		client.h = window.innerHeight;
+		Object.defineProperties(client,{
+			w : {
+				get : function(){
+					return window.innerWidth ;
+				}
+			},
+			h : {
+				get : function(){
+					return window.innerHeight ;
+				}
+			}
+		});
+
 		//正确屏幕的宽高比
 		client.ratio = client.modeW/client.modeH;
-		client.error = 1.2;
+		client.error = 1.0;
 		
 		client.init = function(){
-			this.w = window.innerWidth;
-			this.h = window.innerHeight;
+
 			//屏幕宽度失调率
 			this.imbalance = this.w/(this.h*this.ratio);
 			this.isBalance = this.imbalance>this.error?false:true;
@@ -168,18 +190,21 @@ define('ut.client',function(modeW,modeH){
 			this.seeW = this.isBalance ? this.w : this.h*this.ratio;
 			
 			this.scaleW = this.seeW/this.modeW;
-			this.scaleH = this.seeH/this.modeH;
+			this.scaleH = this.modeH ? this.seeH/this.modeH : this.scaleW;
 		};
 		
 		client.gbox = $("<div class='gbox'></div>");
 
-		client.setBox = function(){
+		client.setBox = function(modeW,modeH){
 
 			if(!window.gbox){
 				this.gbox.append($('body').html()).wrap("<div></div>").parent().appendTo($('body').empty());
 				window.gbox = this.gbox ;
 			}
 
+			client.modeW = modeW || client.modeW ;
+			client.modeH = modeH || ( modeW ? null : client.modeH ) ;
+			
 
 			this.init();
 
@@ -200,7 +225,7 @@ define('ut.client',function(modeW,modeH){
 			this.gbox.css({
 
 				width : this.modeW + 'px',
-				height : this.modeH + 'px',
+				height : this.modeH ? (this.modeH + 'px') : this.seeH/this.scaleW+'px',
 				position : 'absolute',
 				overflow : 'hidden',
 				left : 0,
@@ -225,6 +250,13 @@ define('ut.client',function(modeW,modeH){
 	})();
 
 });
+
+
+//  $.fn.initTmpl = function(data){
+// 	return this.html(function(){
+// 		return $(this).html().replace(/@/g,'$');
+// 	}).tmpl(data);
+// };
 
 
 ut.initFunc = function(){

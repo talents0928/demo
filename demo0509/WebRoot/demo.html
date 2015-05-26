@@ -43,8 +43,8 @@
 	}
 
 	.size{
-		width:640px;
-		height:960px;
+		width:720px;
+		height:1280px;
 	}
 
 	.content{
@@ -83,7 +83,7 @@
 		
 		ut.ready(function(){
 
-			ut.client.setBox();
+			ut.client.setBox(480);
 
 			//阻止屏幕滚动
 			$(document).on('touchmove',function(e){
@@ -95,7 +95,7 @@
 				var current = 0;
 	
 				function move(index){
-					var str = '-' + index*960 + 'px';
+					var str = '-' + index*1280 + 'px';
 					$ele.css('top',str);
 				}
 				
