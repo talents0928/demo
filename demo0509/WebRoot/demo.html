@@ -23,6 +23,8 @@
 			//console.log($.cookie);
 			//console.log(ut.client);
 
+			//$('#demoTmpl').initTmpl().appendTo($('.ccTp'));;
+
 		});
 
 
@@ -70,14 +72,20 @@
 <body>
 
 			<div class="contentTp content trans">
-				<div class="size" style='background:url(img/img1.jpg);background-size:100% 100%;'></div>
+				<div class="size ccTp" style='background:url(img/img1.jpg);background-size:100% 100%;'></div>
 				<div class="size" style='background:url(img/img2.jpg);background-size:100% 100%;'></div>
 				<div class="size" style='background:url(img/img3.jpg);background-size:100% 100%;'></div>
 				<div class="size" style='background:url(img/img4.jpg);background-size:100% 100%;'></div>
 			</div>
 		
 </body>
+<script type="text/x-jquery-tmpl" id='demoTmpl'>
+	
+	<div class='pa' style='top:30px;left:40px;width:100px;height:100px;background:red;'>
+			你看的到不@{'好惨啊'}
+	</div>
 
+</script>
 	<script type="text/javascript">
 
 		

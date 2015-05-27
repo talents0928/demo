@@ -22,35 +22,35 @@ window.cdnPath = window.cdnPath || (function(){
 
 var ut = {};
 
+/**
+*	设置一个全局的body对象;
+*	所有文本的容器
+**/
+
+var body = body ? body : 'body';
+
 function getReqMap(){
 
-	var map = {};
-	var unMap = ['ut.ready','ut.reqCss'];
-	var needMap = ['cookie'];
+	var finded = {};
+	var reqObj = ['client','cookie','touch','initTmpl'];
+	var reqArr = [];
 
-	$('script').each(function(index,value){
+	$("script").each(function(index,value){
 
-		//加载ut.方法的自动引入
 		var html = $(value).html().replace(/\/\/.*\n/g,'');
-		var arr = html.match(/ut.(\w+)(?=[.\( \)])/g);
+		var arr = html.match(/\.(\w+)(?=\W)/g);
 		$.each(arr||[],function(index,value){
-			// map[value.split('.')[1]] = true;
-			map[value] = true;
-		});
-
-		//加载$.插件的自动引入
-		$.each(needMap||[],function(index,value){
-			var reg = new RegExp('\\$\.'+value,'g');
-			if(reg.test(html)){
-				map['$.'+value] = true;
-			};
+			value = value.match(/[^\.]+/g)[0];
+			finded[value] = true;
 		});
 
 	});
-	for(var i=0;i<unMap.length;i++){
-		delete map[unMap[i]];
+	for( var i=0 ; i<reqObj.length ; i++ ){
+		if(finded[reqObj[i]]){
+			reqArr.push(reqObj[i]);
+		}
 	}
-	return Object.keys(map);
+	return reqArr ;
 };
 
 /**
@@ -69,11 +69,12 @@ function getReqMap(){
 
 			paths : {
 
-				common : cssPath+'/common',
+				_common : cssPath+'/common',
 
 				jquery : 'jquery-1.10.2.min',
-				touch : 'touch-0.2.10',
-				cookie : 'jquery.cookie'
+				_touch : 'touch-0.2.10',
+				_template : 'jquery.tmpl.min',
+				_cookie : 'jquery.cookie'
 
 			},
 
@@ -85,12 +86,10 @@ function getReqMap(){
 
 			shim : {
 
-				touch : {
+				_touch : {
 					exports : 'touch'
-				},
-				cookie : {
-					exports : "cookie"
 				}
+				
 			}
 
 
@@ -103,6 +102,7 @@ function getReqMap(){
 
 
 		require(baseAsset,function(){
+			ut.$_event();
 			var arr = getReqMap();
 			require(arr,function(){
 				$(function(){
@@ -117,19 +117,25 @@ function getReqMap(){
 })();
 
 
-define('ut.touch',['touch'],function(touch){
-
+define('touch',['_touch'],function(touch){
 
 	ut.touch = touch ;
 
 });
+define('initTmpl',['_template','jquery'],function(){
+	$.fn.initTmpl = function(data){
+		return this.html(function(){
+			return $(this).html().replace(/@/g,'$');
+		}).tmpl(data);
+	};
+});
 
-define('$.cookie',['cookie'],function(){
+define('cookie',['_cookie'],function(){
 
 	//console.log(cookie);
 });
 
-define('commonCss',['css!common'],function(){
+define('commonCss',['css!_common'],function(){
 
 });
 
@@ -142,22 +148,38 @@ ut.ready = function(callback){
 
 };
 
-ut.reqCss = function(arr){
-	require(arr);
+ut.reqCss = function(arr,callback){
+	require(arr,function(){
+		callback && callback();
+	});
 };
 
 
-
-
+//默认绑定事件  按钮事件
+ut.$_event = function(){
+	
+		
+	$(document.body).on('touchstart mousedown', function(e){
+		var $node  = $(e.target);
+		var $target = $node.is('[as]') ? $node : $node.parents('[as]').length ? $node.parents('[as]') : false;
+		$target && $target.addClass($target.attr('as'));
+		
+	});
+	$(document.body).on('touchend mouseup', function(e){
+		var $node  = $(e.target);
+		var $target = $node.is('[as]') ? $node : $node.parents('[as]').length ? $node.parents('[as]') : false;
+		$target && $target.removeClass($target.attr('as'));
+	});
+};
 
 /**
-	client 适配对象
-	调用方法 setBox();
-	@parse w 设计宽度
-	@parse h 设计高度
+*	client 适配对象
+*	调用方法 setBox();
+*	@param modeW{int} 设计宽度
+*	@parse modeH{int} 设计高度
 **/
 
-define('ut.client',function(){
+define('client',function(){
 
 	ut.client = (function(){
 		client = {};
@@ -197,9 +219,9 @@ define('ut.client',function(){
 
 		client.setBox = function(modeW,modeH){
 
-			if(!window.gbox){
+			if(!window.body || window.body == 'body'){
 				this.gbox.append($('body').html()).wrap("<div></div>").parent().appendTo($('body').empty());
-				window.gbox = this.gbox ;
+				window.body = this.gbox ;
 			}
 
 			client.modeW = modeW || client.modeW ;
@@ -387,16 +409,7 @@ ut.initFunc = function(){
             re = data;
         else 
             re = ut.toArray(data);
-        function localCompare(a, b, type){
-        	
-            var obj = {
-                'gradegrade': {
-                   
-                }
-            };
-            
-            return obj[type] ? obj[type][a] - obj[type][b] : a.localeCompare(b);
-        };
+       
         function compare(a, b, i){
             //i key数组中的第几个
             i = i || 0;
@@ -408,7 +421,7 @@ ut.initFunc = function(){
                     return desc ? b[key[i]] - a[key[i]] : a[key[i]] - b[key[i]];
                 }
                 else {
-                    return desc ? localCompare(a[key[i]], b[key[i]], key[i]) : localCompare(b[key[i]], a[key[i]], key[i]);
+                    return false;
                 }
             }
             
