@@ -32,7 +32,7 @@ var body = body ? body : 'body';
 function getReqMap(){
 
 	var finded = {};
-	var reqObj = ['client','cookie','touch','initTmpl'];
+	var reqObj = ['client','cookie','touch','initTmpl','iScroll'];
 	var reqArr = [];
 
 	$("script").each(function(index,value){
@@ -66,14 +66,17 @@ function getReqMap(){
 		require.config({
 
 			baseUrl : './js/lib',
+			//baseUrl : './js/lib/libCopy',
 
 			paths : {
 
 				_common : cssPath+'/common',
+				_normalize : cssPath + '/normalize',
 
 				jquery : 'jquery-1.10.2.min',
 				_touch : 'touch-0.2.10',
 				_template : 'jquery.tmpl.min',
+				_iscroll : 'iscroll',
 				_cookie : 'jquery.cookie'
 
 			},
@@ -96,7 +99,7 @@ function getReqMap(){
 		});
 
 		var baseAsset = (function(){
-			var arr = ['jquery','jquery'];
+			var arr = ['jquery','normalizeCss'];
 			return arr;
 		})();
 
@@ -135,8 +138,19 @@ define('cookie',['_cookie'],function(){
 	//console.log(cookie);
 });
 
-define('commonCss',['css!_common'],function(){
+define('commonCss',['css!_common']);
+define('normalizeCss',['css!_normalize']);
 
+define('iScroll',['_iscroll'],function(){
+    ut.iScroll = function(wrapId){
+    	var scroll = new IScroll(wrapId, {
+			useTransition: true,
+	    	vScroll: true,
+	    	vScrollbar: false,
+			preventDefault: false
+	    });
+	    return scroll ;
+    };
 });
 
 
@@ -201,7 +215,7 @@ define('client',function(){
 
 		//正确屏幕的宽高比
 		client.ratio = client.modeW/client.modeH;
-		client.error = 1.0;
+		client.error = 1.2;
 		
 		client.init = function(){
 
@@ -274,12 +288,101 @@ define('client',function(){
 });
 
 
-//  $.fn.initTmpl = function(data){
-// 	return this.html(function(){
-// 		return $(this).html().replace(/@/g,'$');
-// 	}).tmpl(data);
-// };
+ut.toArray = function(obj){
+		
+	var re = $.map(obj ||
+    {}, function(value, index){
+        if ($.isPlainObject(value)) 
+            value._key = index;
+        return value;
+    });
+    return re;
+}
+//通用方法，按照某个字段对data进行排序，data可以是array或者object
+//key是排序用的字段，desc表示是否降序，desc为true表示降序，不传则默认升序
+ut.sortData = function(data, key, desc){
+    //key是数组;
+    var re;
+    if (typeof data == 'array') 
+        re = data;
+    else 
+        re = ut.toArray(data);
+   
+    function compare(a, b, i){
+        //i key数组中的第几个
+        i = i || 0;
+        if (a[key[i]] == b[key[i]]) {
+            return key.length > i ? compare(a, b, i + 1) : false;
+        }
+        else {
+            if (typeof a[key[i]] == 'number') {
+                return desc ? b[key[i]] - a[key[i]] : a[key[i]] - b[key[i]];
+            }
+            else {
+                return false;
+            }
+        }
+        
+    };
+    
+    re.sort(function(a, b){
+        if (key instanceof Array) {
+            return compare(a, b);
+        }
+        else {
+            if (desc) 
+                return b[key] - a[key];
+            else 
+                return a[key] - b[key];
+        }
+        
+    });
+    return re;  
+};
 
+
+
+//向后台发送ajax请求
+ut.send = function(url,cb,options){
+	lay.expand();
+	$.ajax({
+		method : 'post',
+		url : _getAllurl(url,options),
+		timeout: 20000,
+		data : options||{},
+		success : function(data){
+			lay.out();
+			if(data&&data.callback==true){
+				cb&&cb(data.data,data);
+			}else{
+				ut.showMsg(data.msg);
+			}
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown){
+			lay.out();
+			console.log(textStatus);
+		}
+	});
+};
+
+ut.sendForm = function(url,form,cb){
+	lay.expand();
+	form.ajaxSubmit({
+		url: _getAllurl(url),
+		success: function(data){
+			console.log(data);
+			if(data&&data.callback){
+				cb&&cb(data.data,data);
+			}else{
+				console.log(data.msg);
+				ut.showMsg(data.msg);
+			}
+			lay.out();
+			
+		},
+	});
+}
+	
 
 ut.initFunc = function(){
 
@@ -324,132 +427,12 @@ ut.initFunc = function(){
 		
 	// });
 	
-	//向后台发送ajax请求
-	ut.send = function(url,cb,options){
-		lay.expand();
-		$.ajax({
-			method : 'post',
-			url : _getAllurl(url,options),
-			timeout: 20000,
-			data : options||{},
-			success : function(data){
-				lay.out();
-				if(data&&data.callback==true){
-					cb&&cb(data.data,data);
-				}else{
-					ut.showMsg(data.msg);
-				}
-			},
-			error : function(XMLHttpRequest, textStatus, errorThrown){
-				lay.out();
-				console.log(textStatus);
-			}
-		});
-	};
 	
-	 $.fn.initTmpl = function(data){
-			return this.html(function(){
-				return $(this).html().replace(/@/g,'$');
-			}).tmpl(data);
-		};
-	
-	
-	//默认绑定事件  按钮事件
-		
-	$(function(){
-		$(document.body).on('touchstart mousedown', function(e){
-			var $node  = $(e.target);
-			var $target = $node.is('[as]') ? $node : $node.parents('[as]').length ? $node.parents('[as]') : false;
-			$target && $target.addClass($target.attr('as'));
-			
-		});
-		$(document.body).on('touchend mouseup', function(e){
-			var $node  = $(e.target);
-			var $target = $node.is('[as]') ? $node : $node.parents('[as]').length ? $node.parents('[as]') : false;
-			$target && $target.removeClass($target.attr('as'));
-		});
-	});
-		
-	
-	ut.toArray = function(obj){
-		
-		var re = $.map(obj ||
-        {}, function(value, index){
-            if ($.isPlainObject(value)) 
-                value._key = index;
-            return value;
-        });
-        return re;
-	}
-	
-	ut.sendForm = function(url,form,cb){
-		lay.expand();
-		form.ajaxSubmit({
-			url: _getAllurl(url),
-			success: function(data){
-				console.log(data);
-				if(data&&data.callback){
-					cb&&cb(data.data,data);
-				}else{
-					console.log(data.msg);
-					ut.showMsg(data.msg);
-				}
-				lay.out();
-				
-			},
-		});
-	}
-	
-	//通用方法，按照某个字段对data进行排序，data可以是array或者object
-    //key是排序用的字段，desc表示是否降序，desc为true表示降序，不传则默认升序
-    ut.sortData = function(data, key, desc){
-        //key是数组;
-        var re;
-        if (typeof data == 'array') 
-            re = data;
-        else 
-            re = ut.toArray(data);
-       
-        function compare(a, b, i){
-            //i key数组中的第几个
-            i = i || 0;
-            if (a[key[i]] == b[key[i]]) {
-                return key.length > i ? compare(a, b, i + 1) : false;
-            }
-            else {
-                if (typeof a[key[i]] == 'number') {
-                    return desc ? b[key[i]] - a[key[i]] : a[key[i]] - b[key[i]];
-                }
-                else {
-                    return false;
-                }
-            }
-            
-        };
-        
-        re.sort(function(a, b){
-            if (key instanceof Array) {
-                return compare(a, b);
-            }
-            else {
-                if (desc) 
-                    return b[key] - a[key];
-                else 
-                    return a[key] - b[key];
-            }
-            
-        });
-        return re;  
-    };
+
 	
 	
 	
 })();
-
-
-
-
-
 
 
 
