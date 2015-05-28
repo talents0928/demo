@@ -23,6 +23,27 @@ window.cdnPath = window.cdnPath || (function(){
 var ut = {};
 
 /**
+*	对象配置
+*	文件路径引用
+**/
+
+var help = ['client','cookie','touch','initTmpl','iScroll','waiter','easelJs'];
+var cssPath = '../../css/';
+var paths = {
+
+				_common : cssPath+'/common',
+				_normalize : cssPath + '/normalize',
+
+				jquery : 'jquery-1.10.2.min',
+				_touch : 'touch-0.2.10',
+				_template : 'jquery.tmpl.min',
+				_iscroll : 'iscroll',
+				_easelJs : 'easeljs-0.8.1.min',
+				_cookie : 'jquery.cookie'
+
+			};
+
+/**
 *	设置一个全局的body对象;
 *	所有文本的容器
 **/
@@ -32,7 +53,7 @@ var body = body ? body : 'body';
 function getReqMap(){
 
 	var finded = {};
-	var reqObj = ['client','cookie','touch','initTmpl','iScroll'];
+	var reqObj = help;
 	var reqArr = [];
 
 	$("script").each(function(index,value){
@@ -60,26 +81,12 @@ function getReqMap(){
 (function(){
 
 
-
-		var cssPath = '../../css/';
-
 		require.config({
 
 			baseUrl : './js/lib',
 			//baseUrl : './js/lib/libCopy',
 
-			paths : {
-
-				_common : cssPath+'/common',
-				_normalize : cssPath + '/normalize',
-
-				jquery : 'jquery-1.10.2.min',
-				_touch : 'touch-0.2.10',
-				_template : 'jquery.tmpl.min',
-				_iscroll : 'iscroll',
-				_cookie : 'jquery.cookie'
-
-			},
+			paths : paths,
 
 			map : {
 				'*' : {
@@ -91,6 +98,9 @@ function getReqMap(){
 
 				_touch : {
 					exports : 'touch'
+				},
+				_easelJs : {
+					exports : 'easelJs'
 				}
 				
 			}
@@ -151,6 +161,13 @@ define('iScroll',['_iscroll'],function(){
 	    });
 	    return scroll ;
     };
+});
+
+define('easelJs',['_easelJs'],function(){
+
+	
+	ut.easelJs = createjs ;
+
 });
 
 
@@ -341,17 +358,21 @@ ut.sortData = function(data, key, desc){
 };
 
 
-
+var _getAllurl = function(cmd,options){
+//		return 'http://' + window.location.host+'/'+window.location.pathname.split('/')[1]+'/'+cmd;
+		
+		return serverHost + cmd;
+	};
 //向后台发送ajax请求
 ut.send = function(url,cb,options){
-	lay.expand();
+	ut.getWaiter().expand();
 	$.ajax({
 		method : 'post',
 		url : _getAllurl(url,options),
 		timeout: 20000,
 		data : options||{},
 		success : function(data){
-			lay.out();
+			ut.getWaiter().out();
 			if(data&&data.callback==true){
 				cb&&cb(data.data,data);
 			}else{
@@ -359,14 +380,14 @@ ut.send = function(url,cb,options){
 			}
 		},
 		error : function(XMLHttpRequest, textStatus, errorThrown){
-			lay.out();
+			ut.getWaiter().out();
 			console.log(textStatus);
 		}
 	});
 };
 
 ut.sendForm = function(url,form,cb){
-	lay.expand();
+	ut.getWaiter().expand();
 	form.ajaxSubmit({
 		url: _getAllurl(url),
 		success: function(data){
@@ -377,64 +398,44 @@ ut.sendForm = function(url,form,cb){
 				console.log(data.msg);
 				ut.showMsg(data.msg);
 			}
-			lay.out();
+			ut.getWaiter().out();
 			
 		},
 	});
 }
 	
 
-ut.initFunc = function(){
+ut.getWaiter = function(){
+	ut.waiter = new (function(){
 
+		var that = this;
+		//this.gifHref = window.Path||'.'+'/img/new/load.gif';
+		this.size = '25px';
+		this.size2 = '70px;' ;
+		this.ctrl = 'expandTp';
+		this.autoStyle = "position:absolute;top:0;left:0;right:0;bottom:0;margin:auto;";
+		this.dom = "<div class='"+this.ctrl+"' style='position:fixed;width:100vw;height:100vh;top:0;left:0;z-index:99999;'>" +
+				"<div style='"+this.autoStyle+"width:"+this.size2+";height:"+this.size2+";display:none;background:rgba(0,0,0,0.5);border-radius:10px;'>"+
+				"<div style='"+this.autoStyle+"width:"+this.size+";height:"+this.size+";' >" +
+				"<img src='"+this.gifHref+"'></img></div></div>" +
+				"</div>";
+		this.ele = $(this.dom);
+		this.expand = function(){
+			$('.'+that.ctrl).remove();
+			that.ele.appendTo('body');
+			setTimeout(function(){
+				if($('.'+that.ctrl).length){
+					that.ele.find('div').show();
+				}
+			},600);
+		};
+		this.out = function(){
+			$('.'+that.ctrl).remove();
+		};
+	});
 
-
-
-
-
-(function(){
-	
-	var _getAllurl = function(cmd,options){
-//		return 'http://' + window.location.host+'/'+window.location.pathname.split('/')[1]+'/'+cmd;
-		
-		return serverHost + cmd;
-	};
-	
-	// window.lay = new (function(){
-	// 	var that = this;
-	// 	//this.gifHref = window.Path||'.'+'/img/new/load.gif';
-	// 	this.size = '25px';
-	// 	this.size2 = '70px;'
-	// 	this.ctrl = 'expandTp';
-	// 	this.autoStyle = "position:absolute;top:0;left:0;right:0;bottom:0;margin:auto;";
-	// 	this.dom = "<div class='"+this.ctrl+"' style='position:fixed;width:100vw;height:100vh;top:0;left:0;z-index:99999;'>" +
-	// 			"<div style='"+this.autoStyle+"width:"+this.size2+";height:"+this.size2+";display:none;background:rgba(0,0,0,0.5);border-radius:10px;'>"+
-	// 			"<div style='"+this.autoStyle+"width:"+this.size+";height:"+this.size+";' >" +
-	// 			"<img src='"+this.gifHref+"'></img></div></div>" +
-	// 			"</div>";
-	// 	this.ele = $(this.dom);
-	// 	this.expand = function(){
-	// 		$('.'+that.ctrl).remove();
-	// 		that.ele.appendTo('body');
-	// 		setTimeout(function(){
-	// 			if($('.'+that.ctrl).length){
-	// 				that.ele.find('div').show();
-	// 			}
-	// 		},600);
-	// 	};
-	// 	this.out = function(){
-	// 		$('.'+that.ctrl).remove();
-	// 	};
-		
-	// });
-	
-	
-
-	
-	
-	
-})();
-
-
-
+	return ut.waiter ;
 };
+
+
 
