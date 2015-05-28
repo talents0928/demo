@@ -100,7 +100,7 @@ function getReqMap(){
 					exports : 'touch'
 				},
 				_easelJs : {
-					exports : 'easelJs'
+					exports : 'cc'
 				}
 				
 			}
@@ -130,9 +130,8 @@ function getReqMap(){
 })();
 
 
-define('touch',['_touch'],function(touch){
-
-	ut.touch = touch ;
+define('touch',['_touch'],function(a){
+	ut.touch = a ;
 
 });
 define('initTmpl',['_template','jquery'],function(){
@@ -163,9 +162,8 @@ define('iScroll',['_iscroll'],function(){
     };
 });
 
-define('easelJs',['_easelJs'],function(){
+define('easelJs',['_easelJs'],function(data){
 
-	
 	ut.easelJs = createjs ;
 
 });
@@ -437,5 +435,67 @@ ut.getWaiter = function(){
 	return ut.waiter ;
 };
 
+
+ut.manage = (function(){
+
+
+	var list = [] ;
+
+	function isArray ( obj ){
+		return toString.call(obj) == "[object Array]" ? true : false ;
+	};
+
+
+	return {
+			
+
+			add : function(args){
+				if(isArray(args)){
+					list.push(args);
+				}
+				return this;
+			},
+			start : function(){
+
+				this.size  = list.length ;
+				that = this ;
+				for(var i=0;i<this.size;i++){
+					var img = new Image();
+					img.src = (cdnPath?cdnPath:'')+list.pop();
+					
+					if(img.complete){
+						this.size --;
+						if(this.size< this.args.length-4){
+							this.callback();
+							break;
+						}
+					}else{
+						img.onload = function(){
+							that.size --;
+							if(that.size===0){
+								that.callback();
+							}
+						}
+						img.onerror = function(){
+							that.size --;
+							if(that.size===0){
+								that.callback();
+							}
+							console.log('有图片丢失');
+						}
+					}
+					
+				}
+			},
+			setCallback : function(cb){
+				this.cb = cb;
+				return this;
+			},
+			callback : function(){
+				this.cb&&this.cb();
+			}
+				
+	};
+})();
 
 
