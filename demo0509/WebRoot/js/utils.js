@@ -2,11 +2,7 @@
  * @author xiong
  */
 
-//图片上传服务器地址
-//var imgRoot = 'http://ouya.gz.1251386936.clb.myqcloud.com/shop/';
-var imgRoot =  'http://' + window.location.host+'/'+window.location.pathname.split('/')[1]+'/';
 
-//var serverHost = 'http://192.168.3.200/shop/';
 
 var serverHost = 'http://' + window.location.host+'/'+window.location.pathname.split('/')[1]+'/';
 
@@ -27,18 +23,21 @@ var ut = {};
 *	文件路径引用
 **/
 
-var help = ['client','cookie','touch','initTmpl','iScroll','waiter','easelJs'];
+var help = ['client','cookie','touch','initTmpl','iScroll','easelJs','soundJs','foundation'];
 var cssPath = '../../css/';
 var paths = {
 
 				_common : cssPath+'/common',
 				_normalize : cssPath + '/normalize',
+				_foundationCss : cssPath + '/foundation.min',
 
 				jquery : 'jquery-1.10.2.min',
 				_touch : 'touch-0.2.10',
 				_template : 'jquery.tmpl.min',
 				_iscroll : 'iscroll',
 				_easelJs : 'easeljs-0.8.1.min',
+				_soundJs : 'soundjs-0.6.1.min',
+				_foundation : 'foundation.min',
 				_cookie : 'jquery.cookie'
 
 			};
@@ -109,16 +108,18 @@ function getReqMap(){
 		});
 
 		var baseAsset = (function(){
-			var arr = ['jquery','normalizeCss'];
+			var arr = ['jquery',];
 			return arr;
 		})();
-
+		
+		//加载不等待的css资源
+		require(['normalizeCss','commonCss']);
 
 		require(baseAsset,function(){
-			ut.$_event();
 			var arr = getReqMap();
-			require(arr,function(){
-				$(function(){
+			$(function(){
+				ut.$_deps();
+				require(arr,function(){
 					var len  = ut._list.length ;
 					for(var i =0 ; i < len; i++){
 						ut._list.shift()();
@@ -149,6 +150,8 @@ define('cookie',['_cookie'],function(){
 
 define('commonCss',['css!_common']);
 define('normalizeCss',['css!_normalize']);
+define('foundationCss',['css!_foundationCss']);
+define('foundation',['foundationCss','_foundation']);
 
 define('iScroll',['_iscroll'],function(){
     ut.iScroll = function(wrapId){
@@ -165,6 +168,11 @@ define('iScroll',['_iscroll'],function(){
 define('easelJs',['_easelJs'],function(data){
 
 	ut.easelJs = createjs ;
+
+});
+define('soundJs',['_soundJs'],function(data){
+
+	ut.soundJs = createjs ;
 
 });
 
@@ -185,7 +193,7 @@ ut.reqCss = function(arr,callback){
 
 
 //默认绑定事件  按钮事件
-ut.$_event = function(){
+ut.$_deps = function(){
 	
 		
 	$(document.body).on('touchstart mousedown', function(e){
@@ -198,6 +206,42 @@ ut.$_event = function(){
 		var $node  = $(e.target);
 		var $target = $node.is('[as]') ? $node : $node.parents('[as]').length ? $node.parents('[as]') : false;
 		$target && $target.removeClass($target.attr('as'));
+	});
+
+	ut.waiter = new (function(){
+
+		var that = this;
+		this.gifHref = 'js/asset/load.gif';
+		this.size = '25px';
+		this.size2 = '70px';
+		this.ctrl = 'expandTp';
+		this.autoStyle = "position:absolute;top:0;left:0;right:0;bottom:0;margin:auto;";
+		this.dom = "<div class='"+this.ctrl+"' style='position:fixed;width:100vw;height:100vh;top:0;left:0;z-index:99999;'>" +
+				"<div style='"+this.autoStyle+"width:"+this.size2+";height:"+this.size2+";display:none;background:rgba(0,0,0,0.5);border-radius:10px;'>"+
+				"<div style='"+this.autoStyle+"width:"+this.size+";height:"+this.size+";' >" +
+				"<img src='"+this.gifHref+"' style='width:100%;'></img></div></div>" +
+				"</div>";
+		
+		this.expand = function(){
+			$('.'+that.ctrl).remove();
+			this.ele = $(this.dom);
+			that.ele.appendTo('body');
+			setTimeout(function(){
+				if($('.'+that.ctrl).length){
+					that.ele.find('div').show();
+				}
+				setTimeout(function(){
+					if(that){
+						that.ele.remove();
+						console.log('它居然还杂i');
+					}
+						
+				},4000);
+			},600);
+		};
+		this.out = function(){
+			that.ele.remove();
+		};
 	});
 };
 
@@ -302,7 +346,9 @@ define('client',function(){
 
 });
 
-
+ut.getArray = function(num){
+	return (new Array(num));
+};
 ut.toArray = function(obj){
 		
 	var re = $.map(obj ||
@@ -363,14 +409,14 @@ var _getAllurl = function(cmd,options){
 	};
 //向后台发送ajax请求
 ut.send = function(url,cb,options){
-	ut.getWaiter().expand();
+	ut.waiter.expand();
 	$.ajax({
 		method : 'post',
 		url : _getAllurl(url,options),
 		timeout: 20000,
 		data : options||{},
 		success : function(data){
-			ut.getWaiter().out();
+			ut.waiter.out();
 			if(data&&data.callback==true){
 				cb&&cb(data.data,data);
 			}else{
@@ -378,14 +424,14 @@ ut.send = function(url,cb,options){
 			}
 		},
 		error : function(XMLHttpRequest, textStatus, errorThrown){
-			ut.getWaiter().out();
+			ut.waiter.out();
 			console.log(textStatus);
 		}
 	});
 };
 
 ut.sendForm = function(url,form,cb){
-	ut.getWaiter().expand();
+	ut.waiter.expand();
 	form.ajaxSubmit({
 		url: _getAllurl(url),
 		success: function(data){
@@ -396,104 +442,84 @@ ut.sendForm = function(url,form,cb){
 				console.log(data.msg);
 				ut.showMsg(data.msg);
 			}
-			ut.getWaiter().out();
+			ut.waiter.out();
 			
 		},
 	});
 }
 	
 
-ut.getWaiter = function(){
-	ut.waiter = new (function(){
-
-		var that = this;
-		//this.gifHref = window.Path||'.'+'/img/new/load.gif';
-		this.size = '25px';
-		this.size2 = '70px;' ;
-		this.ctrl = 'expandTp';
-		this.autoStyle = "position:absolute;top:0;left:0;right:0;bottom:0;margin:auto;";
-		this.dom = "<div class='"+this.ctrl+"' style='position:fixed;width:100vw;height:100vh;top:0;left:0;z-index:99999;'>" +
-				"<div style='"+this.autoStyle+"width:"+this.size2+";height:"+this.size2+";display:none;background:rgba(0,0,0,0.5);border-radius:10px;'>"+
-				"<div style='"+this.autoStyle+"width:"+this.size+";height:"+this.size+";' >" +
-				"<img src='"+this.gifHref+"'></img></div></div>" +
-				"</div>";
-		this.ele = $(this.dom);
-		this.expand = function(){
-			$('.'+that.ctrl).remove();
-			that.ele.appendTo('body');
-			setTimeout(function(){
-				if($('.'+that.ctrl).length){
-					that.ele.find('div').show();
-				}
-			},600);
-		};
-		this.out = function(){
-			$('.'+that.ctrl).remove();
-		};
-	});
-
-	return ut.waiter ;
-};
-
 
 ut.manage = (function(){
-
-
-	var list = [] ;
 
 	function isArray ( obj ){
 		return toString.call(obj) == "[object Array]" ? true : false ;
 	};
+	function loadList ( manage ) {
+		var size = manage.list.length ;
+		var count = size ;
+		var miss = 0;
 
+		for( var i=0; i<size; i++ ){
+			var img = new Image();
+			img.src = manage.list.pop();
+			
+			if(img.complete){
+				count --;
+				excuEnd();
+			}else{
+				img.onload = function(){
+					count --;
+					excuEnd();
+				}
+				img.onerror = function(){
+					count --;
+					miss ++ ;
+					excuEnd() ;
+				}
+			}
+			
+		}
+
+		function excuEnd(){
+			if(count == 0){
+				miss > 0 ? manage.failback( miss ) : manage.callback();
+			}
+		}
+	}
 
 	return {
 			
+			list : [],
+			add : function( args , url ){
 
-			add : function(args){
 				if(isArray(args)){
-					list.push(args);
+					if(url){
+						var i , len = args.length ;
+						for( i=0; i<len; i++ ){
+							args[i] =  url + args[i] ;
+						}
+					}
+					Array.prototype.push.apply(this.list,args);
 				}
 				return this;
 			},
 			start : function(){
-
-				this.size  = list.length ;
-				that = this ;
-				for(var i=0;i<this.size;i++){
-					var img = new Image();
-					img.src = (cdnPath?cdnPath:'')+list.pop();
-					
-					if(img.complete){
-						this.size --;
-						if(this.size< this.args.length-4){
-							this.callback();
-							break;
-						}
-					}else{
-						img.onload = function(){
-							that.size --;
-							if(that.size===0){
-								that.callback();
-							}
-						}
-						img.onerror = function(){
-							that.size --;
-							if(that.size===0){
-								that.callback();
-							}
-							console.log('有图片丢失');
-						}
-					}
-					
-				}
+				loadList(this);
 			},
-			setCallback : function(cb){
+			setCallback : function( cb ,failcb ){
 				this.cb = cb;
+				this.failcb = failcb || this.cb;
 				return this;
 			},
 			callback : function(){
 				this.cb&&this.cb();
+			},
+			failback : function(miss){
+				console.error('miss is '+miss);
+				this.failcb&&this.failcb();
 			}
+
 				
 	};
 })();
