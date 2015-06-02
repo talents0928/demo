@@ -23,15 +23,15 @@ var ut = {};
 *	文件路径引用
 **/
 
-var help = ['client','cookie','touch','initTmpl','iScroll','easelJs','soundJs','foundation'];
+var help = ['','cookie','touch','initTmpl','iScroll','easelJs','soundJs','foundation'];
 var cssPath = '../../css/';
 var paths = {
 
-				_common : cssPath+'/common',
+//				_common : cssPath+'/common',
 				_normalize : cssPath + '/normalize',
 				_foundationCss : cssPath + '/foundation.min',
 
-				jquery : 'jquery-1.10.2.min',
+				//jquery : 'jquery-1.10.2.min',
 				_touch : 'touch-0.2.10',
 				_template : 'jquery.tmpl.min',
 				_iscroll : 'iscroll',
@@ -107,24 +107,16 @@ function getReqMap(){
 
 		});
 
-		var baseAsset = (function(){
-			var arr = ['jquery',];
-			return arr;
-		})();
-		
 		//加载不等待的css资源
-		require(['normalizeCss','commonCss']);
+		require(['normalizeCss','']);
 
-		require(baseAsset,function(){
+		$(function(){
 			var arr = getReqMap();
-			$(function(){
-				ut.$_deps();
-				require(arr,function(){
-					var len  = ut._list.length ;
-					for(var i =0 ; i < len; i++){
-						ut._list.shift()();
-					}
-				});
+			require(arr,function(){
+				var len  = ut._list.length ;
+				for(var i =0 ; i < len; i++){
+					ut._list.shift()();
+				}
 			});
 		});
 	
@@ -148,7 +140,7 @@ define('cookie',['_cookie'],function(){
 	//console.log(cookie);
 });
 
-define('commonCss',['css!_common']);
+//define('commonCss',['css!_common']);
 define('normalizeCss',['css!_normalize']);
 define('foundationCss',['css!_foundationCss']);
 define('foundation',['foundationCss','_foundation']);
@@ -192,59 +184,52 @@ ut.reqCss = function(arr,callback){
 };
 
 
-//默认绑定事件  按钮事件
-ut.$_deps = function(){
+$(document.body).on('touchstart mousedown', function(e){
+	var $node  = $(e.target);
+	var $target = $node.is('[as]') ? $node : $node.parents('[as]').length ? $node.parents('[as]') : false;
+	$target && $target.addClass($target.attr('as'));
 	
-		
-	$(document.body).on('touchstart mousedown', function(e){
-		var $node  = $(e.target);
-		var $target = $node.is('[as]') ? $node : $node.parents('[as]').length ? $node.parents('[as]') : false;
-		$target && $target.addClass($target.attr('as'));
-		
-	});
-	$(document.body).on('touchend mouseup', function(e){
-		var $node  = $(e.target);
-		var $target = $node.is('[as]') ? $node : $node.parents('[as]').length ? $node.parents('[as]') : false;
-		$target && $target.removeClass($target.attr('as'));
-	});
+});
+$(document.body).on('touchend mouseup', function(e){
+	var $node  = $(e.target);
+	var $target = $node.is('[as]') ? $node : $node.parents('[as]').length ? $node.parents('[as]') : false;
+	$target && $target.removeClass($target.attr('as'));
+});
 
-	ut.waiter = new (function(){
+ut.waiter = new (function(){
 
-		var that = this;
-		this.gifHref = 'js/asset/load.gif';
-		this.size = '25px';
-		this.size2 = '70px';
-		this.ctrl = 'expandTp';
-		this.autoStyle = "position:absolute;top:0;left:0;right:0;bottom:0;margin:auto;";
-		this.dom = "<div class='"+this.ctrl+"' style='position:fixed;width:100vw;height:100vh;top:0;left:0;z-index:99999;'>" +
-				"<div style='"+this.autoStyle+"width:"+this.size2+";height:"+this.size2+";display:none;background:rgba(0,0,0,0.5);border-radius:10px;'>"+
-				"<div style='"+this.autoStyle+"width:"+this.size+";height:"+this.size+";' >" +
-				"<img src='"+this.gifHref+"' style='width:100%;'></img></div></div>" +
-				"</div>";
-		
-		this.expand = function(){
-			$('.'+that.ctrl).remove();
-			this.ele = $(this.dom);
-			that.ele.appendTo('body');
+	var that = this;
+	this.gifHref = 'js/asset/load.gif';
+	this.size = '25px';
+	this.size2 = '70px';
+	this.ctrl = 'expandTp';
+	this.autoStyle = "position:absolute;top:0;left:0;right:0;bottom:0;margin:auto;";
+	this.dom = "<div class='"+this.ctrl+"' style='position:fixed;width:100vw;height:100vh;top:0;left:0;z-index:99999;'>" +
+			"<div style='"+this.autoStyle+"width:"+this.size2+";height:"+this.size2+";display:none;background:rgba(0,0,0,0.5);border-radius:10px;'>"+
+			"<div style='"+this.autoStyle+"width:"+this.size+";height:"+this.size+";' >" +
+			"<img src='"+this.gifHref+"' style='width:100%;'></img></div></div>" +
+			"</div>";
+	
+	this.expand = function(){
+		$('.'+that.ctrl).remove();
+		this.ele = $(this.dom);
+		that.ele.appendTo('body');
+		setTimeout(function(){
+			if($('.'+that.ctrl).length){
+				that.ele.find('div').show();
+			}
 			setTimeout(function(){
-				if($('.'+that.ctrl).length){
-					that.ele.find('div').show();
+				if(that){
+					that.ele.remove();
 				}
-				setTimeout(function(){
-					if(that){
-						that.ele.remove();
-						console.log('它居然还杂i');
-					}
-						
-				},4000);
-			},600);
-		};
-		this.out = function(){
-			that.ele.remove();
-		};
-	});
-};
-
+					
+			},4000);
+		},600);
+	};
+	this.out = function(){
+		that.ele.remove();
+	};
+});
 /**
 *	client 适配对象
 *	调用方法 setBox();
@@ -252,99 +237,107 @@ ut.$_deps = function(){
 *	@parse modeH{int} 设计高度
 **/
 
-define('client',function(){
 
-	ut.client = (function(){
-		client = {};
-		client.modeH = 960;
-		client.modeW = 640;
-		
-		Object.defineProperties(client,{
-			w : {
-				get : function(){
-					return window.innerWidth ;
-				}
-			},
-			h : {
-				get : function(){
-					return window.innerHeight ;
-				}
+ut.client = (function(){
+	client = {};
+	client.modeH = 960;
+	client.modeW = 640;
+	
+	Object.defineProperties(client,{
+		w : {
+			get : function(){
+				return window.innerWidth ;
 			}
-		});
+		},
+		h : {
+			get : function(){
+				return window.innerHeight ;
+			}
+		}
+	});
 
-		//正确屏幕的宽高比
-		client.ratio = client.modeW/client.modeH;
-		client.error = 1.2;
+	//正确屏幕的宽高比
+	client.ratio = client.modeW/client.modeH;
+	client.error = 1.2;
+	
+	client.init = function(){
+
+		//屏幕宽度失调率
+		this.imbalance = this.w/(this.h*this.ratio);
+		this.isBalance = this.imbalance>this.error?false:true;
+		this.seeH = this.h;
+		this.seeW = this.isBalance ? this.w : this.h*this.ratio;
 		
-		client.init = function(){
+		this.scaleW = this.seeW/this.modeW;
+		this.scaleH = this.modeH ? this.seeH/this.modeH : this.scaleW;
+	};
+	
+	client.gbox = $("<div class='gbox'></div>");
 
-			//屏幕宽度失调率
-			this.imbalance = this.w/(this.h*this.ratio);
-			this.isBalance = this.imbalance>this.error?false:true;
-			this.seeH = this.h;
-			this.seeW = this.isBalance ? this.w : this.h*this.ratio;
-			
-			this.scaleW = this.seeW/this.modeW;
-			this.scaleH = this.modeH ? this.seeH/this.modeH : this.scaleW;
-		};
-		
-		client.gbox = $("<div class='gbox'></div>");
+	client.unX = function(x){
+		return ( x - this.gbox.offset().left ) / this.scaleW ;
+	};
+	client.unY = function(y){
+		return y / this.scaleH ;
+	};
+	client.setBox = function(modeW,modeH){
 
-		client.setBox = function(modeW,modeH){
-
-			if(!window.body || window.body == 'body'){
+		if(!window.body || window.body == 'body'){
+			if($('.gbox').length){
+				this.gbox = $('.gbox') ;
+			}else{
 				this.gbox.append($('body').html()).wrap("<div></div>").parent().appendTo($('body').empty());
-				window.body = this.gbox ;
 			}
+			window.body = this.gbox ;
+		}
 
-			client.modeW = modeW || client.modeW ;
-			client.modeH = modeH || ( modeW ? null : client.modeH ) ;
-			
-
-			this.init();
-
-			this.gbox.parent().css({
-
-				width : this.seeW + 'px',
-				height : this.seeH + 'px',
-
-				margin : 'auto',
-				overflow : 'hidden',
-				position : 'absolute',
-				top : '0',
-				left : '0',
-				right : '0'
-
-			});
-
-			this.gbox.css({
-
-				width : this.modeW + 'px',
-				height : this.modeH ? (this.modeH + 'px') : this.seeH/this.scaleW+'px',
-				position : 'absolute',
-				overflow : 'hidden',
-				left : 0,
-				top : 0,
-
-				transformOrigin : '0 0',
-				transform : 'scale('+this.scaleW+','+this.scaleH+')'
-
-			});
-
-		};
+		client.modeW = modeW || client.modeW ;
+		client.modeH = modeH || ( modeW ? null : client.modeH ) ;
 		
-		$(window).on('resize',function(){
-			client.setBox();
-		});
-		$(window).on('orientationchange',function(){
-			client.setBox();
+
+		this.init();
+
+		this.gbox.parent().css({
+
+			width : this.seeW + 'px',
+			height : this.seeH + 'px',
+
+			margin : 'auto',
+			overflow : 'hidden',
+			position : 'absolute',
+			top : '0',
+			left : '0',
+			right : '0'
+
 		});
 
-		return client;
-		
-	})();
+		this.gbox.css({
 
-});
+			width : this.modeW + 'px',
+			height : this.modeH ? (this.modeH + 'px') : this.seeH/this.scaleW+'px',
+			position : 'absolute',
+			overflow : 'hidden',
+			left : 0,
+			top : 0,
+
+			transformOrigin : '0 0',
+			transform : 'scale('+this.scaleW+','+this.scaleH+')'
+
+		});
+
+	};
+	
+	$(window).on('resize',function(){
+		client.setBox();
+	});
+	$(window).on('orientationchange',function(){
+		client.setBox();
+	});
+
+	return client;
+	
+})();
+
 
 ut.getArray = function(num){
 	return (new Array(num));
@@ -413,14 +406,15 @@ ut.send = function(url,cb,options){
 	$.ajax({
 		method : 'post',
 		url : _getAllurl(url,options),
-		timeout: 20000,
+		timeout: 10000,
 		data : options||{},
 		success : function(data){
+			console.log(data);
 			ut.waiter.out();
 			if(data&&data.callback==true){
 				cb&&cb(data.data,data);
 			}else{
-				ut.showMsg(data.msg);
+				//ut.showMsg(data.msg);
 			}
 		},
 		error : function(XMLHttpRequest, textStatus, errorThrown){
@@ -440,10 +434,9 @@ ut.sendForm = function(url,form,cb){
 				cb&&cb(data.data,data);
 			}else{
 				console.log(data.msg);
-				ut.showMsg(data.msg);
+				//ut.showMsg(data.msg);
 			}
 			ut.waiter.out();
-			
 		},
 	});
 }

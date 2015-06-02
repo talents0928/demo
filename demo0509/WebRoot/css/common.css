@@ -80,10 +80,15 @@ textarea{
 
 
 
+.tr0{
+	-webkit-transform:translate(0px,0px);
+}
 .tr2{
-		transform:translate(2px,2px);
-		-webkit-transform:translate(2px,2px);
-	}
+	-webkit-transform:translate(2px,2px);
+}
+.tr4{
+	-webkit-transform:translate(4px,4px);
+}
 
 .auto{
 	position:absolute;
