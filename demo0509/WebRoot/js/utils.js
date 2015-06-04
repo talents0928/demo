@@ -240,8 +240,8 @@ ut.waiter = new (function(){
 
 ut.client = (function(){
 	client = {};
-	client.modeH = 960;
-	client.modeW = 640;
+	client.modeH = 1280;
+	client.modeW = 720;
 	
 	Object.defineProperties(client,{
 		w : {
