@@ -184,13 +184,13 @@ ut.reqCss = function(arr,callback){
 };
 
 
-$(document.body).on('touchstart mousedown', function(e){
+$(document).on('touchstart mousedown', function(e){
 	var $node  = $(e.target);
 	var $target = $node.is('[as]') ? $node : $node.parents('[as]').length ? $node.parents('[as]') : false;
 	$target && $target.addClass($target.attr('as'));
 	
 });
-$(document.body).on('touchend mouseup', function(e){
+$(document).on('touchend mouseup', function(e){
 	var $node  = $(e.target);
 	var $target = $node.is('[as]') ? $node : $node.parents('[as]').length ? $node.parents('[as]') : false;
 	$target && $target.removeClass($target.attr('as'));
@@ -258,7 +258,7 @@ ut.client = (function(){
 
 	//正确屏幕的宽高比
 	client.ratio = client.modeW/client.modeH;
-	client.error = 1.2;
+	client.error = 1.35;
 	
 	client.init = function(){
 
@@ -286,8 +286,9 @@ ut.client = (function(){
 			if($('.gbox').length){
 				this.gbox = $('.gbox') ;
 			}else{
-				this.gbox.append($('body').html()).wrap("<div></div>").parent().appendTo($('body').empty());
+				this.gbox.append($('body').children(':not(script):not(style)')).wrap("<div></div>").parent().appendTo($('body'));
 			}
+			setDefault();
 			window.body = this.gbox ;
 		}
 
@@ -327,12 +328,18 @@ ut.client = (function(){
 
 	};
 	
-	$(window).on('resize',function(){
-		client.setBox();
-	});
-	$(window).on('orientationchange',function(){
-		client.setBox();
-	});
+	function setDefault(){
+		$(window).on('resize',function(){
+			client.setBox();
+		});
+		$(window).on('orientationchange',function(){
+			client.setBox();
+		});
+		$(document).on('touchmove',function(e){
+			e.preventDefault();
+		});
+	}
+	
 
 	return client;
 	
@@ -475,6 +482,7 @@ ut.manage = (function(){
 		}
 
 		function excuEnd(){
+			manage.rate = ( size-count ) / size * 100;
 			if(count == 0){
 				miss > 0 ? manage.failback( miss ) : manage.callback();
 			}
@@ -483,6 +491,7 @@ ut.manage = (function(){
 
 	return {
 			
+			rate : 0 ,
 			list : [],
 			add : function( args , url ){
 

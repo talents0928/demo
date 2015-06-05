@@ -52,10 +52,12 @@
 				'way2.png',
 				'Cloud1.png',
 			];
-
-//			ut.manage.add(arr,'img/images/').setCallback(function(){
-//				console.log('成功了');
-//			}).start();
+			setInterval(function(){
+				console.log(ut.manage.rate);
+			},1000);
+			ut.manage.add(arr,'img/images/').setCallback(function(){
+				console.log('成功了');
+			}).start();
 
 			//console.log(ut.soundJs);
 			//$(document).foundation();
