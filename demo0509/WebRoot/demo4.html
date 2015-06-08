@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>demo for creatjs</title>
+	
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<meta http-equiv="x-dns-prefetch-control" content="on">
+    
+    <script type="text/javascript" src='js/require.js'></script>
+	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
+	<script type="text/javascript" src='js/utils.js'></script>
+	<link rel='stylesheet' href='css/common.css'></link>
+
+  </head>
+  
+  <body>
+    
+	
+	<style type="text/css">
+			.gbox{
+				background:white;
+			}
+	</style>
+				<canvas class='full' id='demoStage' width='720' height='1280'>
+					
+				</canvas>	
+  </body>
+  
+  <script type='text/javascript' >
+  	
+	ut.ready(function(){
+
+
+
+		var img = new Image();
+		img.onload = hander ; 
+		img.src = './img/img2.jpg' ;
+
+		function hander(evt){
+			console.log('funck');
+			console.log(evt.target);
+		}
+		
+		console.log(1111);
+		ut.client.setBox();
+
+		console.log(ut.easelJs);
+		var canvas = document.getElementById('demoStage');
+
+		// var stage  = new ut.easelJs.Stage(canvas);
+
+		// var text = new ut.easelJs.Text('first canvas!','40px Arial','#777');
+		// text.textAlign = 'center';
+		// stage.addChild(text);
+
+		// text.x = canvas.width / 2 ; text.y =  300 ;
+		// stage.update();
+		// console.log(1113);
+
+		var stage = new ut.easelJs.Stage(canvas);
+
+		// Create a new Text object:
+		var text = new ut.easelJs.Text("Hello World!", "36px Arial", "red");
+		text.textAlign = "center";
+
+		// add the text as a child of the stage. This means it will be drawn any time the stage is updated
+		// and that its transformations will be relative to the stage coordinates:
+		stage.addChild(text);
+		console.log(stage.text);
+
+		// position the text on screen, relative to the stage coordinates:
+		text.x = canvas.width / 2;
+		text.y = 180;
+
+		console.log(text.text);
+
+		// text.visible = false ;
+		stage.update();
+
+		
+	});
+  </script>
+</html>
