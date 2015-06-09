@@ -5,46 +5,110 @@
 	
     <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
     <meta http-equiv="description" content="this is my page">
-    <meta http-equiv="content-type" content="text/html; charset=GB18030">
-    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<meta http-equiv="x-dns-prefetch-control" content="on">
+   
+
+    <script type="text/javascript" src='js/require.js'></script>
+	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
+	<script type="text/javascript" src='js/utils.js'></script>
+	<link rel='stylesheet' href='css/common.css'></link>
    <!-- 引入腾讯视频播放器组件 -->
 <script type='text/javascript' src="http://qzs.qq.com/tencentvideo_v1/js/tvp/tvp.player.js" charset="utf-8"></script>
 
-<script type='text/javascript'>
-	
-	function addVideo(){
-		//定义视频对象
-	    var video = new tvp.VideoInfo();
-	    //向视频对象传入视频vid
-	    video.setVid("//c0146k6imdf");
-	    //定义播放器对象
-		var player = new tvp.Player(720, 550);
-	    //设置播放器初始化时加载的视频
-	    player.setCurVideo(video);
-	    //设置精简皮肤，仅点播有效
-	    player.addParam("flashskin", "http://imgcache.qq.com/minivideo_v1/vd/res/skins/TencentPlayerMiniSkin.swf");
-	    //输出播放器,参数就是上面div的id，希望输出到哪个HTML元素里，就写哪个元素的id
-	    player.addParam("autoplay","0");
-	    player.addParam("wmode","transparent");
-		player.addParam('adplay','0');
-		player.addParam('showcfg',1);
-		//给视频开始添加默认图片
-	    //player.addParam("pic","http://img1.gtimg.com/ent/pics/hv1/75/182/1238/80547435.jpg");
-	    player.write("mod_player_skin");
-		
-	};
-    
- </script>
+
 
   </head>
   
 <script type='text/x-jquery-tmpl' id='baseTmpl'>
-	<div id="mod_player_skin" style='margin-top:-10px;'>&nbsp;</div>
-	<div>
-	
-	</div>
+	<div></div>
 </script>
   <body>
-    This is my HTML page. <br>
+   		<style type='text/css'>
+   			.gbox{
+   				background : wheat ;
+   			}
+
+   		</style>
   </body>
+
+  <script type="text/javascript">
+  		 ut.ready(function(){
+
+  		 	ut.client.setBox(720);
+  		 	console.log(98989);
+
+  		 });
+  </script>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -6,7 +6,7 @@
 
 var serverHost = 'http://' + window.location.host+'/'+window.location.pathname.split('/')[1]+'/';
 
-window.cdnPath = window.cdnPath || (function(){
+window.cdnHost = window.cdnHost || (function(){
 	return 'http://' + window.location.host+'/'+window.location.pathname.split('/')[1]+'/';
 })();
 
@@ -32,7 +32,7 @@ var paths = {
 				_foundationCss : cssPath + '/foundation.min',
 
 				//jquery : 'jquery-1.10.2.min',
-				_touch : 'touch-0.2.10',
+				_touch : 'touch-0.2.14.min',
 				_template : 'jquery.tmpl.min',
 				_iscroll : 'iscroll',
 				_easelJs : 'easeljs-0.8.1.min',
