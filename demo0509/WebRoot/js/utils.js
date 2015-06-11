@@ -23,7 +23,7 @@ var ut = {};
 *	文件路径引用
 **/
 
-var help = ['','cookie','touch','initTmpl','iScroll','easelJs','soundJs','foundation'];
+var help = ['','cookie','touch','initTmpl','iScroll','easelJs','soundJs','tweenJs','foundation'];
 var cssPath = '../../css/';
 var paths = {
 
@@ -37,6 +37,7 @@ var paths = {
 				_iscroll : 'iscroll',
 				_easelJs : 'easeljs-0.8.1.min',
 				_soundJs : 'soundjs-0.6.1.min',
+				_tweenJs : 'tweenjs-0.6.1.min',
 				_foundation : 'foundation.min',
 				_cookie : 'jquery.cookie'
 
@@ -51,26 +52,25 @@ var body = body ? body : 'body';
 
 function getReqMap(){
 
-	var finded = {};
-	var reqObj = help;
-	var reqArr = [];
+	var finded = {} ,
+		reqObj = help.concat() ;
 
 	$("script").each(function(index,value){
 
 		var html = $(value).html().replace(/\/\/.*\n/g,'');
-		var arr = html.match(/\.(\w+)(?=\W)/g);
+		var arr = html.match(/\.\s*\w+(?=\W*)/g);
 		$.each(arr||[],function(index,value){
-			value = value.match(/[^\.]+/g)[0];
+			value = value.match(/[^\.\s]+/g)[0];
 			finded[value] = true;
 		});
 
 	});
 	for( var i=0 ; i<reqObj.length ; i++ ){
-		if(finded[reqObj[i]]){
-			reqArr.push(reqObj[i]);
+		if(!finded[reqObj[i]]){
+			delete reqObj[i] ;
 		}
 	}
-	return reqArr ;
+	return reqObj ;
 };
 
 /**
@@ -79,20 +79,16 @@ function getReqMap(){
 **/
 (function(){
 
-
 		require.config({
 
 			baseUrl : './js/lib',
 			//baseUrl : './js/lib/libCopy',
-
 			paths : paths,
-
 			map : {
 				'*' : {
 					css : 'css'
 				}
 			},
-
 			shim : {
 
 				_touch : {
@@ -101,9 +97,7 @@ function getReqMap(){
 				_easelJs : {
 					exports : 'cc'
 				}
-				
 			}
-
 
 		});
 
@@ -163,6 +157,11 @@ define('easelJs',['_easelJs'],function(data){
 
 });
 define('soundJs',['_soundJs'],function(data){
+
+	ut.soundJs = createjs ;
+
+});
+define('tweenJs',['_tweenJs'],function(data){
 
 	ut.soundJs = createjs ;
 
@@ -239,7 +238,7 @@ ut.waiter = new (function(){
 
 
 ut.client = (function(){
-	client = {};
+	var client = {};
 	client.modeH = 1280;
 	client.modeW = 720;
 	
@@ -329,10 +328,7 @@ ut.client = (function(){
 	};
 	
 	function setDefault(){
-		$(window).on('resize',function(){
-			client.setBox();
-		});
-		$(window).on('orientationchange',function(){
+		$(window).on('resize orientationchange',function(){
 			client.setBox();
 		});
 		$(document).on('touchmove',function(e){
@@ -391,10 +387,7 @@ ut.sortData = function(data, key, desc){
             return compare(a, b);
         }
         else {
-            if (desc) 
-                return b[key] - a[key];
-            else 
-                return a[key] - b[key];
+            return desc ? (b[key] - a[key]) : (a[key] - b[key]) ;
         }
         
     });
