@@ -369,6 +369,7 @@ window.flux = {
 
 			this.image2.css({
 				'background-image': 'url("'+this.getImage(this.nextImageIndex).src+'")',
+				'background-size' : '100% 100%',
 				'z-index': 100
 			}).show();
 
@@ -784,6 +785,7 @@ window.flux = {
 			renderTile: function(elem, colIndex, rowIndex, colWidth, rowHeight, leftOffset, topOffset) {
 				$(elem).css({
 					'background-image': this.slider.image1.css('background-image'),
+					'background-size' : '100% 100%',
 					'background-position': '-'+leftOffset+'px 0px'
 				}).css3({
 					'transition-duration': '400ms',
@@ -836,13 +838,15 @@ window.flux = {
 
 					'background-image': this.slider.image1.css('background-image'),
 					'background-position': '-'+leftOffset+'px 0px',
+					'background-size' : '100% 100%',
 					'background-repeat': 'no-repeat'
 				}).css3({
 					'backface-visibility': 'hidden'
 				}),
 
 				bar2 = $(bar.get(0).cloneNode(false)).css({
-					'background-image': this.slider.image2.css('background-image')
+					'background-image': this.slider.image2.css('background-image'),
+					'background-size' : '100% 100%',
 				}).css3({
 					'transform': flux.browser.rotateX(90) + ' ' + flux.browser.translate(0, -rowHeight/2, rowHeight/2)
 				}),
@@ -992,6 +996,7 @@ window.flux = {
 				
 				$(elem).css({
 					'background-image': this.slider.image1.css('background-image'),
+					'background-size' : '100% 100%',
 					'background-position': '-'+leftOffset+'px -'+topOffset+'px'
 				}).css3({
 					'transition-duration': '350ms',
@@ -1045,6 +1050,7 @@ window.flux = {
 				
 				$(elem).css({
 					'background-image': this.slider.image1.css('background-image'),
+					'background-size' : '100% 100%',
 					'background-position': '-'+leftOffset+'px -'+topOffset+'px'
 				}).css3({
 					'transition-duration': '350ms',
@@ -1107,6 +1113,7 @@ window.flux = {
 						'z-index': 100+(blockCount-i),
 
 						'background-image': this.slider.image1.css('background-image'),
+						'background-size' : '100% 100%',
 						'background-position': 'center center'
 					}).css3({
 						'border-radius': thisBlockSize+'px',
@@ -1193,7 +1200,8 @@ window.flux = {
 				};
 
 				var currentFace = $('<div class="face current"></div>').css($.extend(css, {
-					background: this.slider.image1.css('background-image')
+					background: this.slider.image1.css('background-image'),
+					'background-size' : '100% 100%'
 				})).css3({
 					'backface-visibility': 'hidden'
 				});
@@ -1201,7 +1209,8 @@ window.flux = {
 				this.cubeContainer.append(currentFace);
 
 				var nextFace = $('<div class="face next"></div>').css($.extend(css, {
-					background: this.slider.image2.css('background-image')
+					background: this.slider.image2.css('background-image'),
+					'background-size' : '100% 100%'
 				})).css3({
 					'transform' : this.options.transitionStrings.call(this, this.options.direction, 'nextFace'),
 					'backface-visibility': 'hidden'
@@ -1279,6 +1288,7 @@ window.flux = {
 					//'z-index': 200, // Removed to make compatible with FF10 (Chrome bug seems to have been fixed)
 
 					'background-image': this.slider.image1.css('background-image'),
+					'background-size' : '100% 100%',
 					'background-position': '-'+leftOffset+'px -'+topOffset+'px',
 					'background-repeat': 'no-repeat',
 					'-moz-transform': 'translateZ(1px)'
@@ -1287,7 +1297,8 @@ window.flux = {
 				});
 
 				var tile2 = $(tile.get(0).cloneNode(false)).css({
-					'background-image': this.slider.image2.css('background-image')
+					'background-image': this.slider.image2.css('background-image'),
+					'background-size' : '100% 100%'
 					//'z-index': 190 // Removed to make compatible with FF10 (Chrome bug seems to have been fixed)
 				}).css3({
 					'transform': flux.browser.rotateY(180),
@@ -1357,6 +1368,7 @@ window.flux = {
 
 				front = $('<div></div>').appendTo(tab).css({
 						'background-image': this.slider.image1.css('background-image'),
+						'background-size' : '100% 100%',
 						'background-position': (this.options.direction == 'left' ? '-'+(this.slider.image1.width()/2) : 0)+'px 0',
 						width: '100%',
 						height: '100%',
@@ -1370,6 +1382,7 @@ window.flux = {
 
 				back = $('<div></div>').appendTo(tab).css({
 						'background-image': this.slider.image2.css('background-image'),
+						'background-size' : '100% 100%',
 						'background-position': (this.options.direction == 'left' ? 0 : '-'+(this.slider.image1.width()/2))+'px 0',
 						width: '100%',
 						height: '100%',
@@ -1388,6 +1401,7 @@ window.flux = {
 					width: '50%',
 					height: '100%',
 					'background-image': this.slider.image1.css('background-image'),
+					'background-size' : '100% 100%',
 					'background-position': (this.options.direction == 'left' ? 0 : '-'+(this.slider.image1.width()/2))+'px 0',
 					'z-index':100
 				}),
@@ -1451,6 +1465,7 @@ window.flux = {
 					position: 'absolute',
 					top: '0px',
 					left: '0px',
+					'background-size' : '100% 100%',
 					background: this.slider[this.options.direction == 'left' ? 'image1' : 'image2'].css('background-image')	
 				}).css3({
 					'backface-visibility': 'hidden'
@@ -1462,6 +1477,7 @@ window.flux = {
 					position: 'absolute',
 					top: '0px',
 					left: width+'px',
+					'background-size' : '100% 100%',
 					background: this.slider[this.options.direction == 'left' ? 'image2' : 'image1'].css('background-image')
 				}).css3({
 					'backface-visibility': 'hidden'
@@ -1511,6 +1527,7 @@ window.flux = {
 				var img = $('<div></div>').css({
 					width: '100%',
 					height: '100%',
+					'background-size' : '100% 100%',
 					'background-image': this.slider.image1.css('background-image')
 				}).css3({
 					'transition-duration': '1600ms',
@@ -1553,7 +1570,8 @@ window.flux = {
 				var img = $('<div class="image"></div>').css({
 					width: '100%',
 					height: '100%',
-					'background-image': this.slider.image1.css('background-image')	
+					'background-image': this.slider.image1.css('background-image') ,
+					'background-size' : '100% 100%'
 				}).css3({
 					'transition-duration': '600ms',
 					'transition-timing-function': 'ease-in',

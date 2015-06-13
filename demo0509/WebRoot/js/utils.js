@@ -86,7 +86,7 @@ function getReqMap(){
 			paths : paths,
 			map : {
 				'*' : {
-					css : 'css'
+					css : 'css.min'
 				}
 			},
 			shim : {
