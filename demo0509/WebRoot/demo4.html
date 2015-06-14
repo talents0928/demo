@@ -65,11 +65,9 @@
 				},3000);
 			});
 
-			stage.addChild(sprite);
+			//stage.addChild(sprite);
 			createjs.Ticker.setFPS(10);
 			createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED ;
-
-
 			createjs.Ticker.addEventListener('tick',function(evt){
 				
 				
@@ -82,9 +80,38 @@
 				'transform-origin' : "0 0"
 			});
 
-			setInterval(function(){
-				console.log(createjs.Ticker.getFPS());
-			},4000);
+			
+
+
+
+
+
+			var graphics = new createjs.Graphics();
+			graphics.setStrokeStyle(1);
+			graphics.beginStroke('blue');
+			graphics.beginFill('red');
+			graphics.drawCircle(0,0,70);
+
+			graphics.beginStroke('yellow');
+			graphics.beginFill('blue');
+			graphics.drawCircle(30, -30, 15);
+
+			var shape = new createjs.Shape(graphics);
+			shape.x = shape.y = 80 ;
+
+			stage.addChild(shape);
+
+
+
+
+
+
+
+
+
+
+
+
 		}).start();
 
 		
