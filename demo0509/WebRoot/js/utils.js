@@ -445,23 +445,30 @@ ut.sendForm = function(url,form,cb){
 
 ut.manage = (function(){
 
+
+	var _cb , _failcb , _list = [] , _cacheList = {};
+
 	function isArray ( obj ){
 		return toString.call(obj) == "[object Array]" ? true : false ;
 	};
+	function isObject ( obj ){
+		return toString.call(obj) == "[object Object]" ? true : false ;
+	};
 	function loadList ( manage ) {
-		var size = manage.list.length ;
-		var count = size ;
-		var miss = 0;
+		var size = _list.length , count = size , miss = 0;
 
 		for( var i=0; i<size; i++ ){
 			var img = new Image();
-			img.src = manage.list.pop();
+			var obj = _list.pop() ;
+			
+			img.src = obj.src ? obj.src : obj ;
+			obj.id && ( _cacheList[obj.id] = img );
 			
 			if(img.complete){
 				count --;
 				excuEnd();
 			}else{
-				img.onload = function(){
+				img.onload = function(evt){
 					count --;
 					excuEnd();
 				}
@@ -473,48 +480,50 @@ ut.manage = (function(){
 			}
 			
 		}
-
 		function excuEnd(){
 			manage.rate = ( size-count ) / size * 100;
 			if(count == 0){
-				miss > 0 ? manage.failback( miss ) : manage.callback();
+				miss > 0 ? failback( miss ) : callback();
 			}
 		}
 	}
-
+	function callback (){
+		_cb && _cb();
+	}
+	function failback (miss){
+		console.error('miss is '+miss);
+		_failcb && _failcb();
+	}
 	return {
 			
 			rate : 0 ,
-			list : [],
 			add : function( args , url ){
 
 				if(isArray(args)){
 					if(url){
-						var i , len = args.length ;
-						for( i=0; i<len; i++ ){
-							args[i] =  url + args[i] ;
+						for(var i=0; i< args.length; i++ ){
+							if( isObject(args[i]) ){
+								args[i].src = url + '/' + args[i].src ;
+							}else{
+								args[i] =  url + '/' + args[i] ;
+							}
 						}
 					}
-					Array.prototype.push.apply(this.list,args);
+					Array.prototype.push.apply(_list,args);
 				}
 				return this;
 			},
 			start : function(){
 				loadList(this);
 			},
+			getImgById : function( id ){
+				return _cacheList[id] ;
+			},
 			setCallback : function( cb ,failcb ){
-				this.cb = cb;
-				this.failcb = failcb || this.cb;
+				_cb = cb ;
+				_failcb = failcb || _cb ;
 				return this;
-			},
-			callback : function(){
-				this.cb&&this.cb();
-			},
-			failback : function(miss){
-				console.error('miss is '+miss);
-				this.failcb&&this.failcb();
 			}
-
 				
 	};
 })();
