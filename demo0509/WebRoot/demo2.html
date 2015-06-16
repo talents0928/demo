@@ -26,7 +26,7 @@
 	
 
 		<div class='oh fullw' id="mainWrap">
-			<div class='oh' id='slider' style='width:100%;height:2700px;background:darkblue;'>
+			<div class='oh' id='slider' style='width:100%;height:2700px;background:wheat;'>
 
 			</div>
 		</div>
@@ -40,14 +40,9 @@
 			ut.iScroll('#mainWrap');
 
 			ut.touch.on('#slider','touchstart',function(evt){
-				console.log('is start');
-
-				console.log(evt);
+				
 			});
-			$('#slider').on('touchstart',function(evt){
-				console.log(111);
-				console.log(evt);
-			});
+			console.log(ut.easelJs);
 
 		});
 		 

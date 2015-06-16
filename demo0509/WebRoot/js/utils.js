@@ -13,9 +13,6 @@ window.cdnHost = window.cdnHost || (function(){
 
 
 
-
-
-
 var ut = {};
 
 /**
@@ -24,23 +21,32 @@ var ut = {};
 **/
 
 var help = ['','cookie','touch','initTmpl','iScroll','easelJs','soundJs','tweenJs','foundation'];
-var cssPath = '../../css/';
+var asset = {
+	cssPath : '../../css/',
+	// cssPath : '../../../css/',
+
+	baseUrl : './js/lib',
+	// baseUrl : './js/lib/libCopy',
+	'':''
+}
 var paths = {
 
 //				_common : cssPath+'/common',
-				_normalize : cssPath + '/normalize',
-				_foundationCss : cssPath + '/foundation.min',
+				_normalize : asset.cssPath + '/normalize',
+				_foundationCss : asset.cssPath + '/foundation.min',
 
 				//jquery : 'jquery-1.10.2.min',
-				_touch : 'touch-0.2.14.min',
-				_template : 'jquery.tmpl.min',
-				_iscroll : 'iscroll',
-				_easelJs : 'easeljs-0.8.1.min',
-				_soundJs : 'soundjs-0.6.1.min',
-				_tweenJs : 'tweenjs-0.6.1.min',
-				_foundation : 'foundation.min',
-				_cookie : 'jquery.cookie'
+				_css : ['css.min','css'],
+				_touch : ['touch-0.2.14.min','touch-0.2.14'],
+				_template : ['jquery.tmpl.min','jquery.tmpl.min'],
+				_iscroll : ['iscroll','iscroll'],
+				_easelJs : ['easeljs-0.8.1.min','easeljs-0.8.1.combined'],
+				_soundJs : ['soundjs-0.6.1.min','soundjs-0.6.1.combined'],
+				_tweenJs : ['tweenjs-0.6.1.min','tweenjs-0.6.1.combined'],
+				_foundation : ['foundation.min','foundation.min'],
+				_cookie : ['jquery.cookie','jquery.cookie'],
 
+				'':''
 			};
 
 /**
@@ -81,12 +87,11 @@ function getReqMap(){
 
 		require.config({
 
-			baseUrl : './js/lib',
-			//baseUrl : './js/lib/libCopy',
+			baseUrl : asset.baseUrl,
 			paths : paths,
 			map : {
 				'*' : {
-					css : 'css.min'
+					css : '_css'
 				}
 			},
 			shim : {
@@ -147,6 +152,9 @@ define('iScroll',['_iscroll'],function(){
 	    	vScrollbar: false,
 			preventDefault: false
 	    });
+	    scroll.on('scrollStart',function(){
+    		this.refresh();
+    	});
 	    return scroll ;
     };
 });
@@ -175,7 +183,10 @@ ut.ready = function(callback){
 	this._list.push(callback);
 
 };
-
+/**
+*	请求css资源方法
+*	@param arr{Array} 映射资源列表
+**/
 ut.reqCss = function(arr,callback){
 	require(arr,function(){
 		callback && callback();
@@ -229,14 +240,14 @@ ut.waiter = new (function(){
 		that.ele.remove();
 	};
 });
+
+
 /**
 *	client 适配对象
 *	调用方法 setBox();
 *	@param modeW{int} 设计宽度
 *	@parse modeH{int} 设计高度
 **/
-
-
 ut.client = (function(){
 	var client = {};
 	client.modeH = 1280;
@@ -285,12 +296,12 @@ ut.client = (function(){
 			if($('.gbox').length){
 				this.gbox = $('.gbox') ;
 			}else{
-				this.gbox.append($('body').children(':not(script):not(style)')).wrap("<div></div>").parent().appendTo($('body'));
+				this.gbox.append($('body').children(':not(script):not(style)'))
+					.wrap("<div></div>").parent().appendTo($('body'));
 			}
 			setDefault();
 			window.body = this.gbox ;
 		}
-
 		client.modeW = modeW || client.modeW ;
 		client.modeH = modeH || ( modeW ? null : client.modeH ) ;
 		
@@ -301,7 +312,6 @@ ut.client = (function(){
 
 			width : this.seeW + 'px',
 			height : this.seeH + 'px',
-
 			margin : 'auto',
 			overflow : 'hidden',
 			position : 'absolute',
@@ -310,7 +320,6 @@ ut.client = (function(){
 			right : '0'
 
 		});
-
 		this.gbox.css({
 
 			width : this.modeW + 'px',
@@ -319,7 +328,6 @@ ut.client = (function(){
 			overflow : 'hidden',
 			left : 0,
 			top : 0,
-
 			transformOrigin : '0 0',
 			transform : 'scale('+this.scaleW+','+this.scaleH+')'
 
@@ -335,7 +343,6 @@ ut.client = (function(){
 			e.preventDefault();
 		});
 	}
-	
 
 	return client;
 	
@@ -395,25 +402,34 @@ ut.sortData = function(data, key, desc){
 };
 
 
-var _getAllurl = function(cmd,options){
-//		return 'http://' + window.location.host+'/'+window.location.pathname.split('/')[1]+'/'+cmd;
-		
-		return serverHost + cmd;
-	};
+function _getAllurl( cmd ){
+	return serverHost + cmd;
+};
 //向后台发送ajax请求
 ut.send = function(url,cb,options){
+
+	if(typeof cb != 'function'){
+		options = cb ;
+		cb = false ;
+	}
+
+	if(options instanceof jQuery){
+		options = options.serialize() ;
+	}
+
 	ut.waiter.expand();
 	$.ajax({
 		method : 'post',
-		url : _getAllurl(url,options),
-		timeout: 10000,
+		url : _getAllurl(url),
+		timeout: 8000,
 		data : options||{},
 		success : function(data){
 			console.log(data);
 			ut.waiter.out();
-			if(data&&data.callback==true){
-				cb&&cb(data.data,data);
+			if( data && data.callback === true ){
+				cb && cb(data.data,data);
 			}else{
+				console.error('callback false') ;
 				//ut.showMsg(data.msg);
 			}
 		},
@@ -424,24 +440,28 @@ ut.send = function(url,cb,options){
 	});
 };
 
-ut.sendForm = function(url,form,cb){
-	ut.waiter.expand();
-	form.ajaxSubmit({
-		url: _getAllurl(url),
-		success: function(data){
-			console.log(data);
-			if(data&&data.callback){
-				cb&&cb(data.data,data);
-			}else{
-				console.log(data.msg);
-				//ut.showMsg(data.msg);
-			}
-			ut.waiter.out();
-		},
-	});
-}
-	
+// ut.sendForm = function(url,form,cb){
+// 	ut.waiter.expand();
+// 	form.ajaxSubmit({
+// 		url: _getAllurl(url),
+// 		success: function(data){
+// 			console.log(data);
+// 			if(data&&data.callback){
+// 				cb&&cb(data.data,data);
+// 			}else{
+// 				console.log(data.msg);
+// 				//ut.showMsg(data.msg);
+// 			}
+// 			ut.waiter.out();
+// 		},
+// 	});
+// }
 
+	
+/**
+*	manage 简易加载图片对象
+*
+**/
 
 ut.manage = (function(){
 

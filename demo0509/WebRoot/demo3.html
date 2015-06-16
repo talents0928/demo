@@ -36,13 +36,28 @@
    			}
 
    		</style>
+
+      <form id='myForm'>
+         
+          <input type='submit' value='提交' id='commit'></input>
+      </form>
   </body>
 
   <script type="text/javascript">
   		 ut.ready(function(){
 
   		 	ut.client.setBox(720);
-  		 	console.log(98989);
+        console.log(ut.easelJs);
+
+        $('#commit').on('click',function(){
+
+            console.log(111);
+            console.log($('#myForm').serialize());
+
+            return false;
+
+        });
+  		 
 
   		 });
   </script>
