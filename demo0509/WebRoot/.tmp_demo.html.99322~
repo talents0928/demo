@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<meta http-equiv="x-dns-prefetch-control" content="on">
+
+	<title>demo 范例</title>
+	<script type="text/javascript" src='js/require.js'></script>
+	<script type="text/javascript" src='js/utils.js'></script>
+	<!--  -->
+	<script type='text/javascript' >
+		
+		ut.reqCss(['commonCss']);
+
+		ut.ready(function(){
+
+
+			//$('#demoTmpl').initTmpl().appendTo($('.ccTp'));;
+
+			//var arr = ['img1.jpg','img2.jpg','img3.jpg','img4.jpg'];
+
+			var arr = [
+				'Poster.png',
+				'unknow_1.png',
+				'mountain_4.png',
+				'mountain_3.png',
+				'mountain_2.png',
+				'mountain_1.png',
+				'jingdezhen.png',
+				'huangyangjie.png',
+				'y6.png',
+				'y5.png',
+				'y4.png',
+				'y3.png',
+				'y2.png',
+				'wuyuan.png',
+				'tengwangge.png',
+				'bird22.png',
+				'bird12.png',
+				'Cloud12.png',
+				'Cloud22.png',
+				'zhubiaoti.png',
+				'laba.png',
+				'Fubiao_2.png',
+				'Fubiao_1.png',
+				'way2.png',
+				'Cloud1.png',
+			];
+
+//			ut.manage.add(arr,'img/images/').setCallback(function(){
+//				console.log('成功了');
+//			}).start();
+
+			//console.log(ut.soundJs);
+			$(document).foundation();
+		});
+
+
+		
+	</script>
+</head>
+
+<style type="text/css">
+	
+	.size{
+		width:720px;
+		height:1280px;
+	}
+
+	.content{
+
+		width:100%;
+		height:100%;
+		overflow:hidden;
+		position: absolute;
+		top:0px;
+		left:0px;
+	}
+	.trans{
+		transition : 600ms top ease;
+		-webkit-transition : 600ms top ease;
+	}
+	.h-box{
+		width:400px;
+		height:200px;
+		background:drakblue;
+	}
+	
+	.muisc {
+		width:50px;
+		height:50px;
+		background:darkblue;
+		
+	}
+
+</style>
+<body>
+
+			<div class="contentTp content trans" id='contentWrap'>
+				<ul style='overflow:hidden;width:100%;' class=''>
+				<div class="size ccTp" style='background:url(img/img1.jpg);background-size:100% 100%;'>
+					
+					<!-- <audio id="myaudio" src="images/yy.mp3"  autoplay loop hidden="true" controls style="width:0;height:0" ></audio> -->
+					<div class="optiongroup">
+						<div class="music  on"></div>
+					</div>
+				
+				</div>
+				<div class="size" style='background:url(img/img2.jpg);background-size:100% 100%;'></div>
+				<div class="size" style='background:url(img/img3.jpg);background-size:100% 100%;'></div>
+				<div class="size" style='background:url(img/img4.jpg);background-size:100% 100%;'></div>
+				</ul>
+			</div>
+		
+</body>
+<script type="text/x-jquery-tmpl" id='demoTmpl'>
+	
+	<div class='pa' style='top:30px;left:40px;width:100px;height:100px;background:red;'>
+			你看的到不@{'好惨啊'}
+	</div>
+
+</script>
+	<script type="text/javascript">
+
+		
+		ut.ready(function(){
+
+
+			//$('#demoTmpl').initTmpl().appendTo('.ccTp');
+			ut.client.setBox();
+			
+			
+			//测试音乐系统
+			$(".music").click(function () {
+				if($(this).hasClass("on")){
+					//$("#myaudio")[0].pause();
+					createjs.Sound.stop();
+					$(".music").removeClass("on");
+				}else{
+					//$("#myaudio")[0].play();
+					createjs.Sound.play(src);
+					$(".music").addClass("on");
+				}
+				
+			});
+
+			ut.iScroll('#contentWrap');
+
+			//阻止屏幕滚动
+			$(document).on('touchmove',function(e){
+				e.preventDefault();
+			});
+
+			function setWipe($ele){
+				var size  = $ele.children().length;
+				var current = 0;
+	
+				function move(index){
+					var str = '-' + index*1280 + 'px';
+					$ele.css('top',str);
+				}
+				
+				ut.touch.on('.contentTp', 'swipeup', function(ev){
+	
+				   if( current == size-1 ){
+				   		return false;
+				   }
+				   current ++ ;
+	
+				   move(current);
+	
+				});
+	
+				ut.touch.on('.contentTp', 'swipedown', function(ev){
+	
+				   if( current == 0 ){
+				   		return false;
+				   }
+				   current -- ;
+	
+				   move(current);
+	
+				});
+				
+			}
+			//setWipe($('.contentTp'));
+
+
+		});
+		
+
+
+	</script>
+</html>
+
+
+
+
+
