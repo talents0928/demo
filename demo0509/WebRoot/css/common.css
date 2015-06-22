@@ -147,24 +147,6 @@ textarea{
 }
 
 
-@media screen and (min-width:100px){
-	html{ font-size:50%; }
-}
-@media screen and (min-width:279px){
-	html{ font-size:70%; }
-}
-@media screen and (min-width:320px){
-	html{ font-size:80%; }	
-}
-@media screen and (min-width:375px){
-	html{ font-size:80%; }	
-}
-@media screen and (min-width:414px){
-	html{ font-size:95%; }	
-}
-@media screen and (min-width:500px){
-	html{ font-size:98%; }	
-}
 
 
 .font-rem-6{
@@ -250,8 +232,22 @@ textarea{
 
 
 
+/**
+*	调整foundation样式
+*
+**/
 
+html{
+	font-size : 180% !important;
+}
 
+html p{
+	margin : auto ;
+}
+
+body{
+	font-size : 35px;
+}
 
 
 
