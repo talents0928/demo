@@ -238,23 +238,44 @@ textarea{
 **/
 
 html{
-	font-size : 180% !important;
+	font-size : 200% !important;
+}
+body{
+	font-size : 100% !important;
+	font-size : 35px !important;
 }
 
 html p{
 	margin : auto ;
 }
 
-body{
-	font-size : 35px;
+
+
+
+
+/**
+*	调整slider默认样式
+*
+**/
+
+.orbit-caption{
+	height:1.8rem;
+	line-height:1.8rem;
+	padding:0 !important;
+	padding-left:0.5rem !important;
 }
-
-
-
-
-
-
-
+.orbit-bullets-container{
+	position :absolute;
+	transform: translateY(50%);
+	-webkit-transform: translateY(50%);
+	bottom : 0.9rem;
+	right : 0.8rem;
+}
+.orbit-bullets{
+    display: block !important;
+	margin: 0;
+	top:0;
+}
 
 
 

@@ -20,13 +20,19 @@ var ut = {};
 *	文件路径引用
 **/
 
-var help = ['','cookie','touch','initTmpl','iScroll','easelJs','soundJs','tweenJs','foundation'];
-var asset = {
-	cssPath : '../../css/',
-	// cssPath : '../../../css/',
+var help = ['','cookie','touch','initTmpl','iScroll','easelJs','soundJs','tweenJs','foundation','wx',''];
 
-	baseUrl : './js/lib',
-	// baseUrl : './js/lib/libCopy',
+/**
+ *	是否开启debug模式
+ */
+var isDebug = $('script[src*=utils][debug=true]').length == 0 ? 0 : 1 ;
+/**
+ *  资源路径配置
+ */
+var asset = {
+	cssPath : ['../../css/','../../../css/'][isDebug],
+	baseUrl : ['./js/lib','./js/lib/libCopy'][isDebug],
+	
 	'':''
 }
 var paths = {
@@ -36,15 +42,16 @@ var paths = {
 				_foundationCss : asset.cssPath + '/foundation.min',
 
 				//jquery : 'jquery-1.10.2.min',
-				_css : ['css.min','css'],
-				_touch : ['touch-0.2.14.min','touch-0.2.14'],
-				_template : ['jquery.tmpl.min','jquery.tmpl.min'],
-				_iscroll : ['iscroll','iscroll'],
-				_easelJs : ['easeljs-0.8.1.min','easeljs-0.8.1.combined'],
-				_soundJs : ['soundjs-0.6.1.min','soundjs-0.6.1.combined'],
-				_tweenJs : ['tweenjs-0.6.1.min','tweenjs-0.6.1.combined'],
-				_foundation : ['foundation.min','foundation.min'],
-				_cookie : ['jquery.cookie','jquery.cookie'],
+				_css : ['css.min','css'][isDebug],
+				_touch : ['touch-0.2.14.min','touch-0.2.14'][isDebug],
+				_template : ['jquery.tmpl.min','jquery.tmpl.min'][isDebug],
+				_iscroll : ['iscroll','iscroll'][isDebug],
+				_easelJs : ['easeljs-0.8.1.min','easeljs-0.8.1.combined'][isDebug],
+				_soundJs : ['soundjs-0.6.1.min','soundjs-0.6.1.combined'][isDebug],
+				_tweenJs : ['tweenjs-0.6.1.min','tweenjs-0.6.1.combined'][isDebug],
+				_foundation : ['foundation.min','foundation.min'][isDebug],
+				_cookie : ['jquery.cookie','jquery.cookie'][isDebug],
+				_wx : ['http://res.wx.qq.com/open/js/jweixin-1.0.0'],
 
 				'':''
 			};
@@ -137,6 +144,9 @@ define('initTmpl',['_template','jquery'],function(){
 define('cookie',['_cookie'],function(){
 
 	//console.log(cookie);
+});
+define('wx',['_wx'],function(wx){
+	ut.wx = wx ;
 });
 
 //define('commonCss',['css!_common']);
@@ -284,6 +294,9 @@ ut.client = (function(){
 	
 	client.gbox = $("<div class='gbox'></div>");
 
+/**
+ * 解析正确的手势位置
+ */
 	client.unX = function(x){
 		return ( x - this.gbox.offset().left ) / this.scaleW ;
 	};
