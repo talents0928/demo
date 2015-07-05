@@ -155,17 +155,18 @@ define('foundationCss',['css!_foundationCss']);
 define('foundation',['foundationCss','_foundation']);
 
 define('iScroll',['_iscroll'],function(){
-    ut.iScroll = function(wrapId){
-    	var scroll = new IScroll(wrapId, {
+    ut.iScroll = function(wrapId,options){
+    	var scroll = new IScroll(wrapId, $.extend({
 			useTransition: true,
 	    	vScroll: true,
 	    	vScrollbar: false,
 			preventDefault: false
-	    });
-	    scroll.on('scrollStart',function(){
+	    },options||{}));
+    	
+    	scroll.on('scrollStart',function(){
     		this.refresh();
     	});
-	    return scroll ;
+    	return scroll ;
     };
 });
 
@@ -289,7 +290,8 @@ ut.client = (function(){
 		this.seeW = this.isBalance ? this.w : this.h*this.ratio;
 		
 		this.scaleW = this.seeW/this.modeW;
-		this.scaleH = this.modeH ? this.seeH/this.modeH : this.scaleW;
+		this.modeH = this.modeH ? this.modeH : this.seeH/this.scaleW;
+		this.scaleH = this.seeH/this.modeH ;
 	};
 	
 	client.gbox = $("<div class='gbox'></div>");
@@ -560,5 +562,110 @@ ut.manage = (function(){
 				
 	};
 })();
+
+
+/**
+ * copy touch.js 手势事件
+ * 
+ */
+
+(function($){
+	  var touch = {}, touchTimeout;
+
+	  function parentIfText(node){
+	    return 'tagName' in node ? node : node.parentNode;
+	  }
+
+	  function swipeDirection(x1, x2, y1, y2){
+	    var xDelta = Math.abs(x1 - x2), yDelta = Math.abs(y1 - y2);
+	    return xDelta >= yDelta ? (x1 - x2 > 0 ? 'Left' : 'Right') : (y1 - y2 > 0 ? 'Up' : 'Down');
+	  }
+
+	  var longTapDelay = 750, longTapTimeout;
+
+	  function longTap(){
+	    longTapTimeout = null
+	    if (touch.last) {
+	      touch.el.trigger('longTap')
+	      touch = {}
+	    }
+	  }
+
+	  function cancelLongTap(){
+	    if (longTapTimeout) clearTimeout(longTapTimeout)
+	    longTapTimeout = null
+	  }
+
+	  $(document).ready(function(){
+	    var now, delta
+
+	    document.body.addEventListener('touchstart', function(e){
+	      now = Date.now()
+	      delta = now - (touch.last || now)
+	      touch.el = $(parentIfText(e.touches[0].target));
+	      touchTimeout && clearTimeout(touchTimeout)
+	      touch.x1 = e.touches[0].pageX
+	      touch.y1 = e.touches[0].pageY
+	      if (delta > 0 && delta <= 250) touch.isDoubleTap = true
+	      touch.last = now
+	      //longTapTimeout = setTimeout(longTap, longTapDelay)
+		  touch.el.trigger({type:'vmousedown',originalEvent:{pageX:e.changedTouches[0].pageX,pageY:e.changedTouches[0].pageY}})
+	    });
+		document.body.addEventListener('touchmove', function(e){
+	      //cancelLongTap()
+	      touch.x2 = e.touches[0].pageX
+	      touch.y2 = e.touches[0].pageY
+	    });
+		document.body.addEventListener('touchend', function(e){
+	       //cancelLongTap()
+		  /*
+	      // double tap (tapped twice within 250ms)
+	      if (touch.isDoubleTap) {
+	        touch.el.trigger('doubleTap')
+	        touch = {}
+
+	      // swipe
+	      } else if ((touch.x2 && Math.abs(touch.x1 - touch.x2) > 30) ||
+	                 (touch.y2 && Math.abs(touch.y1 - touch.y2) > 30)) {
+	        touch.el.trigger('swipe') &&
+	          touch.el.trigger('swipe' + (swipeDirection(touch.x1, touch.x2, touch.y1, touch.y2)))
+	        touch = {}
+		 
+	      // normal tap
+	      } else */
+		 
+		 if ((touch.x2 && Math.abs(touch.x1 - touch.x2) > 30) ||
+	                 (touch.y2 && Math.abs(touch.y1 - touch.y2) > 30)) {
+	        touch.el.trigger('swipe') &&
+	          touch.el.trigger('swipe' + (swipeDirection(touch.x1, touch.x2, touch.y1, touch.y2)))
+	        touch = {}
+	      // normal tap
+	     }
+		 else if ((touch.x2 && Math.abs(touch.x1 - touch.x2) > 10) || (touch.y2 && Math.abs(touch.y1 - touch.y2) > 10)) {
+			touch = {};
+		 }
+		 else if ('last' in touch) {
+	        touch.el.trigger({type:'tap',originalEvent:{clientX:e.changedTouches[0].clientX,clientY:e.changedTouches[0].clientY}})
+			touch = {};
+	        /*touchTimeout = setTimeout(function(){
+	          touchTimeout = null
+	          touch.el.trigger('singleTap')
+	          touch = {}
+	        }, 250)*/
+	      }
+	    });
+		document.body.addEventListener('touchcancel', function(){
+	      if (touchTimeout) clearTimeout(touchTimeout)
+	      if (longTapTimeout) clearTimeout(longTapTimeout)
+	      longTapTimeout = touchTimeout = null
+	      touch = {}
+	    })
+	  })
+
+	  ;['swipe', 'swipeLeft', 'swipeRight', 'swipeUp', 'swipeDown', 'doubleTap', 'tap', 'singleTap', 'longTap'].forEach(function(m){
+	    $.fn[m] = function(callback){ return this.bind(m, callback) }
+	  })
+	})(jQuery)
+
 
 

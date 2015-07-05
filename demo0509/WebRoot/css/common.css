@@ -5,7 +5,7 @@
 *	
 **/
 body {
-	background : black;
+	background : wheat;
 	-webkit-tap-highlight-color: rgba(0,0,0,0);
 	-webkit-backface-visibility: hidden;
 	-webkit-user-select: none;
@@ -78,7 +78,15 @@ textarea{
 	text-align: center;
 }
 
-
+.circle{
+	border-radius : 50% 50% ;
+	-webkit-border-radius : 50% 50% ;
+}
+.bb{
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+}
 
 .tr0{
 	-webkit-transform:translate(0px,0px);
@@ -144,6 +152,9 @@ textarea{
 }
 .background-orange{
 	background:#F3A310;
+}
+.bg-white{
+	background:white;
 }
 
 
