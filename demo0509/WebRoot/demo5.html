@@ -13,7 +13,6 @@
 	<script type="text/javascript" src='js/require.js'></script>
 	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
 	<script type="text/javascript" src='js/utils.js'></script>
-	<script type="text/javascript" src='js/lib/flux.js'></script>
 	<link rel='stylesheet' href='css/common.css'></link>
 	<!--  -->
 
@@ -27,15 +26,18 @@
 	.size{
 		width:100%;height:100%;
 	}
+	body{
+		padding:0;margin:0;
+	}
 
 </style>
 <body>
 
-			<div class="contentTp oh" id='contentWrap' style='width:100%;height:400px;'>
-				<img class='' src='img/imgs/1.jpg' />
-				<img class='' src='img/imgs/2.jpg' />
-				<img class='' src='img/imgs/3.jpg' />
-				<img class='' src='img/imgs/4.jpg' />
+			<div class='fullw bb' style='height:300px;background:darkgreen;padding:100px;'>
+			
+			
+					<div class='tac ma fs40 button' id='button' style='width:100px;height:50px;background:red;'>按钮</div>
+				
 			</div>
 		
 </body>
@@ -43,13 +45,32 @@
 	<script type="text/javascript">
 
 		
-		ut.ready(function(){
-			ut.client.setBox();
-			
-			
-
-		});
+//		$('.button').on('click',function(){
+//			console.log('this is onclick');
+//			$(this).trigger('fuck');
+//		});
 		
+		
+		
+		ut.ready(function(){
+			ut.client.setBox(720);
+			console.log('every thing is ok');
+//			$('.button').on('tap',function(){
+//				console.log('this is tap');
+//				console.log('this is fuck event');
+//			});
+//			document.getElementById('button').ontouchend(function(){
+//				console.log('end');
+//			});
+			document.getElementById('button').addEventListener('click',function(){
+				console.log('end');
+			});
+//			
+//			$('.button').on('touchstart',function(){
+//				console.log('this is touchstart event');
+//			});
+			
+		});
 
 
 	</script>

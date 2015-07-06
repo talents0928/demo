@@ -598,6 +598,16 @@ ut.manage = (function(){
 
 	  $(document).ready(function(){
 	    var now, delta
+	    
+	    //begin
+	    if(!('ontouchstart' in window)){
+	    	
+	    	console.log('不支持tap');
+	    }else{
+	    	console.log('支持tap');
+	    }
+	    
+	    //end
 
 	    document.body.addEventListener('touchstart', function(e){
 	      now = Date.now()
@@ -665,7 +675,7 @@ ut.manage = (function(){
 	  ;['swipe', 'swipeLeft', 'swipeRight', 'swipeUp', 'swipeDown', 'doubleTap', 'tap', 'singleTap', 'longTap'].forEach(function(m){
 	    $.fn[m] = function(callback){ return this.bind(m, callback) }
 	  })
-	})(jQuery)
+})(jQuery)
 
 
 
