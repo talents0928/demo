@@ -33,42 +33,46 @@
 </style>
 <body>
 
-			<div class='fullw bb' style='height:300px;background:darkgreen;padding:100px;'>
+			<div class='fullw bb contentTp' style='height:300px;background:darkgreen;padding:100px;'>
 			
 			
-					<div class='tac ma fs40 button' id='button' style='width:100px;height:50px;background:red;'>按钮</div>
+					<div class='tac ma fs40 button' id='button' 
+						as='tr4'
+						style='width:100px;height:50px;background:red;'>按钮</div>
 				
 			</div>
 		
 </body>
 
+<script id="movieTemplate" type="text/x-jsrender">
+	<div>
+		{{:#index+1}}: <b>{{>name}}</b> ({{>releaseYear}})
+	</div>
+</script>
+
 	<script type="text/javascript">
 
-		
-//		$('.button').on('click',function(){
-//			console.log('this is onclick');
-//			$(this).trigger('fuck');
-//		});
 		
 		
 		
 		ut.ready(function(){
 			ut.client.setBox(720);
 			console.log('every thing is ok');
-//			$('.button').on('tap',function(){
-//				console.log('this is tap');
-//				console.log('this is fuck event');
-//			});
-//			document.getElementById('button').ontouchend(function(){
-//				console.log('end');
-//			});
-			document.getElementById('button').addEventListener('click',function(){
-				console.log('end');
+			
+			var movies = [
+				{ name: "The Red Violin", releaseYear: "1998" },
+				{ name: "Eyes Wide Shut", releaseYear: "1999" },
+				{ name: "The Inheritance", releaseYear: "1976" }
+			];
+		
+			// Render the template with the movies data and insert
+			// the rendered HTML under the "movieList" element
+			
+			$('.contentTp').append( $($( "#movieTemplate" ).render( movies )) );
+			
+			$('.button').on('tap',function(){
+				console.log('this is tap event');
 			});
-//			
-//			$('.button').on('touchstart',function(){
-//				console.log('this is touchstart event');
-//			});
 			
 		});
 
