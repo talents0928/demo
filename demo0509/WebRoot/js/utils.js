@@ -290,7 +290,7 @@ ut.client = (function(){
 		this.seeW = this.isBalance ? this.w : this.h*this.ratio;
 		
 		this.scaleW = this.seeW/this.modeW;
-		this.modeH = this.modeH ? this.modeH : this.seeH/this.scaleW;
+		this.modeH = this.isSingle ? this.seeH/this.scaleW : this.modeH ;
 		this.scaleH = this.seeH/this.modeH ;
 	};
 	
@@ -318,6 +318,7 @@ ut.client = (function(){
 			window.body = this.gbox ;
 		}
 		client.modeW = modeW || client.modeW ;
+		client.isSingle = client.isSingle || ( ( modeW ^ modeH ) ? true : false );
 		client.modeH = modeH || ( modeW ? null : client.modeH ) ;
 		
 
