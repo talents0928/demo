@@ -20,7 +20,7 @@ var ut = {};
 *	文件路径引用
 **/
 
-var help = ['','render','cookie','touch','initTmpl','iScroll','easelJs','soundJs','tweenJs','foundation','wx',''];
+var help = ['','tmpl','cookie','touch','initTmpl','iScroll','easelJs','soundJs','tweenJs','foundation','wx',''];
 
 /**
  *	是否开启debug模式
@@ -51,7 +51,6 @@ var paths = {
 				_tweenJs : ['tweenjs-0.6.1.min','tweenjs-0.6.1.combined'][isDebug],
 				_foundation : ['foundation.min','foundation.min'][isDebug],
 				_cookie : ['jquery.cookie','jquery.cookie'][isDebug],
-				_render : ['jsrender.min','jsrender'][isDebug],
 				_wx : ['http://res.wx.qq.com/open/js/jweixin-1.0.0'],
 
 				'':''
@@ -134,13 +133,17 @@ define('touch',['_touch'],function(a){
 	ut.touch = a ;
 
 });
-define('initTmpl',['_template','jquery'],function(){
-	$.fn.initTmpl = function(data){
-		return this.html(function(){
+define('tmpl',['_template','jquery'],function(){
+
+	$.each( $('script:not([type*=javascript])'), function(index,value){
+		$(value).html(function(){
 			return $(this).html().replace(/@/g,'$');
-		}).tmpl(data);
-	};
+		}) ;
+	});
+
+	$.fn.initTmpl = $.fn.tmpl ;
 });
+define('initTmpl',['tmpl'],function(){  });
 
 define('cookie',['_cookie'],function(){
 
@@ -186,10 +189,7 @@ define('tweenJs',['_tweenJs'],function(data){
 	ut.soundJs = createjs ;
 
 });
-define('render',['_render'],function(data){
-	
-	console.log('render');
-});
+
 
 
 

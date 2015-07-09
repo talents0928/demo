@@ -24,60 +24,64 @@
 		
 	</style>
 	
+		<script type='text/x-jquery-tmpl' id='baseTmpl'>
+			<div class='oh fullw' id="mainWrap">
+				<div class='oh' id='slider' style='width:100%;height:2700px;background:wheat;'>
+				
+					 <ul data-orbit style=''>
+					 	
+			            <li>
+			            	<a href='#'>
+			                <img src="./img/imgs/1.jpg" />
+			                <div class="orbit-caption" >
+								<div class='text-ellipsis' style='width:75%;'>标题1</div>
+							</div>
+							</a>
+			            </li>
+						  <li>
+			            	<a href='#'>
+			                <img src="./img/imgs/2.jpg" />
+			                <div class="orbit-caption" >
+								<div class='text-ellipsis' style='width:75%;'>标题1</div>
+							</div>
+							</a>
+			            </li>
+						  <li>
+			            	<a href='#'>
+			                <img src="./img/imgs/3.jpg" />
+			                <div class="orbit-caption" >
+								<div class='text-ellipsis' style='width:75%;'>标题1</div>
+							</div>
+							</a>
+			            </li>
+						
+			        </ul>
+					<div>学校占地面积1000亩，俩足球场，篮球场几十个吧。
+						三个食堂，宿舍有独立卫生间，热水器，饮水机，空调，卫生间内可以洗澡。
+						现在学校大约有16000人。学校的确是在燕郊，走国道，大约一个小时就到天安门了。
+						你来北京了就知道了，坐一个小时车根本不算啥。
+						<div class='fs20'>我一个同学在昌平上学，但去趟西单得俩小时。。。</div>
+						我们学校位置上没有优势，但这也不一定就是弊端。
+						远离喧嚣，生活成本相对市里自然也低。</div>
 
-		<div class='oh fullw' id="mainWrap">
-			<div class='oh' id='slider' style='width:100%;height:2700px;background:wheat;'>
-			
-				 <ul data-orbit style=''>
-				 	
-		            <li>
-		            	<a href='#'>
-		                <img src="./img/imgs/1.jpg" />
-		                <div class="orbit-caption" >
-							<div class='text-ellipsis' style='width:75%;'>标题1</div>
-						</div>
-						</a>
-		            </li>
-					  <li>
-		            	<a href='#'>
-		                <img src="./img/imgs/2.jpg" />
-		                <div class="orbit-caption" >
-							<div class='text-ellipsis' style='width:75%;'>标题1</div>
-						</div>
-						</a>
-		            </li>
-					  <li>
-		            	<a href='#'>
-		                <img src="./img/imgs/3.jpg" />
-		                <div class="orbit-caption" >
-							<div class='text-ellipsis' style='width:75%;'>标题1</div>
-						</div>
-						</a>
-		            </li>
-					
-		        </ul>
-				<div>学校占地面积1000亩，俩足球场，篮球场几十个吧。
-					三个食堂，宿舍有独立卫生间，热水器，饮水机，空调，卫生间内可以洗澡。
-					现在学校大约有16000人。学校的确是在燕郊，走国道，大约一个小时就到天安门了。
-					你来北京了就知道了，坐一个小时车根本不算啥。
-					<div class='fs20'>我一个同学在昌平上学，但去趟西单得俩小时。。。</div>
-					我们学校位置上没有优势，但这也不一定就是弊端。
-					远离喧嚣，生活成本相对市里自然也低。</div>
-
+				</div>
 			</div>
-		</div>
-	<iframe src='./js/component/comp1.html' id='test1'>
+		</script>
+	<!-- <iframe src='./js/component/comp1.html' id='test1'> 
 		  
 	</iframe>
+	-->
 
 	<script type='text/javascript'>
 		
-		ut.client.setBox(720);
+		
 		ut.ready(function(){
 			
-			var win = document.getElementById('test1').contentWindow;
-			var frmobj = win.document.getElementById('component1');
-			$(frmobj).initTmpl().appendTo(body);
+			ut.client.setBox(720);
+			// var win = document.getElementById('test1').contentWindow;
+			// var frmobj = win.document.getElementById('component1');
+			// $(frmobj).initTmpl().appendTo(body);
+			$('#baseTmpl').initTmpl().appendTo(body);
 			
 			$(document).foundation({
 			        orbit: {
@@ -96,13 +100,7 @@
 			        }
 			  });
 			  
-			  ut.wx.ready(function(){
-			  		ut.wx.chooseImage({
-						success : function(){
-							console.log(11);
-						}
-					});
-			  });
+			 
 
 		});
 		 
