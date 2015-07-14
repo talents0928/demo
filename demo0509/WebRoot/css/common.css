@@ -100,7 +100,7 @@ textarea{
 
 .auto{
 	position:absolute;
-	top:0;bottom:0;margin:auto;
+	top:0;bottom:0;margin:auto;right:0;left:0;
 }
 .auto2{
 	position:absolute;

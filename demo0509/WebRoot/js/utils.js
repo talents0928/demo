@@ -137,7 +137,7 @@ define('tmpl',['_template','jquery'],function(){
 
 	$.each( $('script:not([type*=javascript])'), function(index,value){
 		$(value).html(function(){
-			return $(this).html().replace(/@/g,'$');
+			return $(this).html().replace(/@(?=[^\\])/g,'$').replace(/@[\\]/g,'@');
 		}) ;
 	});
 
@@ -223,37 +223,53 @@ $(document).on('mouseup', function(e){
 });
 
 ut.waiter = new (function(){
-
-	var that = this;
+	var that = this ;
 	this.gifHref = 'js/asset/load.gif';
-	this.size = '25px';
+	this.size = '28px';
 	this.size2 = '70px';
 	this.ctrl = 'expandTp';
-	this.autoStyle = "position:absolute;top:0;left:0;right:0;bottom:0;margin:auto;";
-	this.dom = "<div class='"+this.ctrl+"' style='position:fixed;width:100vw;height:100vh;top:0;left:0;z-index:99999;'>" +
-			"<div style='"+this.autoStyle+"width:"+this.size2+";height:"+this.size2+";display:none;background:rgba(0,0,0,0.5);border-radius:10px;'>"+
-			"<div style='"+this.autoStyle+"width:"+this.size+";height:"+this.size+";' >" +
-			"<img src='"+this.gifHref+"' style='width:100%;'></img></div></div>" +
-			"</div>";
-	
+	this.ele = $("<div><div><img/></div></div>");
+	this.ele.css({
+		'position' : 'absolute',
+		'top' : '0',
+		'left' : '0',
+		'width' : window.innerWidth , 'height' : window.innerHeight,
+		'z-index' : '9999'
+	});
+	this.ele.addClass(this.ctrl);
+	this.ele.children('div').css({
+		'position' : 'absolute',
+		'top' : '0' , 'left' : '0', 'bottom' : '0' , 'right' : '0',
+		'width' : this.size2 , 'height' : this.size2,
+		'line-height' : this.size2 ,
+		'margin' : 'auto' ,
+		'display' : 'none' ,
+		'border-radius' : '10px' ,
+		'text-align' : 'center' ,
+		'background' : 'rgba(0,0,0,0.5)'
+	});
+	this.ele.find('img').attr('src',this.gifHref);
+	this.ele.find('img').css({
+		'position' : 'absolute',
+		'top' : '0' , 'left' : '0', 'bottom' : '0' , 'right' : '0',
+		'display' : 'block' ,
+		'margin' : 'auto' ,
+		'width' : this.size ,
+		'height' : this.size 
+	});
 	this.expand = function(){
-		$('.'+that.ctrl).remove();
-		this.ele = $(this.dom);
-		that.ele.appendTo('body');
+		
+		that.obj && that.obj.remove();
+		that.obj = that.ele.clone() ;
+		that.obj.appendTo('body');
 		setTimeout(function(){
 			if($('.'+that.ctrl).length){
-				that.ele.find('div').show();
+				that.obj.find('div').show();
 			}
-			setTimeout(function(){
-				if(that){
-					that.ele.remove();
-				}
-					
-			},4000);
 		},600);
 	};
 	this.out = function(){
-		that.ele.remove();
+		that.obj && that.obj.remove();
 	};
 });
 
@@ -323,7 +339,7 @@ ut.client = (function(){
 			window.body = this.gbox ;
 		}
 		client.modeW = modeW || client.modeW ;
-		client.isSingle = client.isSingle || ( ( modeW ^ modeH ) ? true : false );
+		client.isSingle = client.isSingle || (!modeH && modeW) ? true : false;
 		client.modeH = modeH || ( modeW ? null : client.modeH ) ;
 		
 
@@ -353,6 +369,7 @@ ut.client = (function(){
 			transform : 'scale('+this.scaleW+','+this.scaleH+')'
 
 		});
+		$('body').css('background','black');
 
 	};
 	
@@ -442,7 +459,7 @@ ut.send = function(url,cb,options){
 	$.ajax({
 		method : 'post',
 		url : _getAllurl(url),
-		timeout: 8000,
+		timeout: 20000,
 		data : options||{},
 		success : function(data){
 			console.log(data);
@@ -477,6 +494,19 @@ ut.send = function(url,cb,options){
 // 		},
 // 	});
 // }
+
+
+/**
+ * 时间处理对象
+ */
+ut.timer = (function(){
+	
+	return {
+		getTime : function(nS){
+			return new Date(parseInt(nS) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");     
+		}
+	};
+})();
 
 	
 /**
