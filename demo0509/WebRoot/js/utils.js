@@ -29,7 +29,7 @@ var isDebug = $('script[src*=utils][debug=true]').length == 0 ? 0 : 1 ;
 /**
  *  资源路径配置
  */
-var asset = {
+var asset = window.currAsset || {
 	cssPath : ['../../css/','../../../css/'][isDebug],
 	baseUrl : ['./js/lib','./js/lib/libCopy'][isDebug],
 	
