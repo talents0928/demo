@@ -12,8 +12,11 @@
 	<title>demo 范例</title>
 	<script type="text/javascript" src='js/require.js'></script>
 	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
-	<script type="text/javascript" debug=3 src='js/utils.js'></script>
+	
+	<script type="text/javascript" src='js/utils.js'></script>
 	<link rel='stylesheet' href='css/common.css'></link>
+	
+	
 	<!--  -->
 
 </head>
@@ -21,7 +24,12 @@
 
 <body>
 	<style type="text/css">
-		
+		.bg2{
+			background:darkgreen;
+		}
+		.bg1{
+			background:red;
+		}
 	</style>
 	
 		<script type='text/x-jquery-tmpl' id='baseTmpl'>
@@ -56,6 +64,11 @@
 			            </li>
 						
 			        </ul>
+					
+					<div class='fullw pr' style='height:300px;'>
+					
+						<div class='auto bg2' style='width:100px;height:50px;' as='bg1'>按钮</div>
+					</div>
 					<div>学校占地面积1000亩，俩足球场，篮球场几十个吧。
 						三个食堂，宿舍有独立卫生间，热水器，饮水机，空调，卫生间内可以洗澡。
 						现在学校大约有16000人。学校的确是在燕郊，走国道，大约一个小时就到天安门了。

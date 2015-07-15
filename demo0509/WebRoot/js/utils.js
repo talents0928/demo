@@ -210,13 +210,13 @@ ut.reqCss = function(arr,callback){
 };
 
 
-$(document).on('mousedown', function(e){
+$(document).on('touchstart mousedown', function(e){
 	var $node  = $(e.target);
 	var $target = $node.is('[as]') ? $node : $node.parents('[as]') ;
 	$target.length && $target.addClass($target.attr('as'));
 	
 });
-$(document).on('mouseup', function(e){
+$(document).on('touchend mouseup', function(e){
 	var $node  = $(e.target);
 	var $target = $node.is('[as]') ? $node : $node.parents('[as]') ;
 	$target.length && $target.removeClass($target.attr('as'));
