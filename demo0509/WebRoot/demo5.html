@@ -36,10 +36,10 @@
 </body>
 
 <script id="baseTmpl" type="text/x">
-	<div class='full' >
-		<iframe src='./js/component/comp1.html' id='myIframe'
+	<div class='full contentTp' >
+		<!-- <iframe src='./js/component/comp1.html' id='myIframe'
 			style='width:100%;height:50%;border:none;'
-		></iframe>
+		></iframe> -->
 	</div>
 </script>
 
@@ -54,10 +54,39 @@
 			
 			$('#baseTmpl').tmpl().appendTo(body) ;
 		
-			console.log($('#myIframe').get(0).document);
-			setTimeout(function(){
-				console.log(document.getElementById("myIframe").contentWindow.cc);
-			},2000);
+//			console.log($('#myIframe').get(0).document);
+			
+//			ut.send('tmpl.html',function(back){
+//				console.log(back);
+//				
+//				$('#testTmpl').tmpl().appendTo(body);
+//				console.log('111');
+//			},function(back){
+//				console.log(back);
+//				console.log($(back)[2]);
+//				$($(back)[2]).tmpl().appendTo('.contentTp');
+//				console.log('111');
+//			});
+			
+			
+			$.ajax({
+				method : 'post',
+				url : 'tmpl.html',
+				timeout: 20000,
+				data : '',
+				dataTyp : "html" ,
+				success : function(data){
+					console.log(data);
+					console.log($(data).find('#testTmpl'));
+					$($(data).find('#testTmpl')).tmpl().appendTo('.contentTp');
+				},
+				error : function(XMLHttpRequest, textStatus, errorThrown){
+					
+					console.log(textStatus);
+				}
+			});
+			
+			
 			
 			
 			

@@ -444,16 +444,21 @@ function _getAllurl( cmd ){
 	return serverHost + cmd;
 };
 //向后台发送ajax请求
-ut.send = function(url,cb,options){
+ut.send = function(url,cb,failcb,options){
 
 	if(typeof cb != 'function'){
 		options = cb ;
 		cb = false ;
 	}
-
+	if(failcb && (typeof failcb != 'function')){
+		options = failcb ;
+		failcb = false ;
+	}
+	
 	if(options instanceof jQuery){
 		options = options.serialize() ;
 	}
+	
 
 	ut.waiter.expand();
 	$.ajax({
@@ -469,6 +474,7 @@ ut.send = function(url,cb,options){
 			}else{
 				console.error('callback false') ;
 				//ut.showMsg(data.msg);
+				failcb && failcb(data);
 			}
 		},
 		error : function(XMLHttpRequest, textStatus, errorThrown){
@@ -478,22 +484,6 @@ ut.send = function(url,cb,options){
 	});
 };
 
-// ut.sendForm = function(url,form,cb){
-// 	ut.waiter.expand();
-// 	form.ajaxSubmit({
-// 		url: _getAllurl(url),
-// 		success: function(data){
-// 			console.log(data);
-// 			if(data&&data.callback){
-// 				cb&&cb(data.data,data);
-// 			}else{
-// 				console.log(data.msg);
-// 				//ut.showMsg(data.msg);
-// 			}
-// 			ut.waiter.out();
-// 		},
-// 	});
-// }
 
 
 /**
