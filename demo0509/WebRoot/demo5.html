@@ -18,7 +18,7 @@
 
 </head>
 
-<style type="text/css">
+<style type="text/css" id='style'>
 	
 	body{
 		background:black;
@@ -74,11 +74,22 @@
 				url : 'tmpl.html',
 				timeout: 20000,
 				data : '',
-				dataTyp : "html" ,
+				dataTyp : "text" ,
 				success : function(data){
-					console.log(data);
-					console.log($(data).find('#testTmpl'));
-					$($(data).find('#testTmpl')).tmpl().appendTo('.contentTp');
+					$.each($(data),function(index,value){
+						var $ele = $(value);
+						if($ele.is('script')){
+//							console.log($ele);
+							$.template($ele.attr('id'),$ele.html());
+							
+						}else if($ele.is('style')){
+							$ele.appendTo('#style');
+						}else{
+							console.log($ele);
+						}
+						
+					});
+					$.tmpl('testTmpl',{msg:'这一定能成功哦'}).appendTo('.contentTp');
 				},
 				error : function(XMLHttpRequest, textStatus, errorThrown){
 					
