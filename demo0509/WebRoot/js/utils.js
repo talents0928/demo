@@ -164,6 +164,7 @@ define('iScroll',['_iscroll'],function(){
 			useTransition: true,
 	    	vScroll: true,
 	    	vScrollbar: false,
+	    	HWCompositing : false ,
 			preventDefault: false
 	    },options||{}));
     	

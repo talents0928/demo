@@ -45,7 +45,44 @@
 
 	<script type="text/javascript">
 
-		
+		ut.loadConponent = function(conponentUrl){
+			
+			loadUrl( conponentUrl || 'tmpl.html');
+			function loadUrl(url){
+				$.ajax({
+					method : 'post',
+					url : url,
+					timeout: 20000,
+					dataTyp : "text" ,
+					success : function(data){
+						parseData(data);
+					},
+					error : function(XMLHttpRequest, textStatus, errorThrown){
+						console.error('组件加载失败');
+						console.log(textStatus);
+					}
+				});
+			}
+			function parseData(data){
+				var ele = makeStyle();
+				$.each($(data),function(index,value){
+					var $ele = $(value);
+					if($ele.is('script')){
+						$.template($ele.attr('id'),$ele.html());
+					}else if($ele.is('style')){
+						$ele.appendTo(ele);
+					}
+				});
+			}
+			function makeStyle(){
+				var head = document.getElementsByTagName('head')[0];
+				var ele = document.createElement('style');
+				ele.type='text/css';
+				head.appendChild(ele);
+				return ele ;
+			}
+			
+		} ;
 		
 		
 		ut.ready(function(){
@@ -54,50 +91,13 @@
 			
 			$('#baseTmpl').tmpl().appendTo(body) ;
 		
-//			console.log($('#myIframe').get(0).document);
+			ut.loadConponent();
 			
-//			ut.send('tmpl.html',function(back){
-//				console.log(back);
-//				
-//				$('#testTmpl').tmpl().appendTo(body);
-//				console.log('111');
-//			},function(back){
-//				console.log(back);
-//				console.log($(back)[2]);
-//				$($(back)[2]).tmpl().appendTo('.contentTp');
-//				console.log('111');
-//			});
+			setTimeout(function(){
+				$.tmpl('testTmpl',{msg:'这一定能成功哦'}).appendTo('.contentTp');
+			},4000)
 			
-			
-			$.ajax({
-				method : 'post',
-				url : 'tmpl.html',
-				timeout: 20000,
-				data : '',
-				dataTyp : "text" ,
-				success : function(data){
-					$.each($(data),function(index,value){
-						var $ele = $(value);
-						if($ele.is('script')){
-//							console.log($ele);
-							$.template($ele.attr('id'),$ele.html());
-							
-						}else if($ele.is('style')){
-							$ele.appendTo('#style');
-						}else{
-							console.log($ele);
-						}
-						
-					});
-					$.tmpl('testTmpl',{msg:'这一定能成功哦'}).appendTo('.contentTp');
-				},
-				error : function(XMLHttpRequest, textStatus, errorThrown){
-					
-					console.log(textStatus);
-				}
-			});
-			
-			
+				
 			
 			
 			
