@@ -10,7 +10,7 @@ window.cdnHost = window.cdnHost || (function(){
 	return 'http://' + window.location.host+'/'+window.location.pathname.split('/')[1]+'/';
 })();
 
-
+var root  = window.pageData ? window.pageData.data : {};
 
 
 var ut = {};
@@ -20,7 +20,7 @@ var ut = {};
 *	文件路径引用
 **/
 
-var help = ['','tmpl','cookie','touch','initTmpl','iScroll','easelJs','soundJs','tweenJs','foundation','wx',''];
+var help = ['','','cookie','touch','initTmpl','iScroll','easelJs','soundJs','tweenJs','foundation','wx',''];
 
 /**
  *	是否开启debug模式
@@ -32,7 +32,7 @@ var isDebug = $('script[src*=utils][debug=true]').length == 0 ? 0 : 1 ;
 var asset = window.currAsset || {
 	cssPath : ['../../css/','../../../css/'][isDebug],
 	baseUrl : ['./js/lib','./js/lib/libCopy'][isDebug],
-	
+	conponentPath : ['../component','../../component'][isDebug],
 	'':''
 }
 var paths = {
@@ -40,11 +40,13 @@ var paths = {
 //				_common : cssPath+'/common',
 				_normalize : asset.cssPath + '/normalize',
 				_foundationCss : asset.cssPath + '/foundation.min',
+				_component :  asset.conponentPath + '/component.html' ,
 
 				//jquery : 'jquery-1.10.2.min',
 				_css : ['css.min','css'][isDebug],
+				_text : ['text','text'][isDebug],
 				_touch : ['touch-0.2.14.min','touch-0.2.14'][isDebug],
-				_template : ['jquery.tmpl.min','jquery.tmpl.min'][isDebug],
+				_template : ['jquery.tmpl.min','jquery.tmpl'][isDebug],
 				_iscroll : ['iscroll','iscroll'][isDebug],
 				_easelJs : ['easeljs-0.8.1.min','easeljs-0.8.1.combined'][isDebug],
 				_soundJs : ['soundjs-0.6.1.min','soundjs-0.6.1.combined'][isDebug],
@@ -98,7 +100,8 @@ function getReqMap(){
 			paths : paths,
 			map : {
 				'*' : {
-					css : '_css'
+					css : '_css',
+					text : '_text'
 				}
 			},
 			shim : {
@@ -118,6 +121,7 @@ function getReqMap(){
 
 		$(function(){
 			var arr = getReqMap();
+			Array.prototype.push.apply(arr,['component','tmpl']);
 			require(arr,function(){
 				var len  = ut._list.length ;
 				for(var i =0 ; i < len; i++){
@@ -131,19 +135,31 @@ function getReqMap(){
 
 define('touch',['_touch'],function(a){
 	ut.touch = a ;
-
 });
 define('tmpl',['_template','jquery'],function(){
-
 	$.each( $('script:not([type*=javascript])'), function(index,value){
-		$(value).html(function(){
-			return $(this).html().replace(/@(?=[^\\])/g,'$').replace(/@[\\]/g,'@');
-		}) ;
+		$.template($(value).attr('id'),$(value).html().replace(/@(?=[^\\])/g,'$').replace(/@[\\]/g,'@'));
 	});
-
 	$.fn.initTmpl = $.fn.tmpl ;
 });
-define('initTmpl',['tmpl'],function(){  });
+define('component',['text!_component'],function(data){
+	var ele = createStyle();
+	$.each($(data),function(index,value){
+		var $ele = $(value);
+		if($ele.is('script')){
+			$.template($ele.attr('id'),$ele.html().replace(/@(?=[^\\])/g,'$').replace(/@[\\]/g,'@'));
+		}else if($ele.is('style')){
+			$ele.appendTo(ele);
+		}
+	});
+	function createStyle(){
+		var head = document.getElementsByTagName('head')[0];
+		var ele = document.createElement('style');
+		ele.type='text/css';
+		head.appendChild(ele);
+		return ele ;
+	}
+});
 
 define('cookie',['_cookie'],function(){
 
@@ -157,6 +173,7 @@ define('wx',['_wx'],function(wx){
 define('normalizeCss',['css!_normalize']);
 define('foundationCss',['css!_foundationCss']);
 define('foundation',['foundationCss','_foundation']);
+
 
 define('iScroll',['_iscroll'],function(){
     ut.iScroll = function(wrapId,options){
@@ -387,6 +404,159 @@ ut.client = (function(){
 	
 })();
 
+//数组方法
+ut.get = function(key){
+	return new Intel(typeof key == 'string'?user.get(key):key);
+};
+function Intel(data){
+	this.data = data;
+	this.end = function(){
+		return this.data;
+	};
+	this._toArray = function (obj){
+		var re = $.map(obj ||{},function(value, index){
+            if ($.isPlainObject(value))
+                value._key = index;
+            return value;
+		});
+		return re;
+	};
+	this.toArray = function(){
+		this.data = this._toArray(this.data);
+        return this;
+	};
+};
+Intel.prototype.fillData = function(colum, minLength){
+	var data = this.data;
+	var re;
+    if (typeof data == 'array') 
+        re = data;
+    else 
+        re = this._toArray(data);
+    if (minLength && re.length < minLength) 
+        re = re.concat(new Array(minLength - re.length));
+    else {
+        var fix = Math.ceil(re.length / colum) * colum - re.length;
+        if (fix) 
+            re = re.concat(new Array(fix));
+    }
+    this.data = re;
+    return this;
+};
+Intel.prototype.filter = function(rule, isother){
+	
+    var copy = $.extend({}, this.data);
+    
+    function isChild(ob, rule){
+        for(var i in rule){
+        	if(ob[i]==undefined)
+        		return false;
+        }
+        return true;
+    };
+    function find(ob,rule){
+    	if(isChild(ob,rule)){
+    		for(var i in rule){
+    			if(ob[i]!=rule[i])
+    				return false;
+    		}
+    		return true;
+    	}else{
+    		for(var i in ob){
+    			if (typeof ob[i] == 'object' && ob[i] != null && find(ob[i],rule)) {
+    				return true;
+    			}
+    		}
+    	}
+    	return false;
+    };
+    
+    for(var i in copy){
+    	if( (isother&&find(copy[i], rule)) || (!isother&&!find(copy[i],rule)) ){
+    		 delete copy[i];
+    	}
+    }
+    this.data = copy
+    return this;
+};
+
+Intel.prototype.sortData = function(key, desc){
+    //key是数组;
+    var re;var data = this.data;
+    if (typeof data == 'array') 
+        re = data;
+    else 
+        re = this._toArray(data);
+    function localCompare(a, b, type){
+    	
+        var obj = {
+            'gradegrade': {
+                'sss': 1,
+                'ss': 2,
+                's': 3,
+                'a': 4,
+                'b': 5,
+                'c': 6,
+                'd': 7
+            }
+        };
+        
+        return obj[type] ? obj[type][a] - obj[type][b] : a.localeCompare(b);
+    };
+    function compare(a, b, i){
+        //i key数组中的第几个
+        i = i || 0;
+        if (a[key[i]] == b[key[i]]) {
+            return key.length > i ? compare(a, b, i + 1) : false;
+        }
+        else {
+            if (typeof a[key[i]] == 'number') {
+                return desc ? b[key[i]] - a[key[i]] : a[key[i]] - b[key[i]];
+            }
+            else {
+                return desc ? localCompare(b[key[i]], a[key[i]], key[i]) : localCompare(a[key[i]], b[key[i]], key[i]);
+            }
+        }
+        
+    };
+    
+    re.sort(function(a, b){
+        if (key instanceof Array) {
+            return compare(a, b);
+        }
+        else {
+            if (desc) 
+                return b[key] - a[key];
+            else 
+                return a[key] - b[key];
+        }
+        
+    });
+    this.data = re;
+    return this;  
+};
+Intel.prototype.filterOne = function(rule, isother){
+	return this.filter(rule, isother).one().end();
+};
+Intel.prototype.last = function(){
+	return this.data[this.keys()-1];
+};
+Intel.prototype.keys = function(){
+	return Object.keys(this.data||[]).length;
+};
+Intel.prototype.one = function(){
+	var obj = this.data
+    var arr = Object.keys(obj);
+    if (arr.length == 0) {
+        this.data = false;
+    }else{
+    	this.data = obj[arr[0]].empty == true?obj[arr[1]]:obj[arr[0]];
+    }
+    return this;
+};
+
+
+
 
 ut.getArray = function(num){
 	return (new Array(num));
@@ -400,7 +570,7 @@ ut.toArray = function(obj){
         return value;
     });
     return re;
-}
+};
 //通用方法，按照某个字段对data进行排序，data可以是array或者object
 //key是排序用的字段，desc表示是否降序，desc为true表示降序，不传则默认升序
 ut.sortData = function(data, key, desc){
@@ -441,13 +611,11 @@ ut.sortData = function(data, key, desc){
 };
 
 
-function _getAllurl( cmd ){
-	return serverHost + cmd;
-};
-//向后台发送ajax请求
-ut.send = function(url,cb,failcb,options){
 
-	if(typeof cb != 'function'){
+//向后台发送ajax请求
+ut.send = function(url,cb,failcb,errorcb,options){
+
+	if(cb && typeof cb != 'function'){
 		options = cb ;
 		cb = false ;
 	}
@@ -455,31 +623,36 @@ ut.send = function(url,cb,failcb,options){
 		options = failcb ;
 		failcb = false ;
 	}
-	
+	if(errorcb && (typeof errorcb != 'function')){
+		options = errorcb ;
+		errorcb = false ;
+	}
 	if(options instanceof jQuery){
 		options = options.serialize() ;
 	}
-	
 
 	ut.waiter.expand();
 	$.ajax({
 		method : 'post',
-		url : _getAllurl(url),
-		timeout: 20000,
+		url : serverHost + url,
+		timeout: 60000,
 		data : options||{},
 		success : function(data){
 			console.log(data);
 			ut.waiter.out();
+			if(window.pageData){
+				$.extend(true,pageData,data);
+			}
 			if( data && data.callback === true ){
 				cb && cb(data.data,data);
 			}else{
 				console.error('callback false') ;
-				//ut.showMsg(data.msg);
 				failcb && failcb(data);
 			}
 		},
 		error : function(XMLHttpRequest, textStatus, errorThrown){
 			ut.waiter.out();
+			errorcb && errorcb(textStatus);
 			console.log(textStatus);
 		}
 	});

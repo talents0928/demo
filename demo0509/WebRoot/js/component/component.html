@@ -1,0 +1,29 @@
+
+
+<style text='text/css'>
+	.bg0{
+		background:darkgreen;
+	}
+</style>
+
+<script type='text/x' id='testTmpl'>
+	<div class='bg0' style='width:300px;height:200px;margin:auto;margin-top:300px;'>${$data.msg}</div>
+	{{tmpl 'testTmpl2'}}
+</script>
+
+
+
+
+<script type='text/x' id='messageTmpl'>
+	<div class='pa00 full' style='background:rgba(0,0,0,0.3);z-index:99;font-size:28px;' id='message'>
+		<div class='pa auto2 oh' style='width:400px;border-radius:10px;top:45%;'>
+			<div class='fullw pr' style='height:130px;background:rgba(255,255,255,1);line-height:1.5;'>
+				<div class='pa auto2 tac' style='width:85%;'>@{@data}</div>
+			</div>
+			<div class='fullw pr tac sureTp fs28' as='op1'
+				style='margin-top:1px;height:80px;line-height:80px;background:rgba(255,255,255,1);color:#007aff;'>
+				确定
+			</div>
+		</div>
+	</div>
+</script>

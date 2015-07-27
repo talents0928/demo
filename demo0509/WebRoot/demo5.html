@@ -12,7 +12,7 @@
 	<title>demo 范例</title>
 	<script type="text/javascript" src='js/require.js'></script>
 	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
-	<script type="text/javascript" src='js/utils.js'></script>
+	<script type="text/javascript" debug=true src='js/utils.js'></script>
 	<link rel='stylesheet' href='css/common.css'></link>
 	<!--  -->
 
@@ -26,7 +26,14 @@
 	.gbox{
 		background : wheat ;
 	}
-	
+	.btnTp{
+		position: absolute;
+		top:30%;left:0;right: 0;
+		margin:auto;
+		line-height:80px;
+		text-align:center;
+		color:#fff;
+	}
 
 </style>
 <body>
@@ -36,69 +43,36 @@
 </body>
 
 <script id="baseTmpl" type="text/x">
-	<div class='full contentTp' >
-		<!-- <iframe src='./js/component/comp1.html' id='myIframe'
-			style='width:100%;height:50%;border:none;'
-		></iframe> -->
+	<div class='full contentTp' id='@{ut.client.modeH}' >
+		<div class='btnTp' 
+			style='width:180px;height:80px;background:#367ecf;'>测试按钮</div>
 	</div>
 </script>
 
 	<script type="text/javascript">
 
-		ut.loadConponent = function(conponentUrl){
-			
-			loadUrl( conponentUrl || 'tmpl.html');
-			function loadUrl(url){
-				$.ajax({
-					method : 'post',
-					url : url,
-					timeout: 20000,
-					dataTyp : "text" ,
-					success : function(data){
-						parseData(data);
-					},
-					error : function(XMLHttpRequest, textStatus, errorThrown){
-						console.error('组件加载失败');
-						console.log(textStatus);
-					}
+		function showMessage(msg){
+			$.tmpl('messageTmpl', msg).appendTo(body);
+			$('#message .sureTp').on('tap',function(){
+				$('#message').fadeOut(400,function(){
+					$(this).remove();
 				});
-			}
-			function parseData(data){
-				var ele = makeStyle();
-				$.each($(data),function(index,value){
-					var $ele = $(value);
-					if($ele.is('script')){
-						$.template($ele.attr('id'),$ele.html());
-					}else if($ele.is('style')){
-						$ele.appendTo(ele);
-					}
-				});
-			}
-			function makeStyle(){
-				var head = document.getElementsByTagName('head')[0];
-				var ele = document.createElement('style');
-				ele.type='text/css';
-				head.appendChild(ele);
-				return ele ;
-			}
-			
-		} ;
+			});
+		}
 		
 		
 		ut.ready(function(){
-			ut.client.setBox(720);
-			console.log('every thing is ok');
+			ut.client.setBox(640);
 			
-			$('#baseTmpl').tmpl().appendTo(body) ;
-		
-			ut.loadConponent();
+//			$('#baseTmpl').tmpl().appendTo(body) ;
+			$.tmpl('baseTmpl').appendTo(body) ;
 			
-			setTimeout(function(){
-				$.tmpl('testTmpl',{msg:'这一定能成功哦'}).appendTo('.contentTp');
-			},4000)
-			
-				
-			
+			//$.tmpl('testTmpl',{msg:'这一定能成功哦'}).appendTo('.contentTp');
+
+			$('.btnTp').on('tap',function(){
+				showMessage('非常棒的弹出窗口');
+				console.log($('#message').tmplItem().data);
+			})
 			
 			
 		});
