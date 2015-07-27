@@ -555,6 +555,45 @@ Intel.prototype.one = function(){
     return this;
 };
 
+(function(){
+	
+	function toArray(obj){
+		return $.map(obj ||{},function(value, index){
+            if ($.isPlainObject(value))
+                value._key = index;
+            return value;
+		});
+	};
+	ut.get = function(obj){
+		return toArray(obj);
+	};
+	//拓展数组方法
+	Array.prototype.fill = function(colum, minLength){
+		var re = toArray(this);
+	    if (minLength && re.length < minLength) 
+	        re = re.concat(new Array(minLength - re.length));
+	    else {
+	        var fix = Math.ceil(re.length / colum) * colum - re.length;
+	        if (fix) 
+	            re = re.concat(new Array(fix));
+	    }
+	    return re;
+	};
+	Array.prototype.test = function(obj){
+		return toArray(obj);
+	};
+
+
+
+
+
+
+
+	$.each('fill sortData test'.split(' '),function(index,value){
+		Object.defineProperty(Array.prototype, value , {enumerable : false });
+	});
+	
+})();
 
 
 
@@ -571,6 +610,7 @@ ut.toArray = function(obj){
     });
     return re;
 };
+
 //通用方法，按照某个字段对data进行排序，data可以是array或者object
 //key是排序用的字段，desc表示是否降序，desc为true表示降序，不传则默认升序
 ut.sortData = function(data, key, desc){
