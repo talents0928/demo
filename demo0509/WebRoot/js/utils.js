@@ -10,7 +10,7 @@ window.cdnHost = window.cdnHost || (function(){
 	return 'http://' + window.location.host+'/'+window.location.pathname.split('/')[1]+'/';
 })();
 
-var root  = window.pageData ? window.pageData.data : {};
+
 
 
 var ut = {};
@@ -142,7 +142,7 @@ define('tmpl',['_template','jquery'],function(){
 	});
 	$.fn.initTmpl = $.fn.tmpl ;
 });
-define('component',['text!_component'],function(data){
+define('component',['text!_component','_template'],function(data){
 	var ele = createStyle();
 	$.each($(data),function(index,value){
 		var $ele = $(value);
@@ -405,155 +405,7 @@ ut.client = (function(){
 })();
 
 //数组方法
-ut.get = function(key){
-	return new Intel(typeof key == 'string'?user.get(key):key);
-};
-function Intel(data){
-	this.data = data;
-	this.end = function(){
-		return this.data;
-	};
-	this._toArray = function (obj){
-		var re = $.map(obj ||{},function(value, index){
-            if ($.isPlainObject(value))
-                value._key = index;
-            return value;
-		});
-		return re;
-	};
-	this.toArray = function(){
-		this.data = this._toArray(this.data);
-        return this;
-	};
-};
-Intel.prototype.fillData = function(colum, minLength){
-	var data = this.data;
-	var re;
-    if (typeof data == 'array') 
-        re = data;
-    else 
-        re = this._toArray(data);
-    if (minLength && re.length < minLength) 
-        re = re.concat(new Array(minLength - re.length));
-    else {
-        var fix = Math.ceil(re.length / colum) * colum - re.length;
-        if (fix) 
-            re = re.concat(new Array(fix));
-    }
-    this.data = re;
-    return this;
-};
-Intel.prototype.filter = function(rule, isother){
-	
-    var copy = $.extend({}, this.data);
-    
-    function isChild(ob, rule){
-        for(var i in rule){
-        	if(ob[i]==undefined)
-        		return false;
-        }
-        return true;
-    };
-    function find(ob,rule){
-    	if(isChild(ob,rule)){
-    		for(var i in rule){
-    			if(ob[i]!=rule[i])
-    				return false;
-    		}
-    		return true;
-    	}else{
-    		for(var i in ob){
-    			if (typeof ob[i] == 'object' && ob[i] != null && find(ob[i],rule)) {
-    				return true;
-    			}
-    		}
-    	}
-    	return false;
-    };
-    
-    for(var i in copy){
-    	if( (isother&&find(copy[i], rule)) || (!isother&&!find(copy[i],rule)) ){
-    		 delete copy[i];
-    	}
-    }
-    this.data = copy
-    return this;
-};
 
-Intel.prototype.sortData = function(key, desc){
-    //key是数组;
-    var re;var data = this.data;
-    if (typeof data == 'array') 
-        re = data;
-    else 
-        re = this._toArray(data);
-    function localCompare(a, b, type){
-    	
-        var obj = {
-            'gradegrade': {
-                'sss': 1,
-                'ss': 2,
-                's': 3,
-                'a': 4,
-                'b': 5,
-                'c': 6,
-                'd': 7
-            }
-        };
-        
-        return obj[type] ? obj[type][a] - obj[type][b] : a.localeCompare(b);
-    };
-    function compare(a, b, i){
-        //i key数组中的第几个
-        i = i || 0;
-        if (a[key[i]] == b[key[i]]) {
-            return key.length > i ? compare(a, b, i + 1) : false;
-        }
-        else {
-            if (typeof a[key[i]] == 'number') {
-                return desc ? b[key[i]] - a[key[i]] : a[key[i]] - b[key[i]];
-            }
-            else {
-                return desc ? localCompare(b[key[i]], a[key[i]], key[i]) : localCompare(a[key[i]], b[key[i]], key[i]);
-            }
-        }
-        
-    };
-    
-    re.sort(function(a, b){
-        if (key instanceof Array) {
-            return compare(a, b);
-        }
-        else {
-            if (desc) 
-                return b[key] - a[key];
-            else 
-                return a[key] - b[key];
-        }
-        
-    });
-    this.data = re;
-    return this;  
-};
-Intel.prototype.filterOne = function(rule, isother){
-	return this.filter(rule, isother).one().end();
-};
-Intel.prototype.last = function(){
-	return this.data[this.keys()-1];
-};
-Intel.prototype.keys = function(){
-	return Object.keys(this.data||[]).length;
-};
-Intel.prototype.one = function(){
-	var obj = this.data
-    var arr = Object.keys(obj);
-    if (arr.length == 0) {
-        this.data = false;
-    }else{
-    	this.data = obj[arr[0]].empty == true?obj[arr[1]]:obj[arr[0]];
-    }
-    return this;
-};
 
 (function(){
 	
@@ -579,17 +431,89 @@ Intel.prototype.one = function(){
 	    }
 	    return re;
 	};
-	Array.prototype.test = function(obj){
-		return toArray(obj);
+	Array.prototype.filter = function(rule, isother){
+		
+	    var copy = $.extend({}, this);
+	    
+	    function isChild(ob, rule){
+	        for(var i in rule){
+	        	if(ob[i]==undefined)
+	        		return false;
+	        }
+	        return true;
+	    };
+	    function find(ob,rule){
+	    	if(isChild(ob,rule)){
+	    		for(var i in rule){
+	    			if(ob[i]!=rule[i])
+	    				return false;
+	    		}
+	    		return true;
+	    	}else{
+	    		for(var i in ob){
+	    			if (typeof ob[i] == 'object' && ob[i] != null && find(ob[i],rule)) {
+	    				return true;
+	    			}
+	    		}
+	    	}
+	    	return false;
+	    };
+	    
+	    for(var i in copy){
+	    	if( (isother&&find(copy[i], rule)) || (!isother&&!find(copy[i],rule)) ){
+	    		 delete copy[i];
+	    	}
+	    }
+	    return toArray(copy);
+	};
+	Array.prototype.sortData = function(key, desc){
+	    //key是数组;
+	    var re =  this ;
+	    function localCompare(a, b, type){
+	    	
+	        var obj = {
+	            'gradegrade': {
+	                'sss': 1,
+	                'd': 7
+	            }
+	        };
+	        
+	        return obj[type] ? obj[type][a] - obj[type][b] : a.localeCompare(b);
+	    };
+	    function compare(a, b, i){
+	        //i key数组中的第几个
+	        i = i || 0;
+	        if (a[key[i]] == b[key[i]]) {
+	            return key.length > i ? compare(a, b, i + 1) : false;
+	        }
+	        else {
+	            if (typeof a[key[i]] == 'number') {
+	                return desc ? b[key[i]] - a[key[i]] : a[key[i]] - b[key[i]];
+	            }
+	            else {
+	                return desc ? localCompare(b[key[i]], a[key[i]], key[i]) : localCompare(a[key[i]], b[key[i]], key[i]);
+	            }
+	        }
+	        
+	    };
+	    
+	    re.sort(function(a, b){
+	        if (key instanceof Array) {
+	            return compare(a, b);
+	        }
+	        else {
+	            if (desc) 
+	                return b[key] - a[key];
+	            else 
+	                return a[key] - b[key];
+	        }
+	        
+	    });
+	    return re;  
 	};
 
 
-
-
-
-
-
-	$.each('fill sortData test'.split(' '),function(index,value){
+	$.each('fill sortData filter'.split(' '),function(index,value){
 		Object.defineProperty(Array.prototype, value , {enumerable : false });
 	});
 	
@@ -651,52 +575,57 @@ ut.sortData = function(data, key, desc){
 };
 
 
+(function (){
+	
+	var origin = window.pageData || {} ;
+	window.root  = origin.data || {};
+	//向后台发送ajax请求
+	ut.send = function(url,cb,failcb,errorcb,options){
 
-//向后台发送ajax请求
-ut.send = function(url,cb,failcb,errorcb,options){
-
-	if(cb && typeof cb != 'function'){
-		options = cb ;
-		cb = false ;
-	}
-	if(failcb && (typeof failcb != 'function')){
-		options = failcb ;
-		failcb = false ;
-	}
-	if(errorcb && (typeof errorcb != 'function')){
-		options = errorcb ;
-		errorcb = false ;
-	}
-	if(options instanceof jQuery){
-		options = options.serialize() ;
-	}
-
-	ut.waiter.expand();
-	$.ajax({
-		method : 'post',
-		url : serverHost + url,
-		timeout: 60000,
-		data : options||{},
-		success : function(data){
-			console.log(data);
-			ut.waiter.out();
-			if(window.pageData){
-				$.extend(true,pageData,data);
-			}
-			if( data && data.callback === true ){
-				cb && cb(data.data,data);
-			}else{
-				console.error('callback false') ;
-				failcb && failcb(data);
-			}
-		},
-		error : function(XMLHttpRequest, textStatus, errorThrown){
-			ut.waiter.out();
-			errorcb && errorcb(textStatus);
-			console.log(textStatus);
+		if(cb && typeof cb != 'function'){
+			options = cb ;
+			cb = false ;
 		}
-	});
-};
+		if(failcb && (typeof failcb != 'function')){
+			options = failcb ;
+			failcb = false ;
+		}
+		if(errorcb && (typeof errorcb != 'function')){
+			options = errorcb ;
+			errorcb = false ;
+		}
+		if(options instanceof jQuery){
+			options = options.serialize() ;
+		}
+
+		ut.waiter.expand();
+		$.ajax({
+			method : 'post',
+			url : serverHost + url,
+			timeout: 60000,
+			data : options||{},
+			success : function(data){
+				console.log(data);
+				ut.waiter.out();
+				$.extend(true,origin,data);
+				if( data && data.callback === true ){
+					cb && cb(data.data,data);
+				}else{
+					console.error('callback false') ;
+					failcb && failcb(data);
+				}
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown){
+				ut.waiter.out();
+				errorcb && errorcb(textStatus);
+				console.log(textStatus);
+			}
+		});
+	};
+	
+	
+})();
+
 
 
 
