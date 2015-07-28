@@ -41,6 +41,8 @@ var paths = {
 				_normalize : asset.cssPath + '/normalize',
 				_foundationCss : asset.cssPath + '/foundation.min',
 				_component :  asset.conponentPath + '/component.html' ,
+				_componentJs :  asset.conponentPath + '/component' ,
+
 
 				//jquery : 'jquery-1.10.2.min',
 				_css : ['css.min','css'][isDebug],
@@ -142,7 +144,7 @@ define('tmpl',['_template','jquery'],function(){
 	});
 	$.fn.initTmpl = $.fn.tmpl ;
 });
-define('component',['text!_component','_template'],function(data){
+define('component',['text!_component','_template','_componentJs'],function(data){
 	var ele = createStyle();
 	$.each($(data),function(index,value){
 		var $ele = $(value);
