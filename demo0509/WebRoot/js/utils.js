@@ -468,6 +468,61 @@ ut.client = (function(){
 	    }
 	    return toArray(copy);
 	};
+	Array.prototype.sortData = function(keys, desc ,custom){
+	    //key是数组;
+	    var re =  this ;
+	    
+	    
+	    keys = keys instanceof Array ? keys : [keys] ;
+	    desc = desc instanceof Array ? desc : [desc] ;
+	    
+	    function compare(a,b,i){
+	    	
+	    };
+	    
+	    
+	    function localCompare(a, b, type){
+	    	
+	        var obj = {
+	            'gradegrade': {
+	                'sss': 1,
+	                'd': 7
+	            }
+	        };
+	        
+	        return obj[type] ? obj[type][a] - obj[type][b] : a.localeCompare(b);
+	    };
+	    function compare(a, b, i){
+	        //i key数组中的第几个
+	        i = i || 0;
+	        if (a[key[i]] == b[key[i]]) {
+	            return key.length > i ? compare(a, b, i + 1) : false;
+	        }
+	        else {
+	            if (typeof a[key[i]] == 'number') {
+	                return desc ? b[key[i]] - a[key[i]] : a[key[i]] - b[key[i]];
+	            }
+	            else {
+	                return desc ? localCompare(b[key[i]], a[key[i]], key[i]) : localCompare(a[key[i]], b[key[i]], key[i]);
+	            }
+	        }
+	        
+	    };
+	    
+	    re.sort(function(a, b){
+	        if (key instanceof Array) {
+	            return compare(a, b);
+	        }
+	        else {
+	            if (desc) 
+	                return b[key] - a[key];
+	            else 
+	                return a[key] - b[key];
+	        }
+	        
+	    });
+	    return re;  
+	};
 	Array.prototype.sortData = function(key, desc){
 	    //key是数组;
 	    var re =  this ;
