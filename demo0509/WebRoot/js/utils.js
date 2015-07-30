@@ -468,15 +468,23 @@ ut.client = (function(){
 	    }
 	    return toArray(copy);
 	};
-	Array.prototype.sortData = function(keys, desc ,custom){
+	Array.prototype.sortData = function(keys, descs ,custom){
 	    //key是数组;
 	    var re =  this ;
 	    
 	    
 	    keys = keys instanceof Array ? keys : [keys] ;
-	    desc = desc instanceof Array ? desc : [desc] ;
+	    descs = desc instanceof Array ? descs : [descs] ;
 	    
 	    function compare(a,b,i){
+	    	i = i || 0 ;
+	    	if( typeof keys[i] == undefined ){
+	    		return false
+	    	}
+	    	var key = keys[i] , desc = descs[i]
+	    	return a[key] == b[key] ? compare(a, b, i + 1) 
+	    		 : desc ? a[key] - b[key] : b[key] - a[key] ;
+	    		  
 	    	
 	    };
 	    
