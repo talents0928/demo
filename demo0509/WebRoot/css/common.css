@@ -5,7 +5,7 @@
 *	
 **/
 body {
-	background : wheat;
+	background : white;
 	-webkit-tap-highlight-color: rgba(0,0,0,0);
 	-webkit-backface-visibility: hidden;
 	-webkit-user-select: none;
@@ -96,6 +96,18 @@ textarea{
 }
 .tr4{
 	-webkit-transform:translate(4px,4px);
+}
+.op3{
+		position: relative;
+		overflow :hidden;
+	}
+.op3:before{
+	content : '';
+	display : block;
+	width:100%;height:100%;
+	position:absolute;
+	top:0;left:0;
+	background : rgba(0,0,0,0.3);
 }
 
 .auto{
