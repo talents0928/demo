@@ -481,7 +481,10 @@ ut.client = (function(){
 	    	if( typeof keys[i] == undefined ){
 	    		return false
 	    	}
-	    	var key = keys[i] , desc = descs[i]
+	    	var key = keys[i] , desc = descs[i] ;
+	    	
+	    	
+	    	
 	    	return a[key] == b[key] ? compare(a, b, i + 1) 
 	    		 : desc ? a[key] - b[key] : b[key] - a[key] ;
 	    		  

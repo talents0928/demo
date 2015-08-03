@@ -1,50 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	 <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 	<meta name="format-detection" content="telephone=no">
 	<meta http-equiv="x-dns-prefetch-control" content="on">
+   
 
-	<title>demo 范例</title>
+    <script type="text/javascript" src='js/require.min.js'></script>
 	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
-	<script type="text/javascript" src='js/lib/libCopy/jquery.tmpl.js'></script>
+	<script type="text/javascript" src='js/utils.js'></script>
 	<link rel='stylesheet' href='css/common.css'></link>
-	<!--  -->
 
 </head>
 
 
 <body>
 	<style type="text/css">
-		
+		.box{
+			width:50px;height:50px;
+			border-radius : 50%;
+			background : darkred;
+			position : absolute;
+			top:100px;left:100px;
+		}
 	</style>
 	
 		<script type='text/x' id='baseTmpl'>
-		${console.log($data)}
-			<div class='fullw' style='background:darkgreen;height:200px;'>
-				${name}
-				{{tmpl($data.address) '#list1Tmpl'}}
+			<div class='full oh' id='mainWrap' style='background:wheat;'>
+				
+				<div class='box'></div>
 			</div>
 		</script>
 
-		<script type='text/gg' id='list1Tmpl'>
-			<div class='fullw' style='background:darkred;height:100px;line-height:50px;'>
-				<div>${province}</div>
-				<div>${num}</div>
-			</div>
-		</script>
-	
-
+		
 	
 
 	<script type='text/javascript'>
+		ut.ready(function(){
+			ut.client.setBox(640);
+			$('#baseTmpl').tmpl().appendTo(body);
+			var $ele = $('.box');
+			console.log(ut.easelJs);
+			createjs.Tween.get($ele);
+		});
 		
-		var data = {name:'何川','address':{'province':'江西省','num':'190909'}};
-		$('#baseTmpl').tmpl(data).appendTo('body');
 		
 		 
 	</script>
