@@ -140,7 +140,11 @@ define('touch',['_touch'],function(a){
 });
 define('tmpl',['_template','jquery'],function(){
 	$.each( $('script:not([type*=javascript])'), function(index,value){
-		$.template($(value).attr('id'),$(value).html().replace(/@(?=[^\\])/g,'$').replace(/@[\\]/g,'@'));
+		var $this = $(value);
+		$this.html(function(){
+			return $(this).html().replace(/@(?=[^\\])/g,'$').replace(/@[\\]/g,'@') ;
+		});
+		$.template($this.attr('id'),$this.html());
 	});
 	$.fn.initTmpl = $.fn.tmpl ;
 });
@@ -194,7 +198,7 @@ define('iScroll',['_iscroll'],function(){
     };
 });
 
-define('easelJs',['_easelJs'],function(data){
+define('easelJs',['_easelJs','_tweenJs','_soundJs'],function(data){
 
 	ut.easelJs = createjs ;
 
@@ -204,11 +208,7 @@ define('soundJs',['_soundJs'],function(data){
 	ut.soundJs = createjs ;
 
 });
-define('tweenJs',['_tweenJs'],function(data){
 
-	ut.soundJs = createjs ;
-
-});
 
 
 
