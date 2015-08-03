@@ -53,6 +53,7 @@ var paths = {
 				_easelJs : ['easeljs-0.8.1.min','easeljs-0.8.1.combined'][isDebug],
 				_soundJs : ['soundjs-0.6.1.min','soundjs-0.6.1.combined'][isDebug],
 				_tweenJs : ['tweenjs-0.6.1.min','tweenjs-0.6.1.combined'][isDebug],
+				_CSSPlugin : ['CSSPlugin','CSSPlugin'][isDebug],
 				_foundation : ['foundation.min','foundation.min'][isDebug],
 				_cookie : ['jquery.cookie','jquery.cookie'][isDebug],
 				_wx : ['http://res.wx.qq.com/open/js/jweixin-1.0.0'],
@@ -198,9 +199,10 @@ define('iScroll',['_iscroll'],function(){
     };
 });
 
-define('easelJs',['_easelJs','_tweenJs','_soundJs'],function(data){
-
+define('easelJs',['_easelJs','_tweenJs','_soundJs','_CSSPlugin'],function(data){
+	
 	ut.easelJs = createjs ;
+	createjs.CSSPlugin.install(createjs.Tween);
 
 });
 define('soundJs',['_soundJs'],function(data){

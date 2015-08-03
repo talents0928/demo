@@ -33,7 +33,7 @@
 	</style>
 	
 		<script type='text/x' id='baseTmpl'>
-			<div class='full oh' id='mainWrap' style='background:wheat;'>
+			<div class='full oh pr' id='mainWrap' style='background:wheat;'>
 				
 				<div class='box'></div>
 			</div>
@@ -48,7 +48,9 @@
 			$('#baseTmpl').tmpl().appendTo(body);
 			var $ele = $('.box');
 			console.log(ut.easelJs);
-			createjs.Tween.get($ele);
+			createjs.Tween.get($ele,{css:true}).wait(2000).to({'top':'500px'},1500).call(function(){
+				console.log('fuck');
+			});
 		});
 		
 		
