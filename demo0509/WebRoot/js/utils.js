@@ -20,7 +20,7 @@ var ut = {};
 *	文件路径引用
 **/
 
-var help = ['','','cookie','touch','initTmpl','iScroll','easelJs','soundJs','tweenJs','foundation','wx',''];
+var help = ['','moveJs','cookie','touch','initTmpl','iScroll','easelJs','soundJs','tweenJs','foundation','wx',''];
 
 /**
  *	是否开启debug模式
@@ -53,7 +53,7 @@ var paths = {
 				_easelJs : ['easeljs-0.8.1.min','easeljs-0.8.1.combined'][isDebug],
 				_soundJs : ['soundjs-0.6.1.min','soundjs-0.6.1.combined'][isDebug],
 				_tweenJs : ['tweenjs-0.6.1.min','tweenjs-0.6.1.combined'][isDebug],
-				_CSSPlugin : ['CSSPlugin','CSSPlugin'][isDebug],
+				_move : ['move.min','move'][isDebug],
 				_foundation : ['foundation.min','foundation.min'][isDebug],
 				_cookie : ['jquery.cookie','jquery.cookie'][isDebug],
 				_wx : ['http://res.wx.qq.com/open/js/jweixin-1.0.0'],
@@ -199,15 +199,19 @@ define('iScroll',['_iscroll'],function(){
     };
 });
 
-define('easelJs',['_easelJs','_tweenJs','_soundJs','_CSSPlugin'],function(data){
+define('easelJs',['_easelJs','_tweenJs','_soundJs'],function(data){
 	
 	ut.easelJs = createjs ;
-	createjs.CSSPlugin.install(createjs.Tween);
 
 });
 define('soundJs',['_soundJs'],function(data){
 
 	ut.soundJs = createjs ;
+
+});
+define('moveJs',['_move'],function(data){
+	console.log(data);
+	ut.moveJs = move ;
 
 });
 
@@ -397,7 +401,9 @@ ut.client = (function(){
 	
 	function setDefault(){
 		$(window).on('resize orientationchange',function(){
-			client.setBox();
+			if(!$(document.activeElement).is('input,textarea')){
+				client.setBox();
+			}
 		});
 		$(document).on('touchmove',function(e){
 			e.preventDefault();
