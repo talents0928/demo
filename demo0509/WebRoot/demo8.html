@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>demo for creatjs</title>
+	
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<meta http-equiv="x-dns-prefetch-control" content="on">
+    
+    <script type="text/javascript" src='js/require.js'></script>
+	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
+	<script type="text/javascript" src='js/utils.js'></script>
+	<link rel='stylesheet' href='css/common.css'></link>
+
+  </head>
+  
+  <body>
+    
+	
+	<style type="text/css">
+			.gbox{
+				background:white;
+			}
+	</style>
+				<canvas class='full' id='demoStage' width='720' height='1280'>
+					
+				</canvas>	
+  </body>
+  
+  <script type='text/javascript' >
+  	
+	ut.ready(function(){
+
+		ut.client.setBox(720);
+
+		ut.manage.add([{src:'boom.png',id:'boom'}],'./img/').setCallback(function(){
+
+			var createjs = ut.easelJs ;
+			var canvas = document.getElementById('demoStage');
+			var stage = new createjs.Stage(canvas);
+			
+			var spriteSheet = new createjs.SpriteSheet({
+				framerate : 13 ,
+				images : [ut.manage.getImgById('boom')],
+				frames : {width:360,height:640,regX:0,regY:0},
+
+				animations : {
+					play : [0,12,true,0.8]
+				}
+
+			});
+
+			var sprite = new createjs.Sprite(spriteSheet,'play') ;
+			sprite.tickEnabled = true ;
+			sprite.on('animationend',function(){
+				//console.log('it is finish!');
+				//console.log(this);
+				this.stop();
+				var that = this ;
+				setTimeout(function(){
+					that.play();
+				},3000);
+			});
+
+			//stage.addChild(sprite);
+			createjs.Ticker.setFPS(10);
+			createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED ;
+			createjs.Ticker.addEventListener('tick',function(evt){
+				
+				
+				stage.update();
+			});
+			
+
+			$(canvas).css({
+				transform : "scale(2,2)",
+				'transform-origin' : "0 0"
+			});
+
+			
+
+
+
+
+
+			var graphics = new createjs.Graphics();
+			graphics.setStrokeStyle(1);
+			graphics.beginStroke('blue');
+			graphics.beginFill('red');
+			graphics.drawCircle(0,0,70);
+
+			graphics.beginStroke('yellow');
+			graphics.beginFill('blue');
+			graphics.drawCircle(30, -30, 15);
+
+			var shape = new createjs.Shape(graphics);
+			shape.x = shape.y = 80 ;
+
+			stage.addChild(shape);
+
+
+
+
+
+
+
+
+
+
+
+
+		}).start();
+
+		
+	});
+  </script>
+</html>
