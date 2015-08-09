@@ -209,10 +209,8 @@ define('soundJs',['_soundJs'],function(data){
 	ut.soundJs = createjs ;
 
 });
-define('moveJs',['_move'],function(data){
-	console.log(data);
+define('moveJs',['_move'],function(move){
 	ut.moveJs = move ;
-
 });
 
 
