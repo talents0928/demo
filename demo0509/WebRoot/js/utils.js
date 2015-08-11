@@ -20,7 +20,7 @@ var ut = {};
 *	文件路径引用
 **/
 
-var help = ['','moveJs','cookie','touch','initTmpl','iScroll','easelJs','soundJs','tweenJs','foundation','wx',''];
+var help = ['','moveJs','cookie','touch','initTmpl','iScroll','easelJs','soundJs','tweenJs','foundation','wx','velocity'];
 
 /**
  *	是否开启debug模式
@@ -53,6 +53,7 @@ var paths = {
 				_easelJs : ['easeljs-0.8.1.min','easeljs-0.8.1.combined'][isDebug],
 				_soundJs : ['soundjs-0.6.1.min','soundjs-0.6.1.combined'][isDebug],
 				_tweenJs : ['tweenjs-0.6.1.min','tweenjs-0.6.1.combined'][isDebug],
+				_velocity : ['velocity.min','velocity'][isDebug],
 				_move : ['move.min','move'][isDebug],
 				_foundation : ['foundation.min','foundation.min'][isDebug],
 				_cookie : ['jquery.cookie','jquery.cookie'][isDebug],
@@ -212,7 +213,9 @@ define('soundJs',['_soundJs'],function(data){
 define('moveJs',['_move'],function(move){
 	ut.moveJs = move ;
 });
-
+define('velocity',['_velocity'],function(data){
+	
+});
 
 
 
