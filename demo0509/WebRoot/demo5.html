@@ -43,9 +43,13 @@
 </body>
 
 <script id="baseTmpl" type="text/x">
+	${console.log('5555')}
 	<div class='full contentTp' id='@{ut.client.modeH}' >
+		
+		{{each ut.make()||[]}}
 		<div class='btnTp text-ellipsis' 
 			style='width:180px;line-height:80px;background:#367ecf;'>测试按钮测试按钮测试按钮测试按钮</div>
+		{{/each}}
 	</div>
 </script>
 
@@ -59,7 +63,14 @@
 				});
 			});
 		}
-		
+		ut.make = function(){
+			console.log(222);
+			return {};
+		};
+		function make(){
+			console.log(111);
+			return [];
+		}
 		
 		ut.ready(function(){
 			ut.client.setBox(640);
