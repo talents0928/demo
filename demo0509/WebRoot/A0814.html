@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app>
+<html lang="en">
   <head>
     <title>demo for creatjs</title>
 	
@@ -11,7 +11,7 @@
 	<meta http-equiv="x-dns-prefetch-control" content="on">
    
 	<link rel='stylesheet' href='css/common.css'></link>
-
+	 <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
   </head>
   <script src='./js/angularJs/angular-1.0.1.min.js'></script>
   <div src="http://code.angularjs.org/angular-1.0.1.min.js"></div>
@@ -23,7 +23,7 @@
 	
   </script>
   
-	<body>
+	<body ng-app>
 	  <div ng-controller='HelloController'>
 	    <input ng-model='greeting.text'>
 	    <p>{{greeting.text}}, World</p>
