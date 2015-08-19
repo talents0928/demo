@@ -43,10 +43,9 @@
 </body>
 
 <script id="baseTmpl" type="text/x">
-	${console.log('5555')}
 	<div class='full contentTp' id='@{ut.client.modeH}' >
 		
-		{{each ut.make()||[]}}
+		{{each ut.getArray(4)}}
 		<div class='btnTp text-ellipsis' 
 			style='width:180px;line-height:80px;background:#367ecf;'>测试按钮测试按钮测试按钮测试按钮</div>
 		{{/each}}
@@ -75,6 +74,20 @@
 		ut.ready(function(){
 			ut.client.setBox(640);
 			
+			var c = 9 ;
+			
+			var a  = 3 ;
+			var b ;
+			
+			b = --a + 1 ;
+			b =+ a-- ;
+			console.log(a);
+			console.log(b);
+			console.log(c);
+			
+			
+			
+			
 //			$('#baseTmpl').tmpl().appendTo(body) ;
 			$.tmpl('baseTmpl').appendTo(body) ;
 			
@@ -85,7 +98,7 @@
 				console.log($('#message').tmplItem().data);
 			})
 			
-			
+			var d = 11;
 		});
 
 
