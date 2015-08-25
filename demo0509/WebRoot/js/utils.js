@@ -237,17 +237,31 @@ ut.reqCss = function(arr,callback){
 };
 
 
-$(document).on('touchstart mousedown', function(e){
-	var $node  = $(e.target);
-	var $target = $node.is('[as]') ? $node : $node.parents('[as]') ;
-	$target.length && $target.addClass($target.attr('as'));
+//$(document).on('touchstart mousedown', function(e){
+//	var $node  = $(e.target);
+//	var $target = $node.is('[as]') ? $node : $node.parents('[as]') ;
+//	$target.length && $target.addClass($target.attr('as'));
+//	
+//});
+//$(document).on('touchend mouseup', function(e){
+//	var $node  = $(e.target);
+//	var $target = $node.is('[as]') ? $node : $node.parents('[as]') ;
+//	$target.length && $target.removeClass($target.attr('as'));
+//});
+
+(function(){
 	
-});
-$(document).on('touchend mouseup', function(e){
-	var $node  = $(e.target);
-	var $target = $node.is('[as]') ? $node : $node.parents('[as]') ;
-	$target.length && $target.removeClass($target.attr('as'));
-});
+	$(document).on('touchstart mousedown','[as]',function(e){
+		var $target  = $(this);
+		$target.addClass($target.attr('as'));
+	});
+	
+	$(document).on('touchend mouseup','[as]',function(e){
+		var $target  = $(this);
+		$target.removeClass($target.attr('as'));
+	});
+	
+})();
 
 ut.waiter = new (function(){
 	var that = this ;
@@ -327,7 +341,7 @@ ut.client = (function(){
 
 	//正确屏幕的宽高比
 	client.ratio = client.modeW/client.modeH;
-	client.error = 1.35;
+	client.error = 100.35;
 	
 	client.init = function(){
 

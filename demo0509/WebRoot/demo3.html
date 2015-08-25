@@ -15,7 +15,7 @@
 	<meta http-equiv="x-dns-prefetch-control" content="on">
    
 
-    <script type="text/javascript" src='js/require.js'></script>
+    <script type="text/javascript" src='js/require.min.js'></script>
 	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
 	<script type="text/javascript" src='js/utils.js'></script>
 	<link rel='stylesheet' href='css/common.css'></link>
@@ -25,39 +25,31 @@
 
 
   </head>
-  
-<script type='text/x-jquery-tmpl' id='baseTmpl'>
-	<div></div>
+
+<style type='text/css'>
+	.gbox{
+		background : wheat ;
+	}
+</style>
+<script type='x' id='baseTmpl'>
+	<div class='full oh' id='demoWrap'>
+		<div class='oh'>
+			{{each ut.getArray(30)}}
+			<div class='pr' style='background:white;margin:10px auto;height:60px;' as='op3'></div>
+			{{/each}}
+		</div>
+	</div>
 </script>
   <body>
-   		<style type='text/css'>
-   			.gbox{
-   				background : wheat ;
-   			}
-
-   		</style>
-
-      <form id='myForm'>
-         
-          <input type='submit' value='提交' id='commit'></input>
-      </form>
+   		
   </body>
 
   <script type="text/javascript">
   		 ut.ready(function(){
 
-  		 	ut.client.setBox(720);
-        console.log(ut.easelJs);
-
-        $('#commit').on('click',function(){
-
-            console.log(111);
-            console.log($('#myForm').serialize());
-
-            return false;
-
-        });
-  		 
+  		 	ut.client.setBox(640);
+        	$.tmpl('baseTmpl').appendTo(body);
+  		 	ut.iScroll('#demoWrap');
 
   		 });
   </script>
