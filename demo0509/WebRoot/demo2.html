@@ -10,7 +10,7 @@
 	<meta http-equiv="x-dns-prefetch-control" content="on">
 
 	<title>demo 范例</title>
-	<script type="text/javascript" src='js/require.js'></script>
+	<script type="text/javascript" src='js/require.min.js'></script>
 	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
 	<script type="text/javascript" debug=3 src='js/utils.js'></script>
 	<link rel='stylesheet' href='css/common.css'></link>
@@ -24,11 +24,11 @@
 		
 	</style>
 	
-
+<script type='x' id='baseTmpl'>
 		<div class='oh fullw' id="mainWrap">
 			<div class='oh' id='slider' style='width:100%;height:2700px;background:wheat;'>
 			
-				 <ul data-orbit style=''>
+				 <ul data-orbit style='' class='dn'>
 				 	
 		            <li>
 		            	<a href='#'>
@@ -56,25 +56,58 @@
 		            </li>
 					
 		        </ul>
-				<div>学校占地面积1000亩，俩足球场，篮球场几十个吧。
-					三个食堂，宿舍有独立卫生间，热水器，饮水机，空调，卫生间内可以洗澡。
-					现在学校大约有16000人。学校的确是在燕郊，走国道，大约一个小时就到天安门了。
-					你来北京了就知道了，坐一个小时车根本不算啥。
-					<div class='fs20'>我一个同学在昌平上学，但去趟西单得俩小时。。。</div>
-					我们学校位置上没有优势，但这也不一定就是弊端。
-					远离喧嚣，生活成本相对市里自然也低。</div>
+				<form data-abide="ajax" method="post" id='myDemoForm'>
+					<div class='row collapse'>
+						<div class='small-4 columns'>
+							<div>你说这里是神马</div>
+						</div>
+						<div class='small-4 columns'>
+							<input type="text" placeholder="large-" name='num' pattern="^\d{5}$" style='width:100%;'></input>
+							<small class='error'>请输入数字</small>
+						</div>
+						<div class='small-4 columns'>
+							<a class='button'>你说这里是神马</a>
+						</div>
+						<div class='small-12 columns'>
+							<div class='ma' style='width:60%;height:80px;' id='commitTp'>提交</div>
+						</div>
+					</div>
+				</form>
+				
 
 			</div>
 		</div>
-	
+</script>
 
 	<script type='text/javascript'>
 		
-		ut.client.setBox(720);
+		
 		ut.ready(function(){
 			
+			ut.client.setBox(640);
+			$.tmpl('baseTmpl').appendTo(body);
 			
-			$(document).foundation({
+			  
+			  ut.wx.ready(function(){
+			  		ut.wx.chooseImage({
+						success : function(){
+							console.log(11);
+						}
+					});
+			  });
+			  $(document).on('tap','#commitTp',function(){
+			  	console.log('tap');
+			  	 $('#myDemoForm').submit();
+			  });
+			  $('#myDemoForm').on('valid',function(){
+			  		console.log('1111');
+			  }).on('invalid',function(){
+
+
+			  });;
+			  
+			  
+			  var obj = {
 			        orbit: {
 			          animation: 'slide',
 			          timer_speed: 4000,
@@ -89,15 +122,8 @@
 			          swipe : true,
 			          slide_number : false
 			        }
-			  });
-			  
-			  ut.wx.ready(function(){
-			  		ut.wx.chooseImage({
-						success : function(){
-							console.log(11);
-						}
-					});
-			  });
+			  };
+			  $(document).foundation();
 
 		});
 		 
