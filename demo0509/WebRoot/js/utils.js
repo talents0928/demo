@@ -10,8 +10,12 @@ window.cdnHost = window.cdnHost || (function(){
 	return 'http://' + window.location.host+'/'+window.location.pathname.split('/')[1]+'/';
 })();
 
+/**
+*	设置一个全局的body对象;
+*	所有文本的容器
+**/
 
-
+var body = body ? body : 'body';
 
 var ut = {};
 
@@ -20,7 +24,7 @@ var ut = {};
 *	文件路径引用
 **/
 
-var help = ['','moveJs','cookie','touch','initTmpl','iScroll','easelJs','soundJs','tweenJs','foundation','wx','velocity'];
+var help = ['','cookie','iScroll','easelJs','soundJs','','wx','velocity'];
 
 /**
  *	是否开启debug模式
@@ -39,7 +43,6 @@ var paths = {
 
 //				_common : cssPath+'/common',
 				_normalize : asset.cssPath + '/normalize',
-				_foundationCss : asset.cssPath + '/foundation.min',
 				_component :  asset.conponentPath + '/component.html' ,
 				_componentJs :  asset.conponentPath + '/component' ,
 
@@ -47,50 +50,19 @@ var paths = {
 				//jquery : 'jquery-1.10.2.min',
 				_css : ['css.min','css'][isDebug],
 				_text : ['text','text'][isDebug],
-				_touch : ['touch-0.2.14.min','touch-0.2.14'][isDebug],
 				_template : ['jquery.tmpl.min','jquery.tmpl'][isDebug],
 				_iscroll : ['iscroll','iscroll'][isDebug],
 				_easelJs : ['easeljs-0.8.1.min','easeljs-0.8.1.combined'][isDebug],
 				_soundJs : ['soundjs-0.6.1.min','soundjs-0.6.1.combined'][isDebug],
 				_tweenJs : ['tweenjs-0.6.1.min','tweenjs-0.6.1.combined'][isDebug],
 				_velocity : ['velocity.min','velocity'][isDebug],
-				_move : ['move.min','move'][isDebug],
-				_foundation : ['foundation.min','foundation.min'][isDebug],
 				_cookie : ['jquery.cookie','jquery.cookie'][isDebug],
 				_wx : ['http://res.wx.qq.com/open/js/jweixin-1.0.0'],
 
 				'':''
 			};
 
-/**
-*	设置一个全局的body对象;
-*	所有文本的容器
-**/
 
-var body = body ? body : 'body';
-
-function getReqMap(){
-
-	var finded = {} ,
-		reqObj = help.concat() ;
-
-	$("script").each(function(index,value){
-
-		var html = $(value).html().replace(/\/\/.*\n/g,'');
-		var arr = html.match(/\.\s*\w+(?=\W*)/g);
-		$.each(arr||[],function(index,value){
-			value = value.match(/[^\.\s]+/g)[0];
-			finded[value] = true;
-		});
-
-	});
-	for( var i=0 ; i<reqObj.length ; i++ ){
-		if(!finded[reqObj[i]]){
-			delete reqObj[i] ;
-		}
-	}
-	return reqObj ;
-};
 
 /**
 *	初始化requireJs 配置 
@@ -98,6 +70,12 @@ function getReqMap(){
 **/
 (function(){
 
+	//判断是否依赖require对象
+	if(!window.require){
+		window.define = function(){ } ;
+		return false ;
+	}
+	
 		require.config({
 
 			baseUrl : asset.baseUrl,
@@ -110,9 +88,6 @@ function getReqMap(){
 			},
 			shim : {
 
-				_touch : {
-					exports : 'touch'
-				},
 				_easelJs : {
 					exports : 'cc'
 				}
@@ -127,19 +102,33 @@ function getReqMap(){
 			var arr = getReqMap();
 			Array.prototype.push.apply(arr,['component','tmpl']);
 			require(arr,function(){
-				var len  = ut._list.length ;
-				for(var i =0 ; i < len; i++){
+				for(var i =0 ; i < ut._list.length ; i++){
 					ut._list.shift()();
 				}
 			});
 		});
+		function getReqMap(){
+			var finded = {} ,
+				reqObj = help.concat() ;
+			$("script").each(function(index,value){
+				var html = $(value).html().replace(/\/\/.*\n/g,'');
+				var arr = html.match(/\.\s*\w+(?=\W*)/g);
+				$.each(arr||[],function(index,value){
+					value = value.match(/[^\.\s]+/g)[0];
+					finded[value] = true;
+				});
+			});
+			for( var i=0 ; i<reqObj.length ; i++ ){
+				if(!finded[reqObj[i]]){
+					delete reqObj[i] ;
+				}
+			}
+			return reqObj ;
+		};
 	
 })();
 
 
-define('touch',['_touch'],function(a){
-	ut.touch = a ;
-});
 define('tmpl',['_template','jquery'],function(){
 	$.each( $('script:not([type*=javascript])'), function(index,value){
 		var $this = $(value);
@@ -148,7 +137,6 @@ define('tmpl',['_template','jquery'],function(){
 		});
 		$.template($this.attr('id'),$this.html());
 	});
-	$.fn.initTmpl = $.fn.tmpl ;
 });
 define('component',['text!_component','_template','_componentJs'],function(data){
 	var ele = createStyle();
@@ -179,8 +167,6 @@ define('wx',['_wx'],function(wx){
 
 //define('commonCss',['css!_common']);
 define('normalizeCss',['css!_normalize']);
-define('foundationCss',['css!_foundationCss']);
-define('foundation',['foundationCss','_foundation']);
 
 
 define('iScroll',['_iscroll'],function(){
@@ -209,9 +195,6 @@ define('soundJs',['_soundJs'],function(data){
 
 	ut.soundJs = createjs ;
 
-});
-define('moveJs',['_move'],function(move){
-	ut.moveJs = move ;
 });
 define('velocity',['_velocity'],function(data){
 	
@@ -317,37 +300,34 @@ ut.waiter = new (function(){
 
 /**
 *	client 适配对象
-*	调用方法 setBox();
+*	调用方法 ut.client.box();
 *	@param modeW{int} 设计宽度
 *	@parse modeH{int} 设计高度
 **/
 ut.client = (function(){
 	var client = {};
-	client.modeH = 1280;
-	client.modeW = 720;
+	client.modeH = 1008;
+	client.modeW = 640;
 	
 	Object.defineProperties(client,{
 		w : {
-			get : function(){
-				return window.innerWidth ;
-			}
+			get : function(){ return window.innerWidth ; }
 		},
 		h : {
-			get : function(){
-				return window.innerHeight ;
-			}
+			get : function(){ return window.innerHeight ; }
 		}
 	});
 
 	//正确屏幕的宽高比
 	client.ratio = client.modeW/client.modeH;
-	client.error = 100.35;
+	client.error = 1.35;
 	
 	client.init = function(){
 
 		//屏幕宽度失调率
 		this.imbalance = this.w/(this.h*this.ratio);
 		this.isBalance = this.imbalance>this.error?false:true;
+		//实际显示高宽
 		this.seeH = this.h;
 		this.seeW = this.isBalance ? this.w : this.h*this.ratio;
 		
@@ -367,7 +347,7 @@ ut.client = (function(){
 	client.unY = function(y){
 		return y / this.scaleH ;
 	};
-	client.setBox = function(modeW,modeH){
+	client.box = function(modeW,modeH){
 
 		if(!window.body || window.body == 'body'){
 			if($('.gbox').length){
@@ -417,17 +397,30 @@ ut.client = (function(){
 	function setDefault(){
 		$(window).on('resize orientationchange',function(){
 			if(!$(document.activeElement).is('input,textarea')){
-				client.setBox();
+				client.box();
 			}
 		});
 		$(document).on('touchmove',function(e){
 			e.preventDefault();
 		});
 	}
+	client.flex = function(modeW){
+		this.modeW = modeW ? modeW : this.modeW ;
+		var viewport = "<meta name='viewport' content='width="+this.modeW+", initial-scale=1, user-scalable=no, minimum-scale=1'>" ;
+		$(viewport).appendTo(body);
+		
+		$('html,body').css({'width':'100%','height':'100%'});
+		
+		this.gbox = $(body) ;
+		this.modeH = this.gbox.height();
+		
+	};
 
 	return client;
 	
 })();
+
+
 
 //数组方法
 

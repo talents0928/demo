@@ -25,6 +25,7 @@
 	}
 	.gbox{
 		background : wheat ;
+		background : darkgreen;
 	}
 	.btnTp{
 		position: absolute;
@@ -34,7 +35,88 @@
 		text-align:center;
 		color:#fff;
 	}
-
+	.flex{
+		display: -webkit-box;
+		display: -webkit-flex ;
+	}
+	.flexRow{
+		display : -webkit-box;
+		-webkit-box-orient : horizontal ;
+		display: flex ;
+		display: -webkit-flex ;
+		flex-direction : row ;
+		-webkit-flex-direction : row ;
+	}
+	.flexColumn{
+		display : -webkit-box;
+		-webkit-box-orient : vertical ;
+		display: flex ;
+		display: -webkit-flex ;
+		flex-direction : column ;
+		-webkit-flex-direction : column ;
+	}
+	.flex1{
+		box-flex:1;
+		-webkit-box-flex:1;
+		flex : 1 ;
+		-webkit-flex : 1 ;
+		position : relative;
+	}
+	.flex2{
+		box-flex:2;
+		-webkit-box-flex:2;
+		flex : 2 ;
+		-webkit-flex : 2 ;
+		position : relative;
+	}
+	.flex3{
+		box-flex:3;
+		-webkit-box-flex:3;
+		flex : 3 ;
+		-webkit-flex : 3 ;
+		position : relative;
+	}
+	.flexCenter{
+		-webkit-box-align : center ;
+		align-items : center ;
+		-webkit-align-items : center ;
+	}
+	.flexStart{
+		-webkit-box-align : start ;
+		align-items : flex-start ;
+		-webkit-align-items : flex-start ;
+	}
+	.flexEnd{
+		-webkit-box-align : end ;
+		align-items : flex-end ;
+		-webkit-align-items : flex-end ;
+	}
+	.flexBaseLine{
+		-webkit-box-align : baseline ;
+		align-items : baseline ;
+		-webkit-align-items : baseline ;
+	}
+	.flexStretch{
+		-webkit-box-align : stretch ;
+		align-items : stretch ;
+		-webkit-align-items : stretch ;
+	}
+	
+	.bg1{
+		background : #60f942;
+	}
+	.bg2{
+		background : #fe4f3a;
+	}
+	.bg3{
+		background : #ff0000;
+	}
+	.bg4{
+		background : #331ffb;
+	}
+	.bg5{
+		background : #e86439;
+	}
 </style>
 <body>
 
@@ -43,12 +125,25 @@
 </body>
 
 <script id="baseTmpl" type="text/x">
-	<div class='full contentTp' id='@{ut.client.modeH}' >
-		
-		{{each ut.getArray(4)}}
-		<div class='btnTp text-ellipsis' 
-			style='width:180px;line-height:80px;background:#367ecf;'>测试按钮测试按钮测试按钮测试按钮</div>
-		{{/each}}
+	<div class='full contentTp flexColumn ' id='base' >
+		<div class='flex1 bg1 '>
+			<div class='pa full flexRow'>
+				<div class='fullh bg4' style='width:120px;'></div>
+				<div class='flex1 bg3 '></div>
+			</div>
+		</div>
+		<div class='flex2 bg2 flexColumn'>
+			<div class='fullw bg5' style='height:80px;'></div>
+			<div class='fullw bg1 flex1 flexRow flexCenter' >
+				<div class='ma' style='width:50px;height:50px;background:black;'></div>
+			</div>
+			<div class='fullw bg5' style='height:80px;'></div>
+		</div>
+		<div class='flex3 bg3 flexColumn flexCenter'>
+			<div class='flex1 bg1' style='width:50%;'></div>
+			<div class='flex2 bg2' style='width:50%;'></div>
+			<div class='flex3 bg4' style='width:50%;'></div>
+		</div>
 	</div>
 </script>
 
@@ -82,10 +177,8 @@
 
 			$('.btnTp').on('tap',function(){
 				showMessage('非常棒的弹出窗口');
-				console.log($('#message').tmplItem().data);
 			})
 			
-			var d = 11;
 		});
 
 
