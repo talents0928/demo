@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<meta http-equiv="x-dns-prefetch-control" content="on">
+
+	<title>demo 范例</title>
+	<script type="text/javascript" src='js/require.min.js'></script>
+	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
+	<script type="text/javascript" src='js/utils.js'></script>
+	<link rel="icon" href="img/favicon.ico" type="image/x-icon" />
+	<link rel='stylesheet' href='css/common.css'></link>
+	<!--  -->
+
+</head>
+<style type='text/css'>
+	.box1{
+		width:100% ;
+		height:100px;
+	}
+	.bg1{ background : #ffdb13; }
+	.bg2{ background : #fe1622; }
+	.bg3{ background : #fa25e9; }
+	.bg4{ background : #3a24f5; }
+	.bg5{ background : #1bff27; }
+	.bg6{ background : #ff7830; }
+	.bg7{ background : #f829ff; }
+</style>
+<script type='x' id='baseTmpl'>
+	<div class='full oh pr' id='mainWrap' >
+		<div class='fullw oh'>
+			{{each ut.getArray(15)}}
+			<div class='bg@{@index%7+1} box1'></div>
+			{{/each}}
+		</div>
+	</div>
+</script>
+<body>
+	
+	
+
+</body>
+
+<script type='text/javascript'>
+		
+	ut.client.flex(640);
+	ut.ready(function(){
+		$.tmpl('baseTmpl').appendTo(body);
+//		ut.iScroll('#mainWrap');
+	});
+		 
+</script>
+</html>
+
+
+
+
+

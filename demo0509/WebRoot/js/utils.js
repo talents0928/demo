@@ -413,7 +413,7 @@ ut.client = (function(){
 	client.flex = function(modeW){
 		this.modeW = modeW ? modeW : this.modeW ;
 		var viewport = "<meta name='viewport' content='width="+this.modeW+", initial-scale=1, user-scalable=no, minimum-scale=1'>" ;
-		$(viewport).appendTo(body);
+		$(viewport).appendTo('head');
 		
 		$('html,body').css({'width':'100%','height':'100%'});
 		
