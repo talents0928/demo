@@ -20,14 +20,13 @@ var body = body ? body : 'body';
 var ut = {};
 
 /**
-*	对象配置
-*	文件路径引用
+*	引用对象映射组
 **/
-
-var help = ['','cookie','iScroll','easelJs','soundJs','','wx','velocity'];
+var helpMap = [] ;
 
 /**
  *	是否开启debug模式
+ *	<script type='text/javascript' debug='true' src='utils.js'></script>
  */
 var isDebug = $('script[src*=utils][debug=true]').length == 0 ? 0 : 1 ;
 /**
@@ -72,7 +71,7 @@ var paths = {
 
 	//判断是否依赖require对象
 	if(!window.require){
-		window.define = function(){ } ;
+		window.define = new Function() ;
 		return false ;
 	}
 	
@@ -91,6 +90,7 @@ var paths = {
 				_easelJs : {
 					exports : 'cc'
 				}
+				
 			}
 
 		});
@@ -109,7 +109,7 @@ var paths = {
 		});
 		function getReqMap(){
 			var finded = {} ,
-				reqObj = help.concat() ;
+				reqObj = helpMap.concat() ;
 			$("script").each(function(index,value){
 				var html = $(value).html().replace(/\/\/.*\n/g,'');
 				var arr = html.match(/\.\s*\w+(?=\W*)/g);
@@ -128,8 +128,14 @@ var paths = {
 	
 })();
 
-
-define('tmpl',['_template','jquery'],function(){
+/**
+ * 自定义define函数，自动收集映射
+ */
+ut.define = function(name,deps,cb){
+	helpMap.push(name);
+	define(name,deps,cb) ;
+};
+ut.define('tmpl',['_template','jquery'],function(){
 	$.each( $('script:not([type*=javascript])'), function(index,value){
 		var $this = $(value);
 		$this.html(function(){
@@ -138,7 +144,7 @@ define('tmpl',['_template','jquery'],function(){
 		$.template($this.attr('id'),$this.html());
 	});
 });
-define('component',['text!_component','_template','_componentJs'],function(data){
+ut.define('component',['text!_component','_template','_componentJs'],function(data){
 	var ele = createStyle();
 	$.each($(data),function(index,value){
 		var $ele = $(value);
@@ -157,19 +163,19 @@ define('component',['text!_component','_template','_componentJs'],function(data)
 	}
 });
 
-define('cookie',['_cookie'],function(){
+ut.define('cookie',['_cookie'],function(){
 
 	//console.log(cookie);
 });
-define('wx',['_wx'],function(wx){
-	ut.wx = wx ;
+ut.define('wx',['_wx'],function(data){
+	ut.wx = data ;
 });
 
 //define('commonCss',['css!_common']);
-define('normalizeCss',['css!_normalize']);
+ut.define('normalizeCss',['css!_normalize']);
 
 
-define('iScroll',['_iscroll'],function(){
+ut.define('iScroll',['_iscroll'],function(){
     ut.iScroll = function(wrapId,options){
     	var scroll = new IScroll(wrapId, $.extend({
 			useTransition: true,
@@ -186,17 +192,17 @@ define('iScroll',['_iscroll'],function(){
     };
 });
 
-define('easelJs',['_easelJs','_tweenJs','_soundJs'],function(data){
+ut.define('easelJs',['_easelJs','_tweenJs','_soundJs'],function(data){
 	
 	ut.easelJs = createjs ;
 
 });
-define('soundJs',['_soundJs'],function(data){
+ut.define('soundJs',['_soundJs'],function(data){
 
 	ut.soundJs = createjs ;
 
 });
-define('velocity',['_velocity'],function(data){
+ut.define('velocity',['_velocity'],function(data){
 	
 });
 
@@ -523,52 +529,6 @@ ut.client = (function(){
 	    });
 	   
 	};
-//	Array.prototype.sortData = function(key, desc){
-//	    //key是数组;
-//	    var re =  this ;
-//	    function localCompare(a, b, type){
-//	    	
-//	        var obj = {
-//	            'gradegrade': {
-//	                'sss': 1,
-//	                'd': 7
-//	            }
-//	        };
-//	        
-//	        return obj[type] ? obj[type][a] - obj[type][b] : a.localeCompare(b);
-//	    };
-//	    function compare(a, b, i){
-//	        //i key数组中的第几个
-//	        i = i || 0;
-//	        if (a[key[i]] == b[key[i]]) {
-//	            return key.length > i ? compare(a, b, i + 1) : false;
-//	        }
-//	        else {
-//	            if (typeof a[key[i]] == 'number') {
-//	                return desc ? b[key[i]] - a[key[i]] : a[key[i]] - b[key[i]];
-//	            }
-//	            else {
-//	                return desc ? localCompare(b[key[i]], a[key[i]], key[i]) : localCompare(a[key[i]], b[key[i]], key[i]);
-//	            }
-//	        }
-//	        
-//	    };
-//	    
-//	    re.sort(function(a, b){
-//	        if (key instanceof Array) {
-//	            return compare(a, b);
-//	        }
-//	        else {
-//	            if (desc) 
-//	                return b[key] - a[key];
-//	            else 
-//	                return a[key] - b[key];
-//	        }
-//	        
-//	    });
-//	    return re;  
-//	};
-
 
 	$.each('fill sortData filter'.split(' '),function(index,value){
 		Object.defineProperty(Array.prototype, value , {enumerable : false });

@@ -77,6 +77,72 @@ textarea{
 	border-spacing: 0px;
 	text-align: center;
 }
+/**
+*	flex布局 css样式
+*/
+.flex,.flexRow{
+	display : -webkit-box;
+	-webkit-box-orient : horizontal ;
+	display: flex ;
+	display: -webkit-flex ;
+	flex-direction : row ;
+	-webkit-flex-direction : row ;
+}
+.flexColumn{
+	display : -webkit-box;
+	-webkit-box-orient : vertical ;
+	display: flex ;
+	display: -webkit-flex ;
+	flex-direction : column ;
+	-webkit-flex-direction : column ;
+}
+.flex1{
+	box-flex:1;
+	-webkit-box-flex:1;
+	flex : 1 ;
+	-webkit-flex : 1 ;
+	position : relative;
+}
+.flex2{
+	box-flex:2;
+	-webkit-box-flex:2;
+	flex : 2 ;
+	-webkit-flex : 2 ;
+	position : relative;
+}
+.flex3{
+	box-flex:3;
+	-webkit-box-flex:3;
+	flex : 3 ;
+	-webkit-flex : 3 ;
+	position : relative;
+}
+.flexCenter{
+	-webkit-box-align : center ;
+	align-items : center ;
+	-webkit-align-items : center ;
+}
+.flexStart{
+	-webkit-box-align : start ;
+	align-items : flex-start ;
+	-webkit-align-items : flex-start ;
+}
+.flexEnd{
+	-webkit-box-align : end ;
+	align-items : flex-end ;
+	-webkit-align-items : flex-end ;
+}
+.flexBaseLine{
+	-webkit-box-align : baseline ;
+	align-items : baseline ;
+	-webkit-align-items : baseline ;
+}
+.flexStretch{
+	-webkit-box-align : stretch ;
+	align-items : stretch ;
+	-webkit-align-items : stretch ;
+}
+
 
 .circle{
 	border-radius : 50% 50% ;
@@ -221,6 +287,8 @@ textarea{
 .lh60{ line-height:60px; }
 .lh65{ line-height:65px; }
 .lh80{ line-height:80px; }
+
+
 
 
 
