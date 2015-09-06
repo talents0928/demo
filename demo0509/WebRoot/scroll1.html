@@ -34,7 +34,7 @@
 <script type='x' id='baseTmpl'>
 	<div class='full oh pr' id='mainWrap' >
 		<div class='fullw oh'>
-			{{each ut.getArray(15)}}
+			{{each ut.getArray(25)}}
 			<div class='bg@{@index%7+1} box1'></div>
 			{{/each}}
 		</div>
@@ -48,10 +48,11 @@
 
 <script type='text/javascript'>
 		
-	ut.client.flex(640);
+	
 	ut.ready(function(){
+		ut.client.flex(640);
 		$.tmpl('baseTmpl').appendTo(body);
-//		ut.iScroll('#mainWrap');
+		ut.iScroll('#mainWrap');
 	});
 		 
 </script>

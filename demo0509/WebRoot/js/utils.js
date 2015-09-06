@@ -419,6 +419,9 @@ ut.client = (function(){
 		
 		this.gbox = $(body) ;
 		this.modeH = this.gbox.height();
+		$(document).on('touchmove',function(e){
+			e.preventDefault();
+		});
 		
 	};
 
