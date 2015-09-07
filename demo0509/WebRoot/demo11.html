@@ -12,22 +12,27 @@
 	<meta http-equiv="x-dns-prefetch-control" content="on">
     
     <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+	<script type="text/javascript" src='js/require.min.js'></script>
 	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
 	<script type="text/javascript" src='js/utils.js'></script>
+	
 	<link rel='stylesheet' href='css/common.css'></link>
 
   </head>
   
   <body>
-    This is my HTML page. <br>
+    <div>This is my HTML page. <br></div>
   </body>
   
   	<script type='text/javascript'>
 		
-		ut.client.flex(640);
 		ut.ready(function(){
-			console.log(111);
-			console.log(ut.easelJs);
+			require(['js/lib/jquery.panzoom.min.js'],function(){
+				ut.client.box(640);
+				console.log(111);
+				
+				
+			});
 		});
 			 
 	</script>
