@@ -14,6 +14,7 @@
 	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
 	<script type="text/javascript" src='js/utils.js'></script>
 	<link rel='stylesheet' href='css/common.css'></link>
+	<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
 	<!--  -->
 
 </head>
@@ -61,24 +62,13 @@
 </body>
 
 <script id="baseTmpl" type="text/x">
-	<div class='full contentTp flexRow ' id='base' >
-		<div class='flex1 bg1 '>
-			<div class='pa full flexRow'>
-				<div class='fullh bg4' style='width:120px;'></div>
-				<div class='flex1 bg3 '></div>
+	<div class='full contentTp flexColunm ' id='base' >
+		<div class='full ' style='padding-top:300px;background:wheat;' >
+			<div id='mapContainer' class='ma' style='width:600px;height:300px;'>
+				<div class='c-white fs28 tac'>1442481528000</div>
 			</div>
-		</div>
-		<div class='flex2 bg2 flexColumn'>
-			<div class='fullw bg5' style='height:80px;'></div>
-			<div class='fullw bg1 flex1 flexRow flexCenter' >
-				<div class='ma' style='width:50px;height:50px;background:black;'></div>
-			</div>
-			<div class='fullw bg5' style='height:80px;'></div>
-		</div>
-		<div class='flex3 bg3 flexColumn flexCenter'>
-			<div class='flex1 bg1' style='width:50%;'></div>
-			<div class='flex2 bg2' style='width:50%;'></div>
-			<div class='flex3 bg4' style='width:50%;'></div>
+			
+			<div class='pr btnTp ' style='width:100px;height:40px;background:blue;'></div>
 		</div>
 	</div>
 </script>
@@ -111,9 +101,23 @@
 			
 			//$.tmpl('testTmpl',{msg:'这一定能成功哦'}).appendTo('.contentTp');
 
-			$('.btnTp').on('tap',function(){
-				showMessage('非常棒的弹出窗口');
-			})
+//			$('.btnTp').on('tap',function(){
+//				showMessage('非常棒的弹出窗口');
+//			}) ;
+			
+//			ut.wxdt('#mapContainer');
+//			var map = new qq.maps.Map(document.getElementById('mapContainer'),{
+//		        // 地图的中心地理坐标。
+//		        center: new qq.maps.LatLng(39.916527,116.397128) ,
+//				zoom : 15
+//		    });
+//			
+//			$('.btnTp').on('tap',function(){
+//				var href = "http://apis.map.qq.com/uri/v1/marker?marker=coord:39.892326,116.342763;title:指上科技;" ;
+//				location.href = href ;
+//			});
+
+
 			
 		});
 

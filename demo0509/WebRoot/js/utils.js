@@ -57,6 +57,7 @@ var paths = {
 				_velocity : ['velocity.min','velocity'][isDebug],
 				_cookie : ['jquery.cookie','jquery.cookie'][isDebug],
 				_wx : ['http://res.wx.qq.com/open/js/jweixin-1.0.0'],
+				_wxdt : ['http://map.qq.com/api/js?v=2.exp'],
 
 				'':''
 			};
@@ -89,6 +90,9 @@ var paths = {
 
 				_easelJs : {
 					exports : 'cc'
+				},
+				_wxdt : {
+					exports : 'dd'
 				}
 				
 			}
@@ -170,6 +174,17 @@ ut.define('cookie',['_cookie'],function(){
 ut.define('wx',['_wx'],function(data){
 	ut.wx = data ;
 });
+ut.define('wxdt',['_wxdt'],function(data){
+	console.log(data);
+	ut.wxdt = function(elementId,x,y){
+		var map = new qq.maps.Map(document.getElementById(elementId),{
+	        // 地图的中心地理坐标。
+	        center: new qq.maps.LatLng(39.916527,116.397128)
+	    });
+		return map ; 
+	} ;
+		
+});
 
 //define('commonCss',['css!_common']);
 ut.define('normalizeCss',['css!_normalize']);
@@ -177,13 +192,22 @@ ut.define('normalizeCss',['css!_normalize']);
 
 ut.define('iScroll',['_iscroll'],function(){
     ut.iScroll = function(wrapId,options){
-    	var scroll = new IScroll(wrapId, $.extend({
-			useTransition: true,
-	    	vScroll: true,
-	    	vScrollbar: false,
-	    	HWCompositing : false ,
-			preventDefault: false
-	    },options||{}));
+//    	var scroll = new IScroll(wrapId, $.extend({
+//			useTransition: true,
+//	    	scrollY: true,
+//	    	vScrollbar: false,
+//	    	HWCompositing : false ,
+//			preventDefault: false
+//	    },options||{}));
+    	
+    	
+    	var obj = $.extend({
+    		scrollX: true,
+    		scrollY: false,
+	    	hScrollbar: false,
+	    },options||{}) ;
+    	console.log(obj);
+    	var scroll = new IScroll(wrapId, obj);
     	
     	scroll.on('scrollStart',function(){
     		this.refresh();

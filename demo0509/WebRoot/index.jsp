@@ -24,6 +24,62 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <body>
     <div style='width:440px;height:200px;margin :200px auto;background:darkblue;'>
 		不是中文  not china  not my maind
+		
+		
 	</div>
   </body>
 </html>
+
+
+<script type='text/javascript'>
+	
+//地图设置
+		var mapData = {} ;
+		$.each(JSON.parse(base.json||null)||[],function(index,value){
+			if('locationX' in value){
+				mapData = value ;
+			}
+		});
+		var map = new qq.maps.Map(document.getElementById('mapView'),{
+	        // 地图的中心地理坐标。
+	        center: new qq.maps.LatLng( mapData.locationY,mapData.locationX ) ,
+			zoom : 15
+	    });		
+		
+		$('#mapView,.mapTp').on('tap',function(){
+			ut.jumpMap( mapData.locationY,mapData.locationX ,root.articleUser.detailData.title);
+		});
+		
+//banner 设置
+
+	cp.banner({ timer : 900 , height : 380 , isFull : true , bullets : true });
+	
+	
+	$(document).on('tap','.houseTp',function(){
+			location = $(this).attr('link') ;
+		});
+		
+	
+	
+	
+	
+	
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -34,8 +34,16 @@
 <script type='x' id='baseTmpl'>
 	<div class='full oh' id='demoWrap'>
 		<div class='oh'>
+			{{each ut.getArray(2)}}
+			<div class='pr' style='background:red;height:60px;'></div>
+			<div class='pr' style='background:black;height:60px;'></div>
+			{{/each}}
+			<div class='pr oh' style='background:white;height:200px;width:100%;' id='secondWrap'>
+				<div style='height:140%;width:900px;'>1111112673526735827618362178361283678213628176327813678216312783612783621783627816378126378</div>
+			</div>
 			{{each ut.getArray(30)}}
-			<div class='pr' style='background:white;margin:10px auto;height:60px;' as='op3'></div>
+			<div class='pr' style='background:red;height:60px;'></div>
+			<div class='pr' style='background:black;height:60px;'></div>
 			{{/each}}
 		</div>
 	</div>
@@ -47,9 +55,11 @@
   <script type="text/javascript">
   		 ut.ready(function(){
 
-  		 	ut.client.setBox(640);
+  		 	ut.client.box(640);
         	$.tmpl('baseTmpl').appendTo(body);
-  		 	ut.iScroll('#demoWrap');
+//  		 	ut.iScroll('#demoWrap');
+			var a = ut.iScroll('#secondWrap');
+			console.log(a);
 
   		 });
   </script>
