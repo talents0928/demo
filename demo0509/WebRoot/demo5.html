@@ -65,7 +65,9 @@
 	<div class='full contentTp flexColunm ' id='base' >
 		<div class='full ' style='padding-top:300px;background:wheat;' >
 			<div id='mapContainer' class='ma' style='width:600px;height:300px;'>
-				<div class='c-white fs28 tac'>1442481528000</div>
+				<div class='c-white fs28 tac'>
+					1442481528000  :   @{root}
+				</div>
 			</div>
 			
 			<div class='pr btnTp ' style='width:100px;height:40px;background:blue;'></div>
@@ -95,7 +97,8 @@
 		ut.ready(function(){
 			ut.client.box(640);
 			
-			
+			window.root = new Date(1442481528000);
+//			return new Date(parseInt(nS) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " "); 
 //			$('#baseTmpl').tmpl().appendTo(body) ;
 			$.tmpl('baseTmpl').appendTo(body) ;
 			

@@ -27,3 +27,132 @@
 		</div>
 	</div>
 </script>
+
+
+
+
+
+<style type='text/css'>
+	.nav{
+		height : 80px; font-size : 28px; line-height : 80px; background : white ;
+		border-width : 0 0 1px 0; border-style : solid ; border-color : #ADADAD ;
+	}
+	.nav-line1{ height:100%;width:1px; background : #ADADAD ; }
+	.nav-item{ font-size : 28px; line-height : 40px; text-align : center ; }
+	.nav-item-active{ color : #d7000f; }
+	.nav-arrow-down{
+		width: 16px;height:16px;
+		border-style: solid ; border-color :#ADADAD ;
+		border-width : 3px 3px 0 0; -webkit-transform : rotateZ(135deg);
+		position : relative; top : 7px; float : left ; -webkit-transition : all 300ms ease ;
+	}
+	.nav-item-active .nav-arrow-down{ -webkit-transform : rotateZ(-45deg); border-color :#d7000f ; top : 15px; }
+	.nav-item-active:before{
+		content : ' ' ; display : block; width:80%;height:4px;
+		background : #d7000f ; position: absolute; left:10%;bottom:0;
+	}
+	.nav-list1{
+		height : 68px; line-height:68px; text-indent : 20px; text-align : left ;
+		background : #DDDDDD ; border-bottom : 1px solid white ; position : relative;
+	}
+	.nav-list1-active{ background : #EEEEEE ; color : #d7000f ; }
+	.nav-list1-active:before,.nav-list2-active:before{
+		content : ' ' ; display : block ;
+		width:4px; height : 60%;
+		position : absolute; top:20%;left : 8px;
+		background : #d7000f ;
+	}
+	.nav-list2{
+		height : 68px; line-height:68px; text-indent : 20px; text-align : left ;
+		background : #EEEEEE ; border-bottom : 1px solid white ; position : relative;
+	}
+	.nav-list2-active{ background : white ; color : #d7000f ;}
+	.nav-list3{
+		height : 68px; line-height:68px; text-indent : 20px; text-align : left ;
+		background : white ; border-bottom : 1px solid #DDDDDD ; position : relative;
+	}
+	.nav-end-active{ color : #d7000f ; }
+	.nav-end-active:after{
+		content : ' ' ; display : block ;
+		width:24px; height : 12px;
+		position : absolute; top:35%;right : 15px;
+		border-style : solid ; border-color : #d7000f ;
+		border-width : 0 0 3px 3px; -webkit-transform : rotateZ(-45deg);
+	}
+	.nav-trans{ -webkit-transition : all 500ms ease ; }
+	.nav-list1,.nav-list2,.nav-list3{
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+</style>
+<script type='x' id='navTmpl'>
+	<div class='nav flex pr'>
+		{{each $data.types||[]}}
+			{{if @index!=0}}<div class='nav-line1'></div>{{/if}}
+			{{tmpl(@value) 'navItemTmpl'}}
+		{{/each}} 
+	</div>
+</script>
+<script type='x' id='navItemTmpl'>
+	<div class='flex1 tac nav-item'>
+		<div class='auto2 flex' style='width:80%;'>
+			{{if @data.mark}}
+			<div class='text-ellipsis flex1 nav-mark' style='color:#d7000f;' >@{@data.mark['type'+@data.mark.typeLevel+'NameCn']}</div>
+			{{else}}
+			<div class='text-ellipsis flex1 nav-text1' >@{@data['type'+@data.typeLevel+'NameCn']}</div>
+			{{/if}}
+			<div style='width:30px;'><div class='nav-arrow-down '></div></div>
+		</div>
+	</div>
+</script>
+<script type='x' id='navLC1Tmpl'>
+	<div class='nav-container1 fullh oh fullw nav-trans pa' style='top:0;left:0;' id='nav-container1' >
+		<div class='fullw'>
+			{{each @data['type'+(@data.typeLevel+1)+'s']}}
+				{{tmpl(@value) 'navList1Tmpl'}}
+			{{/each}}
+		</div>
+	</div>
+</script>
+<script type='x' id='navList1Tmpl'>
+	<div class='nav-list1'>@{@data['type'+@data.typeLevel+'NameCn']}</div>
+</script>
+<script type='x' id='navLC2Tmpl'>
+	<div class='nav-container2 fullh oh fullw pa nav-trans' style='top:0;left:100%;' id='nav-container2' >
+		{{tmpl(@data) 'navLi2Tmpl'}}
+	</div>
+</script>
+<script type='x' id='navLi2Tmpl'>
+	<div class='fullw navLi2'>
+		{{each @data['type'+(@data.typeLevel+1)+'s']}}
+			{{tmpl(@value) 'navList2Tmpl'}}
+		{{/each}}
+	</div>
+</script>
+<script type='x' id='navList2Tmpl'>
+	<div class='nav-list2'>@{@data['type'+@data.typeLevel+'NameCn']}</div>
+</script>
+<script type='x' id='navLC3Tmpl'>
+	<div class='nav-container3 fullh oh fullw pa nav-trans' style='top:0;left:100%;'  id='nav-container3'>
+		{{tmpl(@data) 'navLi3Tmpl'}}
+	</div>
+</script>
+<script type='x' id='navList3Tmpl'>
+	<div class='nav-list3'>@{@data['type'+@data.typeLevel+'NameCn']}</div>
+</script>
+<script type='x' id='navLi3Tmpl'>
+	<div class='fullw navLi3'>
+		{{each @data['type'+(@data.typeLevel+1)+'s']}}
+			{{tmpl(@value) 'navList3Tmpl'}}
+		{{/each}}
+	</div>
+</script>
+
+
+
+
+
+
+
+
