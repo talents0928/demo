@@ -1,126 +1,64 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	<title>携程旅行-酒店预订,机票预订查询,旅游度假,商旅管理-携程无线官网</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no,minimal-ui">
+	
+	<style>
+		
+	</style>
 
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-status-bar-style" content="black">
-	<meta name="format-detection" content="telephone=no">
-	<meta http-equiv="x-dns-prefetch-control" content="on">
-
-	<title>demo 范例</title>
-	<script type="text/javascript" src='js/require.js'></script>
+	<link rel='stylesheet' href='css/common.css'></link>
 	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
 	
-	<script type="text/javascript" src='js/utils.js'></script>
-	<link rel='stylesheet' href='css/common.css'></link>
-	
-	
-	<!--  -->
+	<!-- 
+	<script type='x' charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
+	  -->
 
 </head>
 
-
+<style type="text/css" id='style'>
+	
+	body{ background:wheat; }
+	.gbox{
+		background : wheat ;
+		//background : darkgreen;
+	}
+	.box1{ width: 100%;line-height:100px;text-align :center ; font-size:36px; }
+	
+	.bg1{ color : #60f942; }
+	.bg2{ color : #fe4f3a; }
+	.bg3{ color : #ff0000; }
+	.bg4{ color : #331ffb; }
+	.bg5{ color : #e86439; }
+</style>
 <body>
-	<style type="text/css">
-		.bg2{
-			background:darkgreen;
-		}
-		.bg1{
-			background:red;
-		}
-	</style>
-	
-		<script type='text/x-jquery-tmpl' id='baseTmpl'>
-			<div class='oh fullw' id="mainWrap">
-				<div class='oh' id='slider' style='width:100%;height:2700px;background:wheat;'>
-				
-					 <ul data-orbit style=''>
-					 	
-			            <li>
-			            	<a href='#'>
-			                <img src="./img/imgs/1.jpg" />
-			                <div class="orbit-caption" >
-								<div class='text-ellipsis' style='width:75%;'>标题1</div>
-							</div>
-							</a>
-			            </li>
-						  <li>
-			            	<a href='#'>
-			                <img src="./img/imgs/2.jpg" />
-			                <div class="orbit-caption" >
-								<div class='text-ellipsis' style='width:75%;'>标题1</div>
-							</div>
-							</a>
-			            </li>
-						  <li>
-			            	<a href='#'>
-			                <img src="./img/imgs/3.jpg" />
-			                <div class="orbit-caption" >
-								<div class='text-ellipsis' style='width:75%;'>标题1</div>
-							</div>
-							</a>
-			            </li>
-						
-			        </ul>
-					
-					<div class='fullw pr' style='height:300px;'>
-					
-						<div class='auto bg2' style='width:100px;height:50px;' as='bg1'>按钮</div>
-					</div>
-					<div>学校占地面积1000亩，俩足球场，篮球场几十个吧。
-						三个食堂，宿舍有独立卫生间，热水器，饮水机，空调，卫生间内可以洗澡。
-						现在学校大约有16000人。学校的确是在燕郊，走国道，大约一个小时就到天安门了。
-						你来北京了就知道了，坐一个小时车根本不算啥。
-						<div class='fs20'>我一个同学在昌平上学，但去趟西单得俩小时。。。</div>
-						我们学校位置上没有优势，但这也不一定就是弊端。
-						远离喧嚣，生活成本相对市里自然也低。</div>
-
-				</div>
-			</div>
-		</script>
-	<!-- <iframe src='./js/component/comp1.html' id='test1'> 
-		  
-	</iframe>
-	-->
-
-	<script type='text/javascript'>
-		
-		
-		ut.ready(function(){
+	<div style='margin:50px auto;font-size:30px;text-align:center;'>1</div>
 			
-			ut.client.setBox(720);
-			// var win = document.getElementById('test1').contentWindow;
-			// var frmobj = win.document.getElementById('component1');
-			// $(frmobj).initTmpl().appendTo(body);
-			$('#baseTmpl').initTmpl().appendTo(body);
-			
-			$(document).foundation({
-			        orbit: {
-			          animation: 'slide',
-			          timer_speed: 4000,
-			          animation_speed: 800,
-			          navigation_arrows : false,
-			          pause_on_hover: false,
-			          timer : true,
-			          timer_progress_class : false,
-			          bullets : true,
-			          circular: true, 
-			          resume_on_mouseout : true,
-			          swipe : true,
-			          slide_number : false
-			        }
-			  });
-			  
-			 
-
-		});
-		 
-	</script>
+		
 </body>
-	
-	
+
+<script id="baseTmpl" type="x">
+	<div class='full contentTp pr oh' id='mainWrap' >
+		<div class='fullw oh'>
+			{{each ut.getArray(20)}}
+			<div class='box1 bg@{@index%5}'>@{@index}</div>
+			{{/each}}
+		</div>
+	</div>
+</script>
+
+	<script type="text/javascript">
+
+		$(function(){
+			alert(1);
+//			$('html,body').css({'width':'100%','height':'100%'});
+		});
+		
+
+	</script>
 </html>
 
 

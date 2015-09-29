@@ -408,16 +408,19 @@ ut.client = (function(){
 	}
 	client.flex = function(modeW){
 		this.modeW = modeW ? modeW : this.modeW ;
-		var viewport = "<meta name='viewport' content='width="+this.modeW+", initial-scale=1, user-scalable=no, minimum-scale=1'>" ;
-		$(viewport).appendTo('head');
+//		var viewport = "<meta name='viewport' content='width="+this.modeW+", initial-scale=1, user-scalable=no, minimum-scale=1'>" ;
+//		$(viewport).appendTo('head');
+		
+		$('meta[name=viewport]').attr('content','width='+this.modeW) ;
 		
 		$('html,body').css({'width':'100%','height':'100%'});
 		
-		this.gbox = $(body) ;
+		this.gbox = $(body).addClass('gbox') ;
 		this.modeH = this.gbox.height();
-		$(document).on('touchmove',function(e){
-			e.preventDefault();
-		});
+		alert(11)
+//		$(document).on('touchmove',function(e){
+//			e.preventDefault();
+//		});
 		
 	};
 
