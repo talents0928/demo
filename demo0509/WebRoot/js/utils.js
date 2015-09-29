@@ -24,6 +24,9 @@ var ut = {};
 **/
 var helpMap = [] ;
 
+(function(){
+
+
 /**
  *	是否开启debug模式
  *	<script type='text/javascript' debug='true' src='utils.js'></script>
@@ -62,7 +65,7 @@ var paths = {
 				'':''
 			};
 
-
+var __listFunc = [],__listLoad=[];
 
 /**
 *	初始化requireJs 配置 
@@ -96,7 +99,6 @@ var paths = {
 				}
 				
 			}
-
 		});
 
 		//加载不等待的css资源
@@ -105,9 +107,10 @@ var paths = {
 		$(function(){
 			var arr = getReqMap();
 			Array.prototype.push.apply(arr,['component','tmpl']);
+			Array.prototype.push.apply(arr,__listLoad);
 			require(arr,function(){
-				for(var i =0 ; i < ut._list.length ; i++){
-					ut._list.shift()();
+				for(var i =0 ; i < __listFunc.length ; i++){
+					__listFunc.shift()();
 				}
 			});
 		});
@@ -131,6 +134,15 @@ var paths = {
 		};
 	
 })();
+
+ut.ready = function(arr,callback){
+	if(arr instanceof Array){
+		Array.prototype.push.apply(__listLoad, arr)
+	}else{
+		callback = arr ;
+	}
+	__listFunc.push(callback);
+};
 
 /**
  * 自定义define函数，自动收集映射
@@ -175,7 +187,6 @@ ut.define('wx',['_wx'],function(data){
 	ut.wx = data ;
 });
 ut.define('wxdt',['_wxdt'],function(data){
-	console.log(data);
 	ut.wxdt = function(elementId,x,y){
 		var map = new qq.maps.Map(document.getElementById(elementId),{
 	        // 地图的中心地理坐标。
@@ -192,28 +203,24 @@ ut.define('normalizeCss',['css!_normalize']);
 
 ut.define('iScroll',['_iscroll'],function(){
     ut.iScroll = function(wrapId,options){
-//    	var scroll = new IScroll(wrapId, $.extend({
-//			useTransition: true,
-//	    	scrollY: true,
-//	    	vScrollbar: false,
-//	    	HWCompositing : false ,
-//			preventDefault: false
-//	    },options||{}));
-    	
-    	
-    	var obj = $.extend({
-    		scrollX: true,
-    		scrollY: false,
+    	if(typeof options == 'boolean' && options === true ){
+    		options = { scrollX: true, scrollY: false } ;
+    	}
+    	var scroll = new IScroll(wrapId,$.extend({
+    		useTransition: true,
+    		scrollX: false,
+    		scrollY: true,
 	    	hScrollbar: false,
-	    },options||{}) ;
-    	console.log(obj);
-    	var scroll = new IScroll(wrapId, obj);
+	    	HWCompositing : true ,
+	    	preventDefault: false
+	    },options||{}));
     	
     	scroll.on('scrollStart',function(){
     		this.refresh();
     	});
     	return scroll ;
     };
+    
 });
 
 ut.define('easelJs',['_easelJs','_tweenJs','_soundJs'],function(data){
@@ -231,23 +238,6 @@ ut.define('velocity',['_velocity'],function(data){
 });
 
 
-
-
-ut._list = [];
-ut.ready = function(callback){
-
-	this._list.push(callback);
-
-};
-/**
-*	请求css资源方法
-*	@param arr{Array} 映射资源列表
-**/
-ut.reqCss = function(arr,callback){
-	require(arr,function(){
-		callback && callback();
-	});
-};
 
 
 
@@ -341,12 +331,8 @@ ut.client = (function(){
 	client.modeW = 640;
 	
 	Object.defineProperties(client,{
-		w : {
-			get : function(){ return window.innerWidth ; }
-		},
-		h : {
-			get : function(){ return window.innerHeight ; }
-		}
+		w : { get : function(){ return window.innerWidth ; } },
+		h : { get : function(){ return window.innerHeight ; } }
 	});
 
 	//正确屏幕的宽高比
@@ -372,12 +358,8 @@ ut.client = (function(){
 /**
  * 解析正确的手势位置
  */
-	client.unX = function(x){
-		return ( x - this.gbox.offset().left ) / this.scaleW ;
-	};
-	client.unY = function(y){
-		return y / this.scaleH ;
-	};
+	client.unX = function(x){ return ( x - this.gbox.offset().left ) / this.scaleW ; };
+	client.unY = function(y){ return y / this.scaleH ; };
 	client.box = function(modeW,modeH){
 
 		if(!window.body || window.body == 'body'){
@@ -393,33 +375,22 @@ ut.client = (function(){
 		client.modeW = modeW || client.modeW ;
 		client.isSingle = client.isSingle || (!modeH && modeW) ? true : false;
 		client.modeH = modeH || ( modeW ? null : client.modeH ) ;
-		
 
 		this.init();
 
 		this.gbox.parent().css({
-
 			width : this.seeW + 'px',
 			height : this.seeH + 'px',
-			margin : 'auto',
-			overflow : 'hidden',
+			margin : 'auto', overflow : 'hidden',
 			position : 'absolute',
-			top : '0',
-			left : '0',
-			right : '0'
-
+			top : '0', left : '0', right : '0'
 		});
 		this.gbox.css({
-
 			width : this.modeW + 'px',
 			height : this.modeH ? (this.modeH + 'px') : this.seeH/this.scaleW+'px',
-			position : 'absolute',
-			overflow : 'hidden',
-			left : 0,
-			top : 0,
-			transformOrigin : '0 0',
+			position : 'absolute', overflow : 'hidden',
+			left : 0, top : 0, transformOrigin : '0 0',
 			transform : 'scale('+this.scaleW+','+this.scaleH+')'
-
 		});
 		$('body').css('background','black');
 
@@ -796,6 +767,8 @@ ut.manage = (function(){
 	};
 })();
 
+
+})();
 
 /**
  * copy touch.js 手势事件

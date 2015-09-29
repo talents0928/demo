@@ -14,46 +14,26 @@
 	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
 	<script type="text/javascript" src='js/utils.js'></script>
 	<link rel='stylesheet' href='css/common.css'></link>
-	<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
-	<!--  -->
+	<!-- 
+	<script type='x' charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
+	  -->
 
 </head>
 
 <style type="text/css" id='style'>
 	
-	body{
-		background:black;
-	}
+	body{ background:black; }
 	.gbox{
 		background : wheat ;
-		background : darkgreen;
+		//background : darkgreen;
 	}
-	.btnTp{
-		position: absolute;
-		top:100px;left:0;right: 0;
-		margin:auto;
-		line-height:80px;
-		text-align:center;
-		color:#fff;
-	}
+	.box1{ width: 100%;height:100px;text-align :center ; font-size:32px; }
 	
-	
-	
-	.bg1{
-		background : #60f942;
-	}
-	.bg2{
-		background : #fe4f3a;
-	}
-	.bg3{
-		background : #ff0000;
-	}
-	.bg4{
-		background : #331ffb;
-	}
-	.bg5{
-		background : #e86439;
-	}
+	.bg1{ color : #60f942; }
+	.bg2{ color : #fe4f3a; }
+	.bg3{ color : #ff0000; }
+	.bg4{ color : #331ffb; }
+	.bg5{ color : #e86439; }
 </style>
 <body>
 
@@ -61,16 +41,12 @@
 		
 </body>
 
-<script id="baseTmpl" type="text/x">
-	<div class='full contentTp flexColunm ' id='base' >
-		<div class='full ' style='padding-top:300px;background:wheat;' >
-			<div id='mapContainer' class='ma' style='width:600px;height:300px;'>
-				<div class='c-white fs28 tac'>
-					1442481528000  :   @{root}
-				</div>
-			</div>
-			
-			<div class='pr btnTp ' style='width:100px;height:40px;background:blue;'></div>
+<script id="baseTmpl" type="x">
+	<div class='full contentTp pr oh' id='mainWrap' >
+		<div class='fullw oh'>
+			{{each ut.getArray(20)}}
+			<div class='box1 bg@{@index%5}'>@{@index}</div>
+			{{/each}}
 		</div>
 	</div>
 </script>
@@ -85,40 +61,13 @@
 				});
 			});
 		}
-		ut.make = function(){
-			console.log(222);
-			return {};
-		};
-		function make(){
-			console.log(111);
-			return [];
-		}
 		
 		ut.ready(function(){
 			ut.client.box(640);
 			
-			window.root = new Date(1442481528000);
-//			return new Date(parseInt(nS) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " "); 
-//			$('#baseTmpl').tmpl().appendTo(body) ;
 			$.tmpl('baseTmpl').appendTo(body) ;
 			
-			//$.tmpl('testTmpl',{msg:'这一定能成功哦'}).appendTo('.contentTp');
-
-//			$('.btnTp').on('tap',function(){
-//				showMessage('非常棒的弹出窗口');
-//			}) ;
-			
-//			ut.wxdt('#mapContainer');
-//			var map = new qq.maps.Map(document.getElementById('mapContainer'),{
-//		        // 地图的中心地理坐标。
-//		        center: new qq.maps.LatLng(39.916527,116.397128) ,
-//				zoom : 15
-//		    });
-//			
-//			$('.btnTp').on('tap',function(){
-//				var href = "http://apis.map.qq.com/uri/v1/marker?marker=coord:39.892326,116.342763;title:指上科技;" ;
-//				location.href = href ;
-//			});
+			ut.iScroll('#mainWrap');
 
 
 			
