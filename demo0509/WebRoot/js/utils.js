@@ -411,13 +411,12 @@ ut.client = (function(){
 //		var viewport = "<meta name='viewport' content='width="+this.modeW+", initial-scale=1, user-scalable=no, minimum-scale=1'>" ;
 //		$(viewport).appendTo('head');
 		
-		$('meta[name=viewport]').attr('content','width='+this.modeW) ;
+		$('meta[name=viewport]').attr('content','width='+this.modeW+',user-scalable=no') ;
 		
-		$('html,body').css({'width':'100%','height':'100%'});
+		$('html,body').css({'width':'100%','height':'100%','overflow':'hidden'});
 		
 		this.gbox = $(body).addClass('gbox') ;
 		this.modeH = this.gbox.height();
-		alert(11)
 //		$(document).on('touchmove',function(e){
 //			e.preventDefault();
 //		});

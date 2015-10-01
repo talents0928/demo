@@ -2,9 +2,24 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<meta charset="utf-8">
 
-	<meta name="viewport" content="width=640">
+	<meta charset="utf-8">
+	<meta id="viewport" name="viewport" content="width=640,user-scalable=no">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Expires" content="-1">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="oupengmobile" content="fullscreen,portrait,game">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="x5-fullscreen" content="true">
+	<meta name="x5-page-mode" content="app">
+	<meta name="tencent-x5-page-direction" content="portrait">
+	<meta name="browsermode" content="application">
+	<meta name="full-screen" content="yes">
+	<meta name="screen-orientation" content="portrait">
+
+	
 	
 
 	<title>demo 范例</title>
@@ -15,6 +30,8 @@
 	<!-- 
 	<script type='x' charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
 	  -->
+	  
+	  <script type='text/javascript' src='http://res.wx.qq.com/open/js/jweixin-1.0.0.js'></script>
 
 </head>
 
@@ -39,9 +56,9 @@
 		
 </body>
 
-<div class='full contentTp pr oh' id='mainWrap' >
+<div class='full contentTp pa oh' id='mainWrap' >
 		<div class='fullw oh'>
-			<div class='box1 bg1'>1</div>
+			<div class='box1 bg1'>11</div>
 		</div>
 	</div>
 
@@ -50,12 +67,35 @@
 
 		
 		ut.ready(function(){
-			ut.client.flex(640);
+//			ut.client.flex(640);
 			
 //			$.tmpl('baseTmpl').appendTo(body) ;
 			
 //			ut.iScroll('#mainWrap');
+			
+//			$('body').on('doubleTap',function(e){
+//				alert(33);
+//				e.preventDefault();
+//				return false;
+//			});
 
+			wx.onMenuShareTimeline({
+			      title: '互联网之子 方倍工作室',
+			      link: 'www.baidu.com',
+			      imgUrl: 'http://img3.douban.com/view/movie_poster_cover/spst/public/p2166127561.jpg',
+			      trigger: function (res) {
+			        alert('用户点击分享到朋友圈');
+			      },
+			      success: function (res) {
+			        alert('已分享');
+			      },
+			      cancel: function (res) {
+			        alert('已取消');
+			      },
+			      fail: function (res) {
+			        alert(JSON.stringify(res));
+			      }
+		    });
 
 			
 		});
