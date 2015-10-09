@@ -67,7 +67,12 @@
 			$.tmpl('baseTmpl').appendTo(body) ;
 			
 //			ut.iScroll('#mainWrap');
-			
+			$(window).on('load',function(){
+				console.log(1);
+			}) ;
+			$(window).on('load',function(){
+				console.log(2);
+			}) ;
 //			
 			var index=0;
 			$(document).on('tap','.box2',function(){

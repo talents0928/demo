@@ -326,9 +326,7 @@ ut.waiter = new (function(){
 *	@parse modeH{int} 设计高度
 **/
 ut.client = (function(){
-	var client = {};
-	client.modeH = 1008;
-	client.modeW = 640;
+	var client = {}; client.modeH = 1008; client.modeW = 640;
 	
 	Object.defineProperties(client,{
 		w : { get : function(){ return window.innerWidth ; } },
@@ -336,11 +334,9 @@ ut.client = (function(){
 	});
 
 	//正确屏幕的宽高比
-	client.ratio = client.modeW/client.modeH;
-	client.error = 1.35;
+	client.ratio = client.modeW/client.modeH; client.error = 1.35;
 	
 	client.init = function(){
-
 		//屏幕宽度失调率
 		this.imbalance = this.w/(this.h*this.ratio);
 		this.isBalance = this.imbalance>this.error?false:true;
@@ -355,9 +351,7 @@ ut.client = (function(){
 	
 	client.gbox = $("<div class='gbox'></div>");
 
-/**
- * 解析正确的手势位置
- */
+	// 解析正确的手势位置  
 	client.unX = function(x){ return ( x - this.gbox.offset().left ) / this.scaleW ; };
 	client.unY = function(y){ return y / this.scaleH ; };
 	client.box = function(modeW,modeH){
@@ -366,34 +360,25 @@ ut.client = (function(){
 			if($('.gbox').length){
 				this.gbox = $('.gbox') ;
 			}else{
-				this.gbox.append($('body').children(':not(script):not(style)'))
-					.wrap("<div></div>").parent().appendTo($('body'));
+				this.gbox.append($('body').children(':not(script):not(style)')).wrap("<div></div>").parent().appendTo($('body'));
 			}
-			setDefault();
-			window.body = this.gbox ;
+			setDefault(); window.body = this.gbox ;
 		}
 		client.modeW = modeW || client.modeW ;
 		client.isSingle = client.isSingle || (!modeH && modeW) ? true : false;
 		client.modeH = modeH || ( modeW ? null : client.modeH ) ;
 
 		this.init();
-
 		this.gbox.parent().css({
-			width : this.seeW + 'px',
-			height : this.seeH + 'px',
+			width : this.seeW + 'px', height : this.seeH + 'px',
 			margin : 'auto', overflow : 'hidden',
-			position : 'absolute',
-			top : '0', left : '0', right : '0'
+			position : 'absolute', top : '0', left : '0', right : '0'
 		});
 		this.gbox.css({
-			width : this.modeW + 'px',
-			height : this.modeH ? (this.modeH + 'px') : this.seeH/this.scaleW+'px',
-			position : 'absolute', overflow : 'hidden',
-			left : 0, top : 0, transformOrigin : '0 0',
-			transform : 'scale('+this.scaleW+','+this.scaleH+')'
+			width : this.modeW + 'px', height : this.modeH ? (this.modeH + 'px') : this.seeH/this.scaleW+'px',
+			position : 'absolute', overflow : 'hidden', left : 0, top : 0, transformOrigin : '0 0', transform : 'scale('+this.scaleW+','+this.scaleH+')'
 		});
 		$('body').css('background','black');
-
 	};
 	
 	function setDefault(){
@@ -412,7 +397,6 @@ ut.client = (function(){
 			e.preventDefault();
 		});
 	};
-
 	return client;
 	
 })();
