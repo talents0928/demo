@@ -398,29 +398,19 @@ ut.client = (function(){
 	
 	function setDefault(){
 		$(window).on('resize orientationchange',function(){
-			if(!$(document.activeElement).is('input,textarea')){
-				client.box();
-			}
+			if(!$(document.activeElement).is('input,textarea')){ client.box(); }
 		});
-		$(document).on('touchmove',function(e){
-			e.preventDefault();
-		});
+		$(document).on('touchstart touchmove',function(e){ e.preventDefault(); });
 	}
 	client.flex = function(modeW){
 		this.modeW = modeW ? modeW : this.modeW ;
-//		var viewport = "<meta name='viewport' content='width="+this.modeW+", initial-scale=1, user-scalable=no, minimum-scale=1'>" ;
-//		$(viewport).appendTo('head');
-		
 		$('meta[name=viewport]').attr('content','width='+this.modeW+',user-scalable=no') ;
-		
-		$('html,body').css({'width':'100%','height':'100%','overflow':'hidden'});
-		
+		$('html,body').css({'min-height':'100%'});
 		this.gbox = $(body).addClass('gbox') ;
 		this.modeH = this.gbox.height();
-//		$(document).on('touchmove',function(e){
-//			e.preventDefault();
-//		});
-		
+		$(document).on('touchstart touchmove',function(e){
+			e.preventDefault();
+		});
 	};
 
 	return client;

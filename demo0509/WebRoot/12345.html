@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>玉溪市信访局</title>
+	
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=640,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<meta http-equiv="x-dns-prefetch-control" content="on">
+
+  </head>
+  <script type='text/javascript' src='http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js'></script>
+  <style type="text/css">
+  	body {
+		background : white;-webkit-tap-highlight-color: rgba(0,0,0,0);margin:auto;padding:30px;
+		-webkit-backface-visibility: hidden;-webkit-user-select: none;-webkit-text-size-adjust:none;font-size: 28px;
+		font-family: "Microsoft YaHei","Apple LiGothic Medium","LiHei Pro Medium",Arial,Helvetica,sans-serif;
+	}
+	input{ padding:0px; border:0px;font-size:32px; }
+	textarea{ border:none; }
+	.dib{ display:inline-block; } .pr{position:relative;}
+	.bb{ box-sizing:border-box; -moz-box-sizing:border-box; -webkit-box-sizing:border-box; }
+	.flex,.flexRow{ display:-webkit-box; -webkit-box-orient:horizontal; display:flex; display:-webkit-flex; flex-direction:row; -webkit-flex-direction:row; }
+	.flexColumn{ display:-webkit-box; -webkit-box-orient:vertical; display:flex; display:-webkit-flex; flex-direction:column; -webkit-flex-direction:column; }
+	.flex1{ box-flex:1; -webkit-box-flex:1; flex : 1 ; -webkit-flex : 1 ; position : relative; }
+	.fs32{ font-size:32px; } .fs28{ font-size:28px; } .fs26{ font-size:26px; } .fs22{ font-size:22px; }
+	.tac{ text-align:center; }
+
+  	html,body{ min-height:100%; }
+	body{background:white;}
+	
+	.box1{	width:100%; height:92px; border : 1px solid #D2D2D2; line-height:92px; 
+		 	border-radius : 10px; color : black ; background : #EEEEEE; text-align : center; font-size : 32px;	}
+	.box2{ width:140px;text-align:left;color:#656565;line-height:78px; }
+	.box3{
+		border-radius: 10px; background-color: #FFFFFF;
+		border-style: solid; border-width: 2px; border-color: #cccccc;
+		color: #000; height:78px; padding:0px 0.5em;line-height:74px;
+	}
+	.box4{ height:10em;width:100%;line-height:1.4;padding:10px;text-align:justify; }
+	.box6{ display:block;color:#007aff;width:3.5em;line-height:1.8;position:absolute;top:50%;left:240px;font-size:28px;text-align:center;-webkit-transform : translate(0%,-50%); }
+	.btn1{ width:5em;height:48px;margin-top:15px;border:1px solid #cccccc;text-align:center;line-height:48px;font-size:28px;color:#454545;border-radius:10px; }
+	.btn2{
+		height:78px;width:100%; line-height:78px; border-radius : 10px;
+		color : white ; font-size : 36px; background : #00CB03 ; text-align : center ; margin : auto;
+	}
+	
+	
+	.radio{ width:36px ;height:36px;border: 2px solid #cccccc;background:#fbfbfb;
+		display:inline-block;border-radius:50%;position:absolute;left:0px;top:0;bottom:0;margin:auto; }
+	.radio-active{ background:#28da46;border:none; }
+	.radio-active:after{
+		content : ' '; display : block ; width:50%;height:25%;margin:auto;
+		position:absolute;top:28%;left:20%;-webkit-transform : rotateZ(-45deg);
+		border-width: 0 0 3px 3px ; border-style : solid ; border-color : white;
+	}
+	.c-red{ color:#b71414; }
+  
+  </style>
+  <body>
+		<div class='box1'>玉溪市信访局</div>
+		<div class='flex fs32' style='margin-top:30px;'>
+			<div class='box2 '>标题</div>
+			<input type='text' class='flex1 box3 bb' placeHolder='标题字数控制50个汉字以内'></input>
+		</div>
+		<div class='flex fs32' style='margin-top:20px;'>
+			<div class='box2 '>姓名</div>
+			<input type='text' class='flex1 box3 bb' placeHolder='请输入姓名'></input>
+		</div>
+		<div class='flex fs32' style='margin-top:20px;'>
+			<div class='box2 '>性别</div>
+			<div class='flex1 ' style='line-height:78px;'>
+				<span class='radioTp pr dib' val='男' style='text-indent:60px;'>
+					<span class='radio radio-active bb'></span>男
+				</span>
+				<span class='dib' style='width:40px;'></span>
+				<span class='radioTp pr dib' val='女' style='text-indent:60px;'>
+					<span class='radio bb'></span>女
+				</span>
+			</div>
+			<input type='hidden'  nameType='gender' value='男'></input>
+		</div>
+		<div class='flex fs32' style='margin-top:20px;'>
+			<div class='box2 '>电话</div>
+			<input type='text' class='flex1 box3 bb'></input>
+		</div>
+		<div class='flex fs32' style='margin-top:20px;'>
+			<div class='box2 '>通讯地址</div>
+			<input type='text' class='flex1 box3 bb' ></input>
+		</div>
+		<div class='flex fs32' style='margin-top:20px;'>
+			<div class='box2 '>Email</div>
+			<input type='text' class='flex1 box3 bb'></input>
+		</div>
+		<div class='fs26 c-red' style='margin-top:20px;line-height:1.4;'>郑重提醒!!您必须正确留下至少一种联系方式:电话,通信地址,Email,这样我们才能更好的为你服务!!</div>
+		<div class='fs32' style=''>
+			<div class='box2 '>内容</div>
+			<textarea type='text' class='box3 box4 bb fs32' placeHolder='请输入内容，2000字以内。' style=''></textarea>
+		</div>
+		<div class='flex fs32' style='margin-top:20px;'>
+			<div class='box2 '>附件上载</div>
+			<div class='flex1' >
+				<div style='' class='btn1'>选择文件</div>
+			</div>
+		</div>
+		<div class='fs26 c-red' style='line-height:1.4;'>附件大小不能超过2MB，多人上访的人员姓名可写入word文档通过附件上传</div>
+		<div class='flex fs32' style='margin-top:20px;'>
+			<div class='box2 '>验证码</div>
+			<input type='text' class='flex1 box3 bb' placeHolder='请输入验证码'></input>
+		</div>
+		<div class='pr' style='margin-top:20px;'>
+			<div class='codeTp' style='width:160px;min-height:60px;'><img scr='' style='width:100%;'/></div>
+			<u class='box6 changeTp' >换一张</u>
+		</div>
+		<div class='btn2 queryTp' style='margin-top:60px;' >提交</div>
+		<div class='tac fs22' style='line-height:1.7;color:#b2b2b2;margin-top:20px;'>
+			<div style='margin-bottom:15px;' > 玉溪市&nbsp;版权所有 </div>
+			<div>腾讯区域业务部提供技术支持</div>
+			<div>Copyright © 1998-2015 Tencent Inc</div>
+			<div>All Rights Reserved</div>
+		</div>
+		
+  </body>
+  <script type='text/javascript'>
+  	$(function(){
+		$(document).on('click touchstart','.radioTp',function(){
+			$('.radio-active').removeClass('radio-active');
+			$(this).children('.radio').addClass('radio-active');
+			$('input[nameType=gender]').val($(this).attr('val')) ;
+		});
+		$(document).on('click touchstart','.changeTp',function(){
+			var $ele = $('#codeTp').find('img') ;
+			$ele.attr('src',$ele.attr('src')) ;
+		});
+	});
+  </script>
+</html>

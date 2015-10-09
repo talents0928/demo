@@ -1,23 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-	<meta charset="utf-8">
-	<meta id="viewport" name="viewport" content="width=640,user-scalable=no">
-	<meta http-equiv="Pragma" content="no-cache">
-	<meta http-equiv="Expires" content="-1">
-	<meta http-equiv="Cache-Control" content="no-cache">
-	<meta name="format-detection" content="telephone=no">
-	<meta name="oupengmobile" content="fullscreen,portrait,game">
-	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="x-dns-prefetch-control" content="on" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no, email=no" />
+	<meta name="x5-orientation" content="portrait">
 	<meta name="x5-fullscreen" content="true">
 	<meta name="x5-page-mode" content="app">
-	<meta name="tencent-x5-page-direction" content="portrait">
-	<meta name="browsermode" content="application">
-	<meta name="full-screen" content="yes">
-	<meta name="screen-orientation" content="portrait">
+	<meta name="msapplication-tap-highlight" content="no">
 
 	
 	
@@ -29,10 +22,10 @@
 	<link rel='stylesheet' href='css/common.css'></link>
 	<!-- 
 	<script type='x' charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
-	  -->
+	 
 	  
 	  <script type='text/javascript' src='http://res.wx.qq.com/open/js/jweixin-1.0.0.js'></script>
-
+ -->
 </head>
 
 <style type="text/css" id='style'>
@@ -49,53 +42,37 @@
 	.bg3{ color : #ff0000; }
 	.bg4{ color : #331ffb; }
 	.bg5{ color : #e86439; }
+	.box2{ width:300px;height:100px;background:darkblue;margin:auto;text-align:center;font-size:38px;line-height:100px;color:white; }
 </style>
-<body>
+<body class=''>
 
 			
 		
 </body>
-
-<div class='full contentTp pa oh' id='mainWrap' >
+<script type='x' id='baseTmpl'>
+<div class='full contentTp pa oh ' id='mainWrap' >
 		<div class='fullw oh'>
-			<div class='box1 bg1'>11</div>
+			<div class='box1 bg1'>55</div>
+			<div class='box2'></div>
 		</div>
 	</div>
-
+</script>
 
 	<script type="text/javascript">
 
 		
 		ut.ready(function(){
-//			ut.client.flex(640);
+			ut.client.box(640);
 			
-//			$.tmpl('baseTmpl').appendTo(body) ;
+			$.tmpl('baseTmpl').appendTo(body) ;
 			
 //			ut.iScroll('#mainWrap');
 			
-//			$('body').on('doubleTap',function(e){
-//				alert(33);
-//				e.preventDefault();
-//				return false;
-//			});
-
-			wx.onMenuShareTimeline({
-			      title: '互联网之子 方倍工作室',
-			      link: 'www.baidu.com',
-			      imgUrl: 'http://img3.douban.com/view/movie_poster_cover/spst/public/p2166127561.jpg',
-			      trigger: function (res) {
-			        alert('用户点击分享到朋友圈');
-			      },
-			      success: function (res) {
-			        alert('已分享');
-			      },
-			      cancel: function (res) {
-			        alert('已取消');
-			      },
-			      fail: function (res) {
-			        alert(JSON.stringify(res));
-			      }
-		    });
+//			
+			var index=0;
+			$(document).on('tap','.box2',function(){
+				$(this).text(index++);
+			});
 
 			
 		});
