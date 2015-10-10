@@ -67,18 +67,21 @@
 			$.tmpl('baseTmpl').appendTo(body) ;
 			
 //			ut.iScroll('#mainWrap');
-			$(window).on('load',function(){
-				console.log(1);
-			}) ;
-			$(window).on('load',function(){
-				console.log(2);
-			}) ;
-//			
 			var index=0;
 			$(document).on('tap','.box2',function(){
 				$(this).text(index++);
 			});
+			
+			var browser = (function(){
+				var s = navigator.userAgent.toLowerCase();
+				var match = /(webkit)[ \/]([\w.]+)/.exec(s) ||
+					/(opera)(?:.*version)?[ \/]([\w.]+)/.exec(s) ||
+					/(msie)([\w.]+)/.exec(s) ||
+					!/compatible/.test(s) && /(mozilla)(?:.*? rv:([\w.]+))?/.exec(s)||[];
+				return { name:match[1] ||"" ,version:match[2]||"0" } ;
+			})();
 
+			alert(navigator.userAgent);
 			
 		});
 

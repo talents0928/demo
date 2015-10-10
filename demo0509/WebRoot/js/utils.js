@@ -35,12 +35,15 @@ var isDebug = $('script[src*=utils][debug=true]').length == 0 ? 0 : 1 ;
 /**
  *  资源路径配置
  */
-var asset = window.currAsset || {
-	cssPath : ['../../css/','../../../css/'][isDebug],
-	baseUrl : ['./js/lib','./js/lib/libCopy'][isDebug],
-	conponentPath : ['../component','../../component'][isDebug],
-	'':''
-}
+var asset = (function(){
+	var path = $('script[src*=utils]').attr('src') ;
+	path = path.slice(0,path.indexOf('js/utils'));
+	return {
+		baseUrl : [path+'js/lib',path+'js/lib'][isDebug],
+		cssPath : ['../../css/','../../../css/'][isDebug],
+		conponentPath : ['../component','../../component'][isDebug],
+	}
+})();
 var paths = {
 
 //				_common : cssPath+'/common',
