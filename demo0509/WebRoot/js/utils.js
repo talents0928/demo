@@ -109,8 +109,7 @@ var __listFunc = [],__listLoad=[];
 
 		$(function(){
 			var arr = getReqMap();
-			Array.prototype.push.apply(arr,['component','tmpl']);
-			Array.prototype.push.apply(arr,__listLoad);
+			Array.prototype.push.apply(arr,['component','tmpl'].concat(__listLoad));
 			require(arr,function(){
 				for(var i =0 ; i < __listFunc.length ; i++){
 					__listFunc.shift()();
@@ -183,7 +182,6 @@ ut.define('component',['text!_component','_template','_componentJs'],function(da
 });
 
 ut.define('cookie',['_cookie'],function(){
-
 	//console.log(cookie);
 });
 ut.define('wx',['_wx'],function(data){
@@ -211,15 +209,18 @@ ut.define('iScroll',['_iscroll'],function(){
     	}
     	var scroll = new IScroll(wrapId,$.extend({
     		useTransition: true,
-    		scrollX: false,
-    		scrollY: true,
-	    	hScrollbar: false,
-	    	HWCompositing : true ,
-	    	preventDefault: false
+    		scrollX: false, scrollY: true,
+	    	scrollbars: false ,fadeScrollbars: true ,
+    		preventDefault: false ,
+	    	HWCompositing : ut.UA.system != 'os'
 	    },options||{}));
     	
+    	//this.y == this.maxScrollY 表示划至最后
     	scroll.on('scrollStart',function(){
-    		this.refresh();
+    		var $ele = $(this.wrapper).children() ;
+    		if( $ele.height()!=this.scrollerHeight || $ele.width()!=this.scrollerWidth ){ 
+    			this.refresh(); 
+    		}
     	});
     	return scroll ;
     };
@@ -242,30 +243,13 @@ ut.define('velocity',['_velocity'],function(data){
 
 
 
-
-
-//$(document).on('touchstart mousedown', function(e){
-//	var $node  = $(e.target);
-//	var $target = $node.is('[as]') ? $node : $node.parents('[as]') ;
-//	$target.length && $target.addClass($target.attr('as'));
-//	
-//});
-//$(document).on('touchend mouseup', function(e){
-//	var $node  = $(e.target);
-//	var $target = $node.is('[as]') ? $node : $node.parents('[as]') ;
-//	$target.length && $target.removeClass($target.attr('as'));
-//});
-
 (function(){
 	
 	$(document).on('touchstart mousedown','[as]',function(e){
 		var $target  = $(this);
-		$target.addClass($target.attr('as'));
-	});
-	
-	$(document).on('touchend mouseup','[as]',function(e){
-		var $target  = $(this);
-		$target.removeClass($target.attr('as'));
+		$target.addClass($target.attr('as')).one('touchend mouseup',function(){
+			$target.removeClass($target.attr('as'));
+		});
 	});
 	
 })();
@@ -388,7 +372,11 @@ ut.client = (function(){
 		$(window).on('resize orientationchange',function(){
 			if(!$(document.activeElement).is('input,textarea')){ client.box(); }
 		});
-		$(document).on('touchstart touchmove',function(e){ e.preventDefault(); });
+		$(document).on('touchstart touchmove',function(e){ 
+			if( !(e.type=='touchstart' && $(e.target).is('input,textarea')) ){
+				e.preventDefault();
+			}
+		});
 	}
 	client.flex = function(modeW){
 		this.modeW = modeW ? modeW : this.modeW ;
@@ -397,13 +385,50 @@ ut.client = (function(){
 		this.gbox = $(body).addClass('gbox') ;
 		this.modeH = this.gbox.height();
 		$(document).on('touchstart touchmove',function(e){
-			e.preventDefault();
+			if( !(e.type=='touchstart' && $(e.target).is('input,textarea')) ){
+				e.preventDefault();
+			}
 		});
 	};
 	return client;
 	
 })();
 
+//设备嗅探
+ut.UA = (function(){
+	var s = navigator.userAgent.toLowerCase();
+	var match = /(os)[ \/]([\w_]+)/.exec(s) || /(android)[ \/]([\w.]+)/.exec(s);
+	var _version = match[2] || "0" , _system = match[1] || "" ;
+	function compareVer(v1){
+		v1 = v1.toString().split('.') ; 
+		var v2 = _system == 'os'? _version.split('_') : _version.split('.') , result = 0;
+		for(var i =0;i<v1.length&&i<v2.length;i++){
+			result = v2[i] - v1[i] ;
+			if(result!=0) break ;
+		}
+		return result ;
+	};
+	return { 
+		system : _system ,
+		version : _version ,
+		isIpad : /ipad/.test(s) ,
+		isIphone : /iphone/.test(s) ,
+		isAndroid : this.system == 'android' ,
+		verEq : function(str){
+			return compareVer(str) == 0 ? true : false ;
+		},
+		verLess : function(str){
+			return compareVer(str) < 0 ? true : false ;
+		},
+		verGreater : function(str){
+			return compareVer(str) >= 0 ? true : false ;
+		},
+		is : function(str){
+			str = str.toLowerCase();
+			return s.indexOf(str)==-1? false : true ;
+		}
+	} ;
+})();
 
 
 //数组方法
@@ -468,10 +493,11 @@ ut.client = (function(){
 	    }
 	    return toArray(copy);
 	};
+	//通用方法，按照某个字段对data进行排序，data可以是array或者object
+	//key是排序用的字段，desc表示是否降序，desc为true表示降序，不传则默认升序
 	Array.prototype.sortData = function(keys, descs ,custom){
 	    //key是数组;
 	    var re =  this ;
-	    
 	    
 	    keys = keys instanceof Array ? keys : [keys] ;
 	    descs = descs instanceof Array ? descs : [descs] ;
@@ -530,44 +556,6 @@ ut.toArray = function(obj){
     return re;
 };
 
-//通用方法，按照某个字段对data进行排序，data可以是array或者object
-//key是排序用的字段，desc表示是否降序，desc为true表示降序，不传则默认升序
-ut.sortData = function(data, key, desc){
-    //key是数组;
-    var re;
-    if (typeof data == 'array') 
-        re = data;
-    else 
-        re = ut.toArray(data);
-   
-    function compare(a, b, i){
-        //i key数组中的第几个
-        i = i || 0;
-        if (a[key[i]] == b[key[i]]) {
-            return key.length > i ? compare(a, b, i + 1) : false;
-        }
-        else {
-            if (typeof a[key[i]] == 'number') {
-                return desc ? b[key[i]] - a[key[i]] : a[key[i]] - b[key[i]];
-            }
-            else {
-                return false;
-            }
-        }
-        
-    };
-    
-    re.sort(function(a, b){
-        if (key instanceof Array) {
-            return compare(a, b);
-        }
-        else {
-            return desc ? (b[key] - a[key]) : (a[key] - b[key]) ;
-        }
-        
-    });
-    return re;  
-};
 
 
 (function (){
