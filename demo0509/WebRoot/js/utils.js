@@ -207,11 +207,12 @@ ut.define('iScroll',['_iscroll'],function(){
     	if(typeof options == 'boolean' && options === true ){
     		options = { scrollX: true, scrollY: false } ;
     	}
+    	
     	var scroll = new IScroll(wrapId,$.extend({
     		useTransition: true,
     		scrollX: false, scrollY: true,
 	    	scrollbars: false ,fadeScrollbars: true ,
-    		preventDefault: false ,
+    		preventDefault: false , deceleration : 0.004 ,
 	    	HWCompositing : ut.UA.system != 'os'
 	    },options||{}));
     	
@@ -222,6 +223,7 @@ ut.define('iScroll',['_iscroll'],function(){
     			this.refresh(); 
     		}
     	});
+//    	alert(scroll.options.deceleration) ;
     	return scroll ;
     };
     

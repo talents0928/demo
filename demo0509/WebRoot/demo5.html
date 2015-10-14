@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+	
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<meta http-equiv="x-dns-prefetch-control" content="on" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+	<meta name="viewport" content="initial-scale=0.5,user-scalable=0" />
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 	<meta name="format-detection" content="telephone=no, email=no" />
@@ -51,7 +54,7 @@
 <script type='x' id='baseTmpl'>
 <div class='full contentTp pa oh ' id='mainWrap' >
 		<div class='fullw oh'>
-			{{each ut.getArray(68)}}
+			{{each ut.getArray(58)}}
 				{{if @index==1}}
 				<div class='box2'>
 					<div>0</div>
@@ -66,7 +69,7 @@
 				{{else @index==5}}
 				<div class='box3'><input type='text' style='width:80%;margin:auto;'></input></div>
 				{{else}}
-				<div class='box1' as='op3' style='background:url(./img/imgs/@{@index%4+1}.jpg);background-size:100% 100%;'></div>
+				<div class='box1' style='background:url(./img/imgs/@{@index%4+1}.jpg);background-size:100% 100%;'></div>
 				{{/if}}
 			{{/each}}
 		</div>
@@ -79,9 +82,6 @@
 			ut.client.box(640,1008);
 			$.tmpl('baseTmpl').appendTo(body) ;
 			ut.iScroll('#mainWrap');
-//			$(document).on('tap','.box2',function(){
-//				$(this).text(Number($(this).text())+1) ;
-//			});
 			setTimeout(function(){
 				$('.box1').css('height','220px');
 			},2000);
