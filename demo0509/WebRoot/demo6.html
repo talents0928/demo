@@ -1,61 +1,94 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<meta charset="utf-8">
-	<title>携程旅行-酒店预订,机票预订查询,旅游度假,商旅管理-携程无线官网</title>
-	<meta name="viewport" content="initial-scale=0.5,user-scalable=0" />
 	
-	<style>
-		
-	</style>
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="x-dns-prefetch-control" content="on" />
+	<meta name="viewport" content="width=device-width,initial-scale=0.5,user-scalable=0" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no, email=no" />
+	<meta name="x5-orientation" content="portrait">
+	<meta name="x5-fullscreen" content="true">
+	<meta name="x5-page-mode" content="app">
+	<meta name="msapplication-tap-highlight" content="no">
 
-	<link rel='stylesheet' href='css/common.css'></link>
-	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
 	
+	
+
+	<title>demo 范例</title>
+	<script type="text/javascript" src='js/require.min.js'></script>
+	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
+	<script type="text/javascript" src='js/utils.js'></script>
+	<link rel='stylesheet' href='css/common.css'></link>
 	<!-- 
 	<script type='x' charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
-	  -->
-
+	 
+	  
+	  <script type='text/javascript' src='http://res.wx.qq.com/open/js/jweixin-1.0.0.js'></script>
+ -->
 </head>
 
 <style type="text/css" id='style'>
 	
-	body{ background:wheat; }
-	.gbox{
-		background : wheat ;
-		//background : darkgreen;
-	}
-	.box1{ width: 100%;line-height:100px;text-align :center ; font-size:36px; }
+	body{ background:black; }
+	.gbox{ background : wheat ; }
 	
 	.bg1{ color : #60f942; }
 	.bg2{ color : #fe4f3a; }
 	.bg3{ color : #ff0000; }
 	.bg4{ color : #331ffb; }
 	.bg5{ color : #e86439; }
+	.box1{ width:100%;height:200px;margin:5px 0; }
+	.box2{ width:100%;height:200px;margin:5px 0;color:darkred;font-size:68px;text-align:center;line-height:100px; }
+	.box3{ width:100%;height:200px;margin:5px 0;color:darkred;font-size:68px;text-align:center;line-height:200px; }
+	.btn1{ width:120px;height:60px;text-align:center;line-height:60px;font-size:32px;margin:auto;background:white; }
 </style>
-<body>
-	<div style='margin:50px auto;font-size:30px;text-align:center;'>1</div>
+<body class=''>
+
 			
 		
 </body>
-
-<script id="baseTmpl" type="x">
-	<div class='full contentTp pr oh' id='mainWrap' >
+<script type='x' id='baseTmpl'>
+<div class='fullw contentTp oh ' id='mainWrap' >
 		<div class='fullw oh'>
-			{{each ut.getArray(20)}}
-			<div class='box1 bg@{@index%5}'>@{@index}</div>
+			{{each ut.getArray(58)}}
+				{{if @index==1}}
+				<div class='box2'>
+					<div>0</div>
+					<div class='btn1' as='op3'>按钮</div>
+				</div>
+				{{else  @index==3}}
+				<div class=' fs32 tac' style='padding:20px; height:auto;'>
+					阿列克谢耶维奇曾在自传中，写道：“如果你回头看看我们整个的历史，无论是苏联还是俄罗斯时代，都是尸骨遍地、献血横流，是一个刽子手和受害者之间的永恒对话。
+					“我认为自己来自白俄罗斯世界，来自俄国文化，同时也是一名世界公民。我喜欢文化灿烂的俄罗斯，而不是斯大林、贝利亚他们的俄国。那不是我的世界”。
+					当阿列克谢耶维奇被问到对卢卡申科和普京的看法时，阿列克谢耶维奇直言不讳地斥责“极权主义领袖极度依赖的集体主义文化。”
+				</div>
+				{{else @index==5}}
+				<div class='box3'><input type='text' style='width:80%;margin:auto;'></input></div>
+				{{else}}
+				<div class='box1' style='background:url(./img/imgs/@{@index%4+1}.jpg);background-size:100% 100%;'>
+					
+				</div>
+				{{/if}}
 			{{/each}}
 		</div>
 	</div>
 </script>
 
 	<script type="text/javascript">
-
-		$(function(){
-//			$('html,body').css({'width':'100%','height':'100%'});
-		});
 		
+		ut.ready(function(){
+			ut.client.flex(640);
+			$.tmpl('baseTmpl').appendTo(body) ;
+//			ut.iScroll('#mainWrap');
+//			setTimeout(function(){
+//				$('.box1').css('height','220px');
+//			},2000);
+		});
+
 
 	</script>
 </html>

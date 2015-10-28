@@ -58,7 +58,21 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	$(document).on('tap','.houseTp',function(){
 			location = $(this).attr('link') ;
 		});
-		
+
+
+//		自定义验证		
+//		data-abide-validator="num"
+		$(document).foundation({
+			abide : {
+				validators: {
+					num: function(el, required, parent){
+						var val = $(el).val();
+						var reg = /^$|^\w{${data.data.inquiry.inquiryPage.codeLen}}$/ ;
+						return  reg.test(val);
+					}
+				}
+			}
+		});
 	
 	
 	

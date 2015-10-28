@@ -223,7 +223,6 @@ ut.define('iScroll',['_iscroll'],function(){
     			this.refresh(); 
     		}
     	});
-//    	alert(scroll.options.deceleration) ;
     	return scroll ;
     };
     
@@ -295,7 +294,7 @@ ut.waiter = new (function(){
 		
 		that.obj && that.obj.remove();
 		that.obj = that.ele.clone() ;
-		that.obj.appendTo('body');
+		that.obj.appendTo('body').css('webkitTransform','scale(2)');
 		setTimeout(function(){
 			if($('.'+that.ctrl).length){
 				that.obj.find('div').show();
@@ -345,12 +344,9 @@ ut.client = (function(){
 	client.unY = function(y){ return y / this.scaleH ; };
 	client.box = function(modeW,modeH){
 
-		if(!window.body || window.body == 'body'){
-			if($('.gbox').length){
-				this.gbox = $('.gbox') ;
-			}else{
-				this.gbox.append($('body').children(':not(script):not(style)')).wrap("<div></div>").parent().appendTo($('body'));
-			}
+		if( window.body== undefined || window.body == 'body'){
+			//如果body未定义或指向非适配后的值则认为未适配
+			this.gbox.append($('body').children(':not(script,style)')).wrap("<div></div>").parent().appendTo('body');
 			setDefault(); window.body = this.gbox ;
 		}
 		client.modeW = modeW || client.modeW ;
@@ -383,14 +379,9 @@ ut.client = (function(){
 	client.flex = function(modeW){
 		this.modeW = modeW ? modeW : this.modeW ;
 		$('meta[name=viewport]').attr('content','width='+this.modeW+',user-scalable=no') ;
-		$('html,body').css({'min-height':'100%'});
+		$('html,body').css({'height':'100%'});
 		this.gbox = $(body).addClass('gbox') ;
 		this.modeH = this.gbox.height();
-		$(document).on('touchstart touchmove',function(e){
-			if( !(e.type=='touchstart' && $(e.target).is('input,textarea')) ){
-				e.preventDefault();
-			}
-		});
 	};
 	return client;
 	
@@ -399,7 +390,7 @@ ut.client = (function(){
 //设备嗅探
 ut.UA = (function(){
 	var s = navigator.userAgent.toLowerCase();
-	var match = /(os)[ \/]([\w_]+)/.exec(s) || /(android)[ \/]([\w.]+)/.exec(s);
+	var match = /(os)[ \/]([\w_]+)/.exec(s) || /(android)[ \/]([\w.]+)/.exec(s) ||[];
 	var _version = match[2] || "0" , _system = match[1] || "" ;
 	function compareVer(v1){
 		v1 = v1.toString().split('.') ; 
