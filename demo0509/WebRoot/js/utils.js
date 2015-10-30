@@ -155,21 +155,23 @@ ut.define = function(name,deps,cb){
 };
 ut.define('tmpl',['_template','jquery'],function(){
 	$.each( $('script:not([type*=javascript])'), function(index,value){
-		var $this = $(value);
-		$this.html(function(){
-			return $(this).html().replace(/@(?=[^\\])/g,'$').replace(/@[\\]/g,'@') ;
-		});
-		$.template($this.attr('id'),$this.html());
+		var $value = $(value);
+		$.template($value.attr('id'),$value.html().replace(/.{1}@/g,function(str){
+			return str=='\\@' ? '@' : str.replace(/@/g,'$');
+		}));
 	});
 });
 ut.define('component',['text!_component','_template','_componentJs'],function(data){
 	var ele = createStyle();
+	var cpMap = getCpMap();
 	$.each($(data),function(index,value){
-		var $ele = $(value);
-		if($ele.is('script')){
-			$.template($ele.attr('id'),$ele.html().replace(/@(?=[^\\])/g,'$').replace(/@[\\]/g,'@'));
-		}else if($ele.is('style')){
-			$ele.appendTo(ele);
+		var $value = $(value);
+		if($value.is('script')){
+			$.template($value.attr('id'),$value.html().replace(/.{1}@/g,function(str){
+				return str=='\\@' ? '@' : str.replace(/@/g,'$');
+			}));
+		}else if( $value.is('style') && cpMap[$value.attr('func')] ){
+			$value.appendTo(ele);
 		}
 	});
 	function createStyle(){
@@ -178,8 +180,22 @@ ut.define('component',['text!_component','_template','_componentJs'],function(da
 		ele.type='text/css';
 		head.appendChild(ele);
 		return ele ;
-	}
+	};
+	function getCpMap(){
+		var cpMap = {} ;
+		$('script').each(function(index,value){
+			var html = $(value).html().replace(/\/\/.*\n/g,'');
+			var arr = html.match(/\s+cp\s*\.\s*\w+(?=\W*)/g);
+			$.each(arr||[],function(index,value){
+				value = /.*\.\s*(\w+)/g.exec(value)[1];
+				cpMap[value] = true;
+			});
+		});
+		return cpMap ;
+		
+	};
 });
+
 
 ut.define('cookie',['_cookie'],function(){
 	//console.log(cookie);
@@ -255,56 +271,38 @@ ut.define('velocity',['_velocity'],function(data){
 	
 })();
 
-ut.waiter = new (function(){
-	var that = this ;
-	this.gifHref = 'js/asset/load.gif';
-	this.size = '28px';
-	this.size2 = '70px';
-	this.ctrl = 'expandTp';
-	this.ele = $("<div><div><img/></div></div>");
-	this.ele.css({
-		'position' : 'absolute',
-		'top' : '0',
-		'left' : '0',
-		'width' : window.innerWidth , 'height' : window.innerHeight,
-		'z-index' : '9999'
-	});
-	this.ele.addClass(this.ctrl);
-	this.ele.children('div').css({
-		'position' : 'absolute',
-		'top' : '0' , 'left' : '0', 'bottom' : '0' , 'right' : '0',
-		'width' : this.size2 , 'height' : this.size2,
-		'line-height' : this.size2 ,
-		'margin' : 'auto' ,
-		'display' : 'none' ,
-		'border-radius' : '10px' ,
-		'text-align' : 'center' ,
-		'background' : 'rgba(0,0,0,0.5)'
-	});
-	this.ele.find('img').attr('src',this.gifHref);
-	this.ele.find('img').css({
-		'position' : 'absolute',
-		'top' : '0' , 'left' : '0', 'bottom' : '0' , 'right' : '0',
-		'display' : 'block' ,
-		'margin' : 'auto' ,
-		'width' : this.size ,
-		'height' : this.size 
-	});
-	this.expand = function(){
-		
-		that.obj && that.obj.remove();
-		that.obj = that.ele.clone() ;
-		that.obj.appendTo('body').css('webkitTransform','scale(2)');
-		setTimeout(function(){
-			if($('.'+that.ctrl).length){
-				that.obj.find('div').show();
-			}
-		},600);
+ut.loader = (function(){
+	
+	var path = $('script[src*=utils]').attr('src') ;
+		path = path.slice(0,path.indexOf('js/utils'));
+	var href = path+"js/asset/load.gif" ;
+	var element = "<div class='' ><div><img/></div></div>" ;
+	var centerClass = {'position' : 'absolute','top' : '0', 'left' : '0','bottom' : '0' , 'right' : '0', 'margin' : 'auto' };
+	var size1 = '28px',size2 = '70px' ;
+	var curr ;
+	
+	function create(){
+		var $this = $(element) ;
+		$this.css($.extend(centerClass,{'z-index' : '999'}));
+		$this.children('div').css($.extend({},centerClass,{
+			'width' : size2 , 'height' : size2, 'display' : 'none' , 'webkitTransform':'scale(2) translateY(-25%)',
+			'border-radius' : '10px' , 'background' : 'rgba(0,0,0,0.55)'
+		}));
+		$this.find('img').css($.extend({},centerClass,{
+			'display' : 'block' , 'width' : size1 , 'height' : size1 
+		})).attr('src',href);
+		return $this ;
 	};
-	this.out = function(){
-		that.obj && that.obj.remove();
-	};
-});
+	
+	return {
+		expand : function(){
+			this.remove();
+			curr = create().appendTo('body');
+			setTimeout(function(){ curr && curr.find('div').show(); },400);
+		},
+		remove : function(){ curr && curr.remove(); curr = null ; }
+	}
+})();
 
 
 /**
@@ -371,10 +369,11 @@ ut.client = (function(){
 			if(!$(document.activeElement).is('input,textarea')){ client.box(); }
 		});
 		$(document).on('touchstart touchmove',function(e){ 
-			if( !(e.type=='touchstart' && $(e.target).is('input,textarea')) ){
+			if( !(e.type=='touchstart' && $(e.target).is('input,textarea,select,video,a')) ){
 				e.preventDefault();
 			}
 		});
+		
 	}
 	client.flex = function(modeW){
 		this.modeW = modeW ? modeW : this.modeW ;
@@ -574,7 +573,7 @@ ut.toArray = function(obj){
 			options = options.serialize() ;
 		}
 
-		ut.waiter.expand();
+		ut.loader.expand();
 		$.ajax({
 			method : 'post',
 			url : serverHost + url,
@@ -582,7 +581,7 @@ ut.toArray = function(obj){
 			data : options||{},
 			success : function(data){
 				console.log(data);
-				ut.waiter.out();
+				ut.loader.remove();
 				$.extend(true,origin,data);
 				if( data && data.callback === true ){
 					cb && cb(data.data,data);
@@ -592,7 +591,7 @@ ut.toArray = function(obj){
 				}
 			},
 			error : function(XMLHttpRequest, textStatus, errorThrown){
-				ut.waiter.out();
+				ut.loader.remove();
 				errorcb && errorcb(textStatus);
 				console.log(textStatus);
 			}

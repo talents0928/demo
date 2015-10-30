@@ -69,7 +69,9 @@
 				{{else @index==5}}
 				<div class='box3'><input type='text' style='width:80%;margin:auto;'></input></div>
 				{{else}}
-				<div class='box1' style='background:url(./img/imgs/@{@index%4+1}.jpg);background-size:100% 100%;'>
+				<div class='box1' 
+					onclick="javascript:console.log('funck');"
+					style='background:url(./img/imgs/@{@index%4+1}.jpg);background-size:100% 100%;'>
 					
 				</div>
 				{{/if}}
@@ -82,8 +84,15 @@
 		
 		ut.ready(function(){
 			ut.client.box(640,1008);
+			var jcp ;
 			$.tmpl('baseTmpl').appendTo(body) ;
 			ut.iScroll('#mainWrap');
+			cp.showMessage('你看到的到麽');
+			setTimeout(function(){
+				ut.loader.expand() ;
+			},3000);
+			
+			
 //			setTimeout(function(){
 //				$('.box1').css('height','220px');
 //			},2000);
