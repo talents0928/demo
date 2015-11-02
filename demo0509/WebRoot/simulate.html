@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="x-dns-prefetch-control" content="on" />
+	<meta name="viewport" content="width=device-width,initial-scale=0.5,user-scalable=0" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no, email=no" />
+	<meta name="x5-orientation" content="portrait">
+	<meta name="x5-fullscreen" content="true">
+	<meta name="x5-page-mode" content="app">
+	<meta name="msapplication-tap-highlight" content="no">
+	
+
+	<title>demo 范例</title>
+	<script type="text/javascript" src='js/require.min.js'></script>
+	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
+	<script type="text/javascript" src='js/utils.js?version=1'></script>
+	<link rel='stylesheet' href='css/common.css'></link>
+</head>
+
+
+
+<style type='text/css'>
+	.gbox{ background: wheat; }
+	.radio{ width:25px ;height:25px;border: 3px solid #807E7E;
+		display:inline-block;border-radius:50%;position:absolute;left:0px;top:0;bottom:0;margin:auto; }
+	.radio-active:after{
+		content : ' '; display : block ; width:75%;height:75%;margin:auto;border-radius:50%;
+		position:absolute;top:0;left:0;bottom:0;right:0;background:#807E7E ;
+	}
+	.form-active{ display: block ;}
+	
+.input-box{ width:100%;background:white;height:80px;line-height:80px;margin-bottom:2px; }
+.input-key{ text-align:right; }
+.input-val{ text-align:left;border:0px;padding:10px;padding-left:2em;line-height:40px; }
+
+.select-val{ position : relative ; }
+.select-val select {
+   background: transparent; width: 100%;  font-size: 26px; line-height: 1.4;
+   border: 0;  border-radius: 0; padding-left:2em;
+   height: 100%;  text-align : center; -webkit-appearance: none;
+}
+.select-val:after{
+	content : ' ' ; position :absolute; display : block;
+	width:18px;height:18px;border:3px solid #d5d5d5;border-style:solid ;border-color:#555555 ;border-width:3px 3px 0 0;
+	-webkit-transform : rotateZ(135deg) ; top:22px;right:50px;
+}
+.button-1{
+	width:600px;height:80px; margin: auto;
+	background : #E70000 ;border-radius :20px;
+	font-size : 32px; text-align : center;
+	position : relative ; line-height:80px;
+	padding : 5px; color : white;
+}
+.button-1:after{
+	content : ' '; display : block ;
+	width:100% ;height:100% ; border : 2px solid white;
+	border-radius : 15px;
+    -webkit-box-sizing: border-box;
+}
+.c-black{ color:black;	 }
+.c-white{ color:white;	 }
+.c-orange{ color:#F3A310; }
+.c-grey1{ color:#555555; }
+.c-grey2{ color:#d5d5d5; color:#b2b2b2; }
+.c-grey3{ color:#b2b2b2; }
+.c-red1{ color:#d7000f; }
+.c-red2{ color:#fe5c59; }
+.c-green{ color:#69BB1D; }
+.c-blue1{ color : #0ab5d1 ; }
+.b-red1{ background:#d7000f; }
+.b-red2{ background:#fe5c59; }
+.b-orange{ background:#F3A310; }
+.b-white{ background:white;}
+</style>
+<body class=''>
+
+			
+		
+</body>
+
+<script type='x' id='options1Tmpl'>
+	<option value='null'>请选择楼盘</option>
+	{{each @data.vills}}
+	<option value='@{vcode}'>@{vname}</option>
+	{{/each}}
+</script>
+<script type='x' id='options2Tmpl'>
+	<option value='null'>请选择楼栋</option>
+	{{each @data.secBaseData}}
+	<option value='@{vbuildingnum}'>@{vbuildingname}</option>
+	{{/each}}
+</script>
+<script type='x' id='options3Tmpl'>
+	<option value='null'>请选择单元</option>
+	{{each @data.dys||[]}}
+	<option value='@{@value}'>@{@value}</option>
+	{{/each}}
+</script>
+<script type='x' id='baseTmpl'>
+	<div class='full pr oh' id='mainWrap' >
+		<div class='fullw oh'>
+		<div class='pr' style='height:240px;'>
+			<div class='fs32 auto2 c-red1'>活动登记页面</div>
+		</div>
+		<div class='fullw lay bb' style='padding:20px;line-height:60px;padding-top:0;'>
+			<span>是否俊发业主&nbsp;&nbsp;&nbsp;&nbsp;</span>
+			<span class='radioTp pr dib' style='text-indent:40px;'>
+				<span class='radio bb'></span>
+				是业主
+			</span>
+		</div>
+		<form class='form-active' id='myForm1'>
+			<div class=''>
+			<div class='input-box flex'>
+				<div class='input-key' style='width:160px;' >姓名：</div>
+				<input type='text' class='input-val flex1' placeHolder='' name='nameCn'></input>
+			</div>
+			<div class='input-box flex'>
+				<div class='input-key' style='width:160px;'>电话：</div>
+				<input required pattern='^\d{11}$' error="手机号码格式有误"
+					type='text' class='input-val flex1' placeHolder='' name='tel'></input>
+			</div>
+			
+			<input type='hidden' name='activityId'></input>
+			<input type='hidden' name='owner' value='true'></input>
+			<div class='input-box flex' style='height:160px;'>
+				<div class='input-key' style='width:160px;'>楼盘地址：</div>
+				<div class='flex1 flexColumn'>
+					<div class='flex1 select-val'>
+						<select class='pa db' value='all' name='city' style='text-align:left;'>
+							<option value='null' style='width:100%;'>请选择城市</option>
+							{{each root.baseData&&root.baseData.firBaseData || []}}
+							<option value='@{city}'>@{city}</option>
+							{{/each}}
+						</select>
+					</div>
+					<div class='flex1 select-val'>
+						<select class='pa' value='all' name='vcode' style='text-align:left;' >
+							<option value='null'>请选择楼盘</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class='input-box flex' style='height:160px;'>
+				<div class='input-key' style='width:160px;'>住房地址：</div>
+				<div class='flex1 flexColumn'>
+					<div class='flex1 select-val'>
+						<select class='pa' value='all' name='vbuildingcode' style='text-align:left;'>
+							<option value='null'>请选择楼栋</option>
+						</select>
+					</div>
+					<div class='flex1 select-val'>
+						<select class='pa' value='all' name='unitCode' style='text-align:left;'>
+							<option value='null'>请选择单元</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class='input-box flex'>
+				<div class='input-key' style='width:160px;'>房间号：</div>
+				<input class='input-val flex1' placeHolder='请输入4位数房号' name='room'></input>
+			</div>
+			</div>
+			<div class=' dn' style='height:500px;background:white;'>
+				<div class='' style='width:160px;'></div>
+				<div class='flex1' style='background:darkblue;'></div>
+			</div>
+			
+		</form>
+
+
+		<div class='button-1 btnTp' as='op3' 
+			style='margin:20px auto;margin-top:80px;'><div class='auto2'>报名</div></div>
+		
+		<div class='fullw bb fs22 c-grey3' style='padding:25px;margin-top:20px;' >
+			<div>温馨提示：</div>
+			<div>此页面仅用于登记活动用户信息</div>
+		</div>
+		</div>
+	</div>
+</script>
+
+<script type='text/javascript' >
+	
+	
+	ut.ready(function(){
+		ut.client.box(640,1008);
+		
+		
+		
+		$.tmpl('baseTmpl').appendTo(body);
+		ut.iScroll('#mainWrap') ;
+		$(document).on('tap','.btnTp',function(){
+			
+			ut.verify($('.form-active'),function(){
+				ut.send('jkh/apply.do',function(data){
+					//console.log(data);
+					cp.showMessage('您好，您的报名申请已受理。');
+				},function(back){
+					cp.showMessage(back.msg);
+				},$('.form-active'));
+			},function(msg){
+				cp.showMessage(msg);
+			});
+			
+		});
+		$(document).on('tap','.radioTp',function(){
+			$(this).find('.radio').toggleClass('radio-active');
+			if($('.radio-active').length){
+				$('#myForm1').addClass('form-active');
+				$('#myForm2').removeClass('form-active');
+			}else{
+				$('#myForm1').removeClass('form-active');
+				$('#myForm2').addClass('form-active');
+			}
+		});
+		var secendData = '';
+		$('select[name=city]').on('change',function(){
+			
+			var city = $(this).val();
+			var options  ;
+			$.each(root.baseData.firBaseData||[],function(index,value){
+				if(value.city == city){
+					options = value ;
+				}
+			});
+			$('select[name=vcode]').empty().append($.tmpl('options1Tmpl',options));
+			$('select[name=vbuildingcode]').empty().append("<option value='null'>请选择楼栋</option>");
+			$('select[name=unitCode]').empty().append("<option value='null'>请选择单元</option>");
+		});
+		$('select[name=vcode]').on('change',function(){
+			var vcode = $(this).val();
+			ut.send('baseData/getSecBase.do',function(back){
+				secendData = back.baseData ;
+				$('select[name=vbuildingcode]').empty().append($.tmpl('options2Tmpl',secendData));
+			},{'vcode':vcode});
+		});
+		$('select[name=vbuildingcode]').on('change',function(){
+			
+			var vbuildingnum = $(this).val();
+			var options  ;
+			$.each(secendData.secBaseData||[],function(index,value){
+				if(value.vbuildingnum == vbuildingnum){
+					options = value ;
+				}
+			});
+			$('select[name=unitCode]').empty().append($.tmpl('options3Tmpl',options));
+		});
+		
+		
+	});
+</script>

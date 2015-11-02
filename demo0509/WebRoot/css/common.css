@@ -48,7 +48,10 @@ textarea{ border:none; }
 .fullw{ width: 100%; }
 .fullh{ height: 100%; }
 
-.dn{ display: none; }
+
+.db{ display : block; }
+.dib{ display : inline-block; }
+.di{ display : inline; }
 .oh{ overflow: hidden; }
 .nE{ pointer-events: none; }
 .aE{ pointer-events: auto; }
@@ -139,7 +142,7 @@ textarea{ border:none; }
 	align-items : stretch ;
 	-webkit-align-items : stretch ;
 }
-
+.dn{ display: none; }
 
 .circle{
 	border-radius : 50% 50% ;
@@ -233,41 +236,6 @@ textarea{ border:none; }
 }
 
 
-
-
-.font-rem-6{
-	font-size:0.6rem;
-}
-.font-rem-8{
-	font-size:0.8rem;
-}
-.font-rem-9{
-	font-size:0.9rem;
-}
-.font-rem-10{
-	font-size:1rem;
-}
-.font-rem-11{
-	font-size:1.1rem;
-}
-.font-rem-12{
-	font-size:1.2rem;
-}
-.font-rem-13{
-	font-size:1.3rem;
-}
-.font-rem-14{
-	font-size:1.4rem;
-}
-.font-rem-15{
-	font-size:1.5rem;
-}
-.font-rem-16{
-	font-size:1.6rem;
-}
-.font-rem-18{
-	font-size:1.8rem;
-}
 
 .fs24{ font-size : 24px ; }
 .fs28{ font-size : 28px ; }

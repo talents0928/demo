@@ -117,8 +117,7 @@ var __listFunc = [],__listLoad=[];
 			});
 		});
 		function getReqMap(){
-			var finded = {} ,
-				reqObj = helpMap.concat() ;
+			var finded = {} , reqObj = helpMap.concat() ;
 			$("script").each(function(index,value){
 				var html = $(value).html().replace(/\/\/.*\n/g,'');
 				var arr = html.match(/\.\s*\w+(?=\W*)/g);
@@ -128,9 +127,7 @@ var __listFunc = [],__listLoad=[];
 				});
 			});
 			for( var i=0 ; i<reqObj.length ; i++ ){
-				if(!finded[reqObj[i]]){
-					delete reqObj[i] ;
-				}
+				if(!finded[reqObj[i]]){ delete reqObj[i] ; }
 			}
 			return reqObj ;
 		};
@@ -229,7 +226,8 @@ ut.define('iScroll',['_iscroll'],function(){
     		scrollX: false, scrollY: true,
 	    	scrollbars: false ,fadeScrollbars: true ,
     		preventDefault: false , deceleration : 0.004 ,
-	    	HWCompositing : ut.UA.system != 'os'
+    		HWCompositing : true 
+//	    	HWCompositing : ut.UA.system != 'os'
 	    },options||{}));
     	
     	//this.y == this.maxScrollY 表示划至最后
@@ -257,7 +255,6 @@ ut.define('soundJs',['_soundJs'],function(data){
 ut.define('velocity',['_velocity'],function(data){
 	
 });
-
 
 
 (function(){
@@ -663,17 +660,13 @@ ut.manage = (function(){
 			obj.id && ( _cacheList[obj.id] = img );
 			
 			if(img.complete){
-				count --;
-				excuEnd();
+				count --; excuEnd();
 			}else{
 				img.onload = function(evt){
-					count --;
-					excuEnd();
+					count --; excuEnd();
 				}
 				img.onerror = function(){
-					count --;
-					miss ++ ;
-					excuEnd() ;
+					count --; miss ++ ; excuEnd() ;
 				}
 			}
 			
