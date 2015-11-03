@@ -653,20 +653,22 @@ ut.manage = (function(){
 		var size = _list.length , count = size , miss = 0;
 
 		for( var i=0; i<size; i++ ){
-			var img = new Image();
-			var obj = _list.pop() ;
+			
+			var img = new Image(); var obj = _list.pop() ;
 			
 			img.src = obj.src ? obj.src : obj ;
-			obj.id && ( _cacheList[obj.id] = img );
+			console.log(obj.toString().match(/\/(\w+)\./)[1]);
+			obj.id = obj.id || obj.toString().match(/\/(\w+)\./)[1];
+			console.log(obj.id);
+			_cacheList[ obj.id ] = img ;
 			
 			if(img.complete){
 				count --; excuEnd();
 			}else{
-				img.onload = function(evt){
-					count --; excuEnd();
-				}
-				img.onerror = function(){
-					count --; miss ++ ; excuEnd() ;
+				img.onload = img.onerror = function(e){
+					count --;
+					if( e.type == 'error' ){miss ++}
+					excuEnd();
 				}
 			}
 			
@@ -708,6 +710,7 @@ ut.manage = (function(){
 				loadList(this);
 			},
 			getImgById : function( id ){
+				console.log(_cacheList);
 				return _cacheList[id] ;
 			},
 			setCallback : function( cb ,failcb ){
