@@ -226,8 +226,7 @@ ut.define('iScroll',['_iscroll'],function(){
     		scrollX: false, scrollY: true,
 	    	scrollbars: false ,fadeScrollbars: true ,
     		preventDefault: false , deceleration : 0.004 ,
-    		HWCompositing : true 
-//	    	HWCompositing : ut.UA.system != 'os'
+	    	HWCompositing : ut.UA.system != 'os'
 	    },options||{}));
     	
     	//this.y == this.maxScrollY 表示划至最后
@@ -248,9 +247,7 @@ ut.define('easelJs',['_easelJs','_tweenJs','_soundJs'],function(data){
 
 });
 ut.define('soundJs',['_soundJs'],function(data){
-
 	ut.soundJs = createjs ;
-
 });
 ut.define('velocity',['_velocity'],function(data){
 	
@@ -295,7 +292,7 @@ ut.loader = (function(){
 		expand : function(){
 			this.remove();
 			curr = create().appendTo('body');
-			setTimeout(function(){ curr && curr.find('div').show(); },400);
+			setTimeout(function(){ curr && curr.find('div').show(); },350);
 		},
 		remove : function(){ curr && curr.remove(); curr = null ; }
 	}
@@ -655,11 +652,7 @@ ut.manage = (function(){
 		for( var i=0; i<size; i++ ){
 			
 			var img = new Image(); var obj = _list.pop() ;
-			
-			img.src = obj.src ? obj.src : obj ;
-			console.log(obj.toString().match(/\/(\w+)\./)[1]);
-			obj.id = obj.id || obj.toString().match(/\/(\w+)\./)[1];
-			console.log(obj.id);
+			img.src = obj.src ;
 			_cacheList[ obj.id ] = img ;
 			
 			if(img.complete){
@@ -693,29 +686,21 @@ ut.manage = (function(){
 			add : function( args , url ){
 
 				if(isArray(args)){
-					if(url){
-						for(var i=0; i< args.length; i++ ){
-							if( isObject(args[i]) ){
-								args[i].src = url + '/' + args[i].src ;
-							}else{
-								args[i] =  url + '/' + args[i] ;
-							}
+					for(var i=0; i< args.length; i++ ){
+						
+						if( !isObject(args[i]) ){
+							args[i] = { id: args[i].match(/(\w+)\./)[1] , src:args[i] };
 						}
+						args[i].src = url ? url + '/' + args[i].src : args[i].src ;
 					}
 					Array.prototype.push.apply(_list,args);
 				}
 				return this;
 			},
-			start : function(){
-				loadList(this);
-			},
-			getImgById : function( id ){
-				console.log(_cacheList);
-				return _cacheList[id] ;
-			},
+			start : function(){ loadList(this); },
+			getImgById : function( id ){ return _cacheList[id] ; },
 			setCallback : function( cb ,failcb ){
-				_cb = cb ;
-				_failcb = failcb || _cb ;
+				_cb = cb ; _failcb = failcb || _cb ;
 				return this;
 			}
 				
