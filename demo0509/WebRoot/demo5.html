@@ -103,29 +103,20 @@
 			
 		
 </body>
-<script type='x' id='options1Tmpl'>
-	<option value='null'>请选择楼盘</option>
-	{{each @data.vills}}
-	<option value='@{vcode}'>@{vname}</option>
-	{{/each}}
-</script>
-<script type='x' id='options2Tmpl'>
-	<option value='null'>请选择楼栋</option>
-	{{each @data.secBaseData}}
-	<option value='@{vbuildingnum}'>@{vbuildingname}</option>
-	{{/each}}
-</script>
-<script type='x' id='options3Tmpl'>
-	<option value='null'>请选择单元</option>
-	{{each @data.dys||[]}}
-	<option value='@{@value}'>@{@value}</option>
-	{{/each}}
-</script>
+
 <script type='x' id='baseTmpl'>
-<div class='full contentTp pa oh ' id='mainWrap' >
+	<div class='full contentTp pa oh ' id='mainWrap' >
 		<div class='fullw oh'>
 			{{each ut.getArray(5)}}
-				{{if @index==1}}
+				{{if @index==0}}
+					<div class='box1 pr' style='background:url(./img/imgs/@{@index%4+1}.jpg);background-size:100% 100%;'>
+						
+						<div class='fs30 auto2' style='font-weight:900;color:white;font-size:100px;'>
+							<span class='cdTp' cd='999'></span>
+						</div>
+
+					</div>
+				{{else @index==1}}
 				<div class='box2'>
 					<div>0</div>
 					<div class='btn1' as='op3'>按钮</div>
@@ -139,140 +130,32 @@
 				<div class='box3'><input type='text' style='width:80%;margin:auto;'></input></div>
 				{{else}}
 				<div class='box1' 
-					onclick="javascript:console.log('funck');"
+					onclick="javascript:console.log('');"
 					style='background:url(./img/imgs/@{@index%4+1}.jpg);background-size:100% 100%;'>
 					
 				</div>
 				{{/if}}
 			{{/each}}
-			<div class='' style='-webkit-transform:rotateZ(0deg);'>
-			<div class='input-box flex'>
-				<div class='input-key' style='width:160px;' >姓名：</div>
-				<input type='text' class='input-val flex1' placeHolder='' name='nameCn'></input>
-			</div>
-			<div class='input-box flex'>
-				<div class='input-key' style='width:160px;'>电话：</div>
-				<input required pattern='^\d{11}$' error="手机号码格式有误"
-					type='text' class='input-val flex1' placeHolder='' name='tel'></input>
-			</div>
-			
-			<input type='hidden' name='activityId'></input>
-			<input type='hidden' name='owner' value='true'></input>
-			<div class='input-box flex' style='height:160px;'>
-				<div class='input-key' style='width:160px;'>楼盘地址：</div>
-				<div class='flex1 flexColumn dn'>
-					<div class='flex1 select-val'>
-						<select class='pa db' value='all' name='city' style='text-align:left;'>
-							<option value='null' style='width:100%;'>请选择城市</option>
-							{{each root.baseData&&root.baseData.firBaseData || []}}
-							<option value='@{city}'>@{city}</option>
-							{{/each}}
-						</select>
-					</div>
-					<div class='flex1 select-val'>
-						<select class='pa' value='all' name='vcode' style='text-align:left;' >
-							<option value='null'>请选择楼盘</option>
-						</select>
-					</div>
-				</div>
-			</div>
-			<div class='input-box flex' style='height:160px;'>
-				<div class='input-key' style='width:160px;'>住房地址：</div>
-				<div class='flex1 flexColumn'>
-					<div class='flex1 select-val dn'>
-						<select class='pa' value='all' name='vbuildingcode' style='text-align:left;'>
-							<option value='null'>请选择楼栋</option>
-						</select>
-					</div>
-					<div class='flex1 select-val'>
-						<select class='pa' value='all' name='unitCode' style='text-align:left;'>
-							<option value='null'>请选择单元</option>
-						</select>
-					</div>
-				</div>
-			</div>
-			<div class='input-box flex'>
-				<div class='input-key' style='width:160px;'>房间号：</div>
-				<input class='input-val flex1' name='room'></input>
-			</div>
-			</div>
-			<div class='fullw'>
-				<div class='button-1 btnTp' as='op3' 
-					style='margin:20px auto;margin-top:80px;'><div class='auto2'>报名</div></div>
-			</div>
 		</div>
-	</div>
 </script>
 
 	<script type="text/javascript">
 		
 		ut.ready(function(){
 			ut.client.box(640,1008);
-			var jcp ;
+			
 			$.tmpl('baseTmpl').appendTo(body) ;
 			ut.iScroll('#mainWrap');
 			
-
-			$(document).on('tap','.btnTp',function(){
-			
-			ut.verify($('.form-active'),function(){
-				ut.send('jkh/apply.do',function(data){
-					//console.log(data);
-					cp.showMessage('您好，您的报名申请已受理。');
-				},function(back){
-					cp.showMessage(back.msg);
-				},$('.form-active'));
-			},function(msg){
-				cp.showMessage(msg);
-			});
-			
-		});
-		$(document).on('tap','.radioTp',function(){
-			$(this).find('.radio').toggleClass('radio-active');
-			if($('.radio-active').length){
-				$('#myForm1').addClass('form-active');
-				$('#myForm2').removeClass('form-active');
-			}else{
-				$('#myForm1').removeClass('form-active');
-				$('#myForm2').addClass('form-active');
-			}
-		});
-		var secendData = '';
-		$('select[name=city]').on('change',function(){
-			
-			var city = $(this).val();
-			var options  ;
-			$.each(root.baseData.firBaseData||[],function(index,value){
-				if(value.city == city){
-					options = value ;
+			$('.cdTp').countdown({
+	            until : +2,
+				onExpiry : function(){
+					console.log('11111');
 				}
 			});
-			$('select[name=vcode]').empty().append($.tmpl('options1Tmpl',options));
-			$('select[name=vbuildingcode]').empty().append("<option value='null'>请选择楼栋</option>");
-			$('select[name=unitCode]').empty().append("<option value='null'>请选择单元</option>");
-		});
-		$('select[name=vcode]').on('change',function(){
-			var vcode = $(this).val();
-			ut.send('baseData/getSecBase.do',function(back){
-				secendData = back.baseData ;
-				$('select[name=vbuildingcode]').empty().append($.tmpl('options2Tmpl',secendData));
-			},{'vcode':vcode});
-		});
-		$('select[name=vbuildingcode]').on('change',function(){
 			
-			var vbuildingnum = $(this).val();
-			var options  ;
-			$.each(secendData.secBaseData||[],function(index,value){
-				if(value.vbuildingnum == vbuildingnum){
-					options = value ;
-				}
-			});
-			$('select[name=unitCode]').empty().append($.tmpl('options3Tmpl',options));
-		});
-
-
-
-
+			
+			
 		});
 
 

@@ -62,6 +62,7 @@ var paths = {
 				_tweenJs : ['tweenjs-0.6.1.min','tweenjs-0.6.1.combined'][isDebug],
 				_velocity : ['velocity.min','velocity'][isDebug],
 				_cookie : ['jquery.cookie','jquery.cookie'][isDebug],
+				_custom : ['custom','custom'][isDebug],
 				_wx : ['http://res.wx.qq.com/open/js/jweixin-1.0.0'],
 				_wxdt : ['http://map.qq.com/api/js?v=2.exp'],
 
@@ -193,9 +194,20 @@ ut.define('component',['text!_component','_template','_componentJs'],function(da
 	};
 });
 
-
 ut.define('cookie',['_cookie'],function(){
 	//console.log(cookie);
+});
+ut.define('countdown',['_custom'],function(){
+	var countdown = $.fn.countdown ;
+	$.fn.countdown = function(options){
+		var tcd = this.attr('cd')||0 ;
+		countdown.call(this,$.extend({
+			until: +tcd,
+	        compact: true,
+	        format: tcd>86400?'DHMS':'HMS',
+	        onExpiry: function(){  }
+		},options));
+	};
 });
 ut.define('wx',['_wx'],function(data){
 	ut.wx = data ;

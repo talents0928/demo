@@ -70,7 +70,7 @@
 				createjs.Ticker.setFPS(10);
 				createjs.Ticker.addEventListener('tick',function(evt){
 					stage.update(evt);
-					var a = createjs.Ticker.getMeasuredFPS();
+//					var a = createjs.Ticker.getMeasuredFPS();
 //					text.text = a ;
 //					console.log(a);
 				});
@@ -81,17 +81,17 @@
 				img1.x = img1.y = 0 ; 
 				stage.addChild(img1);
 				
-				var text = new createjs.Text("加加", "20px Arial", "#ff7700");
-				text.x= 0 ; text.y = 0; text.textBaseline = "alphabetic";
-				stage.addChild(text);
+				var text2 = new createjs.Text("加加","20px Arial","#ff7700");
+				text2.x= 0 ; text2.y = 0; text2.textBaseline = "alphabetic";
+				stage.addChild(text2);
 				
-				var imgObj2 = ut.manage.getImgById('p001') ;
-				var img2 = new createjs.Bitmap(imgObj2);
-				img2.x = img2.y = 100 ; img2.regX = imgObj2.width/2 ;
-				img2.regY = imgObj2.height/2 ;
-				createjs.Tween.get(img2,{loop:true}).to({rotation:360},3000);
+//				var imgObj2 = ut.manage.getImgById('p001') ;
+//				var img2 = new createjs.Bitmap(imgObj2);
+//				img2.x = img2.y = 100 ; img2.regX = imgObj2.width/2 ;
+//				img2.regY = imgObj2.height/2 ;
+//				createjs.Tween.get(img2,{loop:true}).to({rotation:360},3000);
 				
-				stage.addChild(img2);
+//				stage.addChild(img2);
 				
 				
 //				for(var i=0;i<18;i++){
