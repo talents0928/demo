@@ -168,8 +168,11 @@ ut.define('component',['text!_component','_template','_componentJs'],function(da
 			$.template($value.attr('id'),$value.html().replace(/.{1}@/g,function(str){
 				return str=='\\@' ? '@' : str.replace(/@/g,'$');
 			}));
-		}else if( $value.is('style') && cpMap[$value.attr('func')] ){
-			$value.appendTo(ele);
+		}else if( $value.is('style')){
+			var cpFunc = $value.attr('cpFunc') ;
+			if( !cpFunc || cpMap[cpFunc] ){
+				$value.appendTo(ele);
+			}
 		}
 	});
 	function createStyle(){
