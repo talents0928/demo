@@ -13,7 +13,9 @@
 	<link rel='stylesheet' href='css/common.css'></link>
 	 <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
   </head>
+  <script type='text/javascript' src='./js/jquery-1.10.2.min.js'></script>
   <script src='./js/angularJs/angular-1.0.1.min.js'></script>
+  <script type='text/javascript' src='./js/lib/jquery.tmpl.min.js'></script>
   <div src="http://code.angularjs.org/angular-1.0.1.min.js"></div>
    <script type='text/javascript' >
   		function HelloController($scope){
@@ -23,13 +25,28 @@
 	
   </script>
   
+  <script type='x' id='myTmpl'>
+  	<div id=''>这里是tmpl的地方{{greeting.text}}</div>
+  </script>
+  
 	<body ng-app>
-	  <div ng-controller='HelloController'>
-	    <input ng-model='greeting.text'>
-	    <p>{{greeting.text}}, World</p>
+		
+			<div >
+	  <div ng-controller='HelloController' >
+	    <input  type='text' ng-model='greeting.text' style='width:15em;height:2em;line-height:2em;' />
+	    <p >{{greeting.text}}, World{{3*4}}</p>
+		<div class='section'> </div>
 	  </div>
+	  		</div>
+			
 	  
 	</body>
+	<script>
+		$(function(){
+			console.log(1);
+			$('#myTmpl').tmpl().appendTo('.section');
+		})
+	</script>
 
 
  
