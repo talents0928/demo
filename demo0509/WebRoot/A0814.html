@@ -18,9 +18,21 @@
   <script type='text/javascript' src='./js/lib/jquery.tmpl.min.js'></script>
   <div src="http://code.angularjs.org/angular-1.0.1.min.js"></div>
    <script type='text/javascript' >
-  		function HelloController($scope){
+   	
+		var greeting = {text:'xxx rencai'} ;
+		
+  		function HelloController($scope,$http){
 			
-			$scope.greeting = {text:'hello rencai'} ;
+			$scope.greeting = greeting ;
+			
+			$scope.send = function(){
+				$http.get('./A1201.html').success(function(data){
+					console.log('success');
+					console.log(data);
+					$scope.addHtml = data ;
+				});
+			} ;
+			
 		}
 	
   </script>
@@ -35,7 +47,10 @@
 	  <div ng-controller='HelloController' >
 	    <input  type='text' ng-model='greeting.text' style='width:15em;height:2em;line-height:2em;' />
 	    <p >{{greeting.text}}, World{{3*4}}</p>
-		<div class='section'> </div>
+		<div style='width:100px;height:40px;background:wheat;' ng-click="send()">
+		
+		</div>
+		<div class='section' ng-bind-html-unsafe='addHtml'> </div>
 	  </div>
 	  		</div>
 			
