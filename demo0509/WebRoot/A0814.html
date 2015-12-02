@@ -14,34 +14,13 @@
 	 <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
   </head>
   <script type='text/javascript' src='./js/jquery-1.10.2.min.js'></script>
-  <script src='./js/angularJs/angular-1.0.1.min.js'></script>
+  <script src='./js/angularJs/angular.js'></script>
   <script type='text/javascript' src='./js/lib/jquery.tmpl.min.js'></script>
   <div src="http://code.angularjs.org/angular-1.0.1.min.js"></div>
-   <script type='text/javascript' >
-   	
-		var greeting = {text:'xxx rencai'} ;
-		
-  		function HelloController($scope,$http){
-			
-			$scope.greeting = greeting ;
-			
-			$scope.send = function(){
-				$http.get('./A1201.html').success(function(data){
-					console.log('success');
-					console.log(data);
-					$scope.addHtml = data ;
-				});
-			} ;
-			
-		}
-	
-  </script>
   
-  <script type='x' id='myTmpl'>
-  	<div id=''>这里是tmpl的地方{{greeting.text}}</div>
-  </script>
   
-	<body ng-app>
+  
+	<body npp>
 		
 			<div >
 	  <div ng-controller='HelloController' >
@@ -50,19 +29,36 @@
 		<div style='width:100px;height:40px;background:wheat;' ng-click="send()">
 		
 		</div>
-		<div class='section' ng-bind-html-unsafe='addHtml'> </div>
+		<div class='section' ng-bind='addHtml'> </div>
 	  </div>
 	  		</div>
 			
 	  
 	</body>
-	<script>
-		$(function(){
-			console.log(1);
-			$('#myTmpl').tmpl().appendTo('.section');
-		})
-	</script>
-
+	 <script type='text/javascript' >
+   	
+		var angularApp = angular.module('angularApp',[]);
+        angularApp.controller('HelloController', [ '$scope','$http', HelloController]);
+		
+  		function HelloController($scope,$http){
+			
+			$scope.greeting = {text:'xxx rencai'} ;
+			$scope.send = function(){
+//				$http.get('./A1201.html').success(function(data){
+//					console.log('success');
+//					console.log(data);
+//					$scope.addHtml = data ;
+//				});
+				angular.element('.section').text('66666') ;
+			} ;
+			
+		}
+		
+		angular.bootstrap(document,['angularApp']) ;
+		
+	
+  </script>
+	
 
  
 </html>
