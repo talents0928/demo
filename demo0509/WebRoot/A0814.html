@@ -28,7 +28,13 @@
 	    <p >{{greeting.text}}, World{{3*4}}{{msg}}</p>
 		<div style='width:100px;height:40px;background:wheat;' ng-click="send()"></div>
 		<div style='width:100px;height:20px;background:red;font-size:12px;' ng-if='0'>你看的到的</div>
-		<div class='section' ng-view > </div>
+		<div ng-controller='childController'>
+			<div>能看到么</div>
+			<div>{{info}}</div>
+			<div>广播信息：{{broadcast}}</div>
+		</div>
+		
+		<div class='section' ng-include="'A1201.html'" > </div>
 	  </div>
 	  		</div>
 			
@@ -43,8 +49,19 @@
 			$scope.send = function(){
 				console.log('send');
 				$scope.msg = '1111' ;
+				$scope.$broadcast('myCall','father info');
 			} ;
+			$scope.info='this is '+'HelloController' ;
+			$scope.broadcast = 'father info' ;
 			
+		}])
+		.controller('childController',['$scope',function($scope){
+			$scope.info='this is '+'childController' ;
+			$scope.broadcast = 'child info';
+			$scope.$on('myCall',function(e,info){
+				console.log(e);
+				$scope.broadcast = 'xxxxx' ;
+			});
 		}])
 		.controller('aController',['$scope',function($scope){
 			console.log(1111);
