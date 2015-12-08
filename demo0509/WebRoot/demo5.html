@@ -119,7 +119,7 @@
 				{{else @index==1}}
 				<div class='box2'>
 					<div>0</div>
-					<div class='btn1' as='op3'>按钮</div>
+					<div class='btn1 click2Tp' as='op3'>按钮</div>
 					<div class='btn1 click1Tp' >按钮</div>
 				</div>
 				{{else  @index==3}}
@@ -154,12 +154,36 @@ ut.ready(function(){
             console.log('11111');
         }
     });
-	$('.click1Tp').on('click',function(){
+	$('.box2').on('click',function(){
 		console.log('事件');
 	});
+	$('.box2').on('click',function(){
+		console.log('事件4');
+	});
+	$('.box2').on('click',function(){
+		console.log('事件6');
+	});
+	$('.box2').on('click',function(){
+		console.log('事件7');
+	});
+//	$('.click1Tp').on('click',function(){
+//		console.log('事件2');
+//	});
 	$('.click1Tp').on('keydown',function(){
 		console.log('事件');
 	});
+	$(document).on('click','.click1Tp',function(){
+		console.log('click事件3');
+	});
+	$(document).on('click','.click1Tp',function(){
+		console.log('click事件4');
+	});
+	$(document).on('click','.click1Tp',function(){
+		console.log('click事件5');
+	});
+	
+	
+	
 	
 	console.log('events',$(".click1Tp").data("event"));
 });
