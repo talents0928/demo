@@ -120,6 +120,7 @@
 				<div class='box2'>
 					<div>0</div>
 					<div class='btn1' as='op3'>按钮</div>
+					<div class='btn1 click1Tp' >按钮</div>
 				</div>
 				{{else  @index==3}}
 				<div class=' fs32 tac' style='padding:20px; height:auto;'>
@@ -153,6 +154,14 @@ ut.ready(function(){
             console.log('11111');
         }
     });
+	$('.click1Tp').on('click',function(){
+		console.log('事件');
+	});
+	$('.click1Tp').on('keydown',function(){
+		console.log('事件');
+	});
+	
+	console.log('events',$(".click1Tp").data("event"));
 });
     
 </script>
