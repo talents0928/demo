@@ -21,7 +21,8 @@
   
   
 	<body ng-app="angularApp">
-		
+			<div>{{greeting.text}}
+			{{name}}</div>
 			<div >
 	  <div ng-controller='HelloController' >
 	    <input id='tt' type='text' ng-model='greeting.text' style='width:15em;height:2em;line-height:2em;' />
@@ -44,6 +45,9 @@
    	
 		var angularApp = angular.module('angularApp',[]);
         angularApp
+		.run(function($rootScope){
+			$rootScope.name = 'rencai';
+		})
 		.controller('HelloController', [ '$scope','$http', function($scope,$http){
 			$scope.greeting = {text:'xxx rencai'} ;
 			$scope.send = function(){
