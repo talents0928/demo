@@ -27,6 +27,7 @@
 	  <div ng-controller='HelloController' >
 	    <input id='tt' type='text' ng-model='greeting.text' style='width:15em;height:2em;line-height:2em;' />
 	    <p >{{greeting.text}}, World{{3*4}}{{msg}}</p>
+		<p>{{msg2}}</p>
 		<div style='width:100px;height:40px;background:wheat;' ng-click="send()"></div>
 		<div style='width:100px;height:20px;background:red;font-size:12px;' ng-if='0'>你看的到的</div>
 		<div ng-repeat="num in nums">{{$index}}</div>
@@ -52,13 +53,20 @@
 		.controller('HelloController', [ '$scope','$http', function($scope,$http){
 			$scope.greeting = {text:'xxx rencai'} ;
 			$scope.send = function(){
+				
+				
 				console.log('send');
-				$scope.nums.push({});
+				
+				
+				$scope.greeting.msg2 = "我地盘" ;
 			} ;
 			$scope.info='this is '+'HelloController' ;
 			$scope.broadcast = 'father info' ;
 			
-			$scope.nums = [{},{},{}] ;
+			$scope.$watch('greeting.msg2',function(newmsg,oldmsg){
+				$scope.msg = newmsg;
+			});
+			
 			
 		}])
 		.controller('childController',['$scope',function($scope){
