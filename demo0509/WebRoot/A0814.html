@@ -29,6 +29,7 @@
 	    <p >{{greeting.text}}, World{{3*4}}{{msg}}</p>
 		<div style='width:100px;height:40px;background:wheat;' ng-click="send()"></div>
 		<div style='width:100px;height:20px;background:red;font-size:12px;' ng-if='0'>你看的到的</div>
+		<div ng-repeat="num in nums">{{$index}}</div>
 		<div ng-controller='childController'>
 			<div>能看到么</div>
 			<div>{{info}}</div>
@@ -52,11 +53,12 @@
 			$scope.greeting = {text:'xxx rencai'} ;
 			$scope.send = function(){
 				console.log('send');
-				$scope.msg = '1111' ;
-				$scope.$broadcast('myCall','father info');
+				$scope.nums.push({});
 			} ;
 			$scope.info='this is '+'HelloController' ;
 			$scope.broadcast = 'father info' ;
+			
+			$scope.nums = [{},{},{}] ;
 			
 		}])
 		.controller('childController',['$scope',function($scope){
