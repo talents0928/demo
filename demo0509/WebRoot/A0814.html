@@ -18,7 +18,10 @@
   <script src='./js/angularJs/angular-route.js'></script>
   <script type='text/javascript' src='./js/lib/jquery.tmpl.min.js'></script>
   
-  
+  	<style type='text/css'>
+  		input{ border :1px solid #eee;height:1.8em; }
+		.errorTp{width:100px;height:100px;background:red;}
+  	</style>
   
 	<body ng-app="angularApp">
 			<div>{{greeting.text}}</div>
@@ -33,16 +36,17 @@
 			<div>{{info}}</div>
 			<div>广播信息：{{broadcast}}</div>
 		</div>
-		<form action='www.baidu.com' id='form' method='post' ng-controller='formCtrl' >
-			<div>
-				<input type='text' name='name'  />
-				<select ng-init="ageT==2" ng-model='ageT' name='age' ng-optionsxxx="x.v for x in arr track by x.k"  id='select'  >
-					<option ng-repeat="v in [{k:1,v:23},{k:'2',v:33},{k:3,v:53}]" value='{{v.k}}' >{{v.v}}</option>
-				</select>
-				<input type='submit' value='提交'></input>
-			</div>
-			
-		</form>
+		<div ng-controller='formCtrl'>
+			<form  name='myForm' method='post'   novalidate ng-submit='submit()'>
+				<div class='ma ' style='width:600px;'>
+				
+					<input type='text' name='nameCn' ng-minlength='8'  ng-model='user.name' />
+					<div class='errorTp' ng-show=" myForm.nameCn.$dirty && myForm.nameCn.$invalid"></div>
+					<input type='submit' value='提交'></input>
+				</div>
+				
+			</form>
+		</div>
 		
 		<div class='section' ng-include="'A1201.html'" > </div>
 	  </div>
@@ -57,22 +61,24 @@
 		})
 		.controller('HelloController', [ '$scope','$http', function($scope,$http){
 			$scope.greeting = {text:'xxx rencai'} ;
-			$scope.send = function(){
-				console.log('send');
-				
-			} ;
+			$scope.send = function(){ console.log('send'); } ;
 			$scope.broadcast = 'father info' ;
 		}])
+		.controller('formCtrl',['$scope',function($scope){
+				$scope.user ={} ;
+				console.log($scope.myForm);
+				setInterval(function(){
+					console.log($scope.myForm.nameCn.$pristine);
+				},2500);
+				$scope.submit = function(){
+					console.log('we has submit');
+				};
+		}])
 		.controller('childController',['$scope',function($scope){
-			$scope.info='this is '+'childController' ;
 			$scope.broadcast = 'child info';
 			$scope.$on('myCall',function(e,info){
 				$scope.broadcast = 'xxxxx' ;
 			});
-		}])
-		.controller('formCtrl',['$scope',function($scope){
-			$scope.arr = [{k:1,v:23},{k:'2',v:23},{k:3,v:53}] ;
-			$scope.age = $scope.arr[0] ;
 		}])
 		.controller('aController',['$scope',function($scope){
 			$scope.msg = '非常好好' ;
