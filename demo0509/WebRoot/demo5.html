@@ -97,6 +97,22 @@
 .b-red2{ background:#fe5c59; }
 .b-orange{ background:#F3A310; }
 .b-white{ background:white;}
+
+
+.shake{ -webkit-animation:SK 0.5s; }
+@-webkit-keyframes SK{
+	0% {-webkit-transform:scale(1)}
+	35% {-webkit-transform:scale(1.05)}
+	65% {-webkit-transform:scale(0.95)}
+	100% {-webkit-transform:scale(1)}
+}
+
+
+.redb{
+	width:300px;height:160px;
+	margin:auto;
+	background:red;
+}
 </style>
 <body class=''>
 
@@ -118,7 +134,7 @@
 					</div>
 				{{else @index==1}}
 				<div class='box2'>
-					<div>0</div>
+					<div class='redb shake'>0</div>
 					<div class='btn1 click2Tp' as='op3'>按钮</div>
 					<div class='btn1 click1Tp' >按钮</div>
 				</div>
