@@ -39,12 +39,10 @@
 			<div>广播信息：{{broadcast}}</div>
 		</div>
 		<div ng-controller='formCtrl'>
-			<form novalidate ng-submit="sendForm();" name='form'>
+			<form novalidate name='form' ng-submit="sendForm()" >
 				<div class='ma ' style='width:600px;' ng-class="{invalid:form.nameCn.$dirty&&form.nameCn.$invalid}">
 				
-					<input type='text' name='nameCn' ng-model='user.name' />
-					<input type='submit' value='提交'></input>
-					{{form.nameCn.$dirty}}
+					<input type='text' name='nameCn' ng-model='user.name' required />
 				</div>
 				
 			</form>
@@ -68,13 +66,24 @@
 		}])
 		.controller('formCtrl',['$scope',function($scope){
 				$scope.user ={} ;
-				$scope.user.name='kk';
+//				$scope.user.name='kk';
+				
+//				$('form').submit(function(){
+//					if($scope.form.$valid){
+//						console.log($scope.form.$valid);
+//					}else{
+//						return false ;
+//					}
+//				});
+//				$('form').submit(function(){
+//					return false;
+//				});
 				
 				$scope.sendForm = function(){
-					
+					alert(1);
 					console.log($scope.form.$valid);
 					console.log('we has submit');
-					return false;
+					
 				};
 		}])
 		.controller('childController',['$scope',function($scope){
