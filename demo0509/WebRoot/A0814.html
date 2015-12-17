@@ -51,9 +51,18 @@
 		<div class='section' ng-include="'A1201.html'" > </div>
 	  </div>
 	  		</div>
+			
+			
+			<div ng-app='myApp'>
+				<div class='' ng-controller="myCtrl">{{test.name}}</div>
+			</div>
 	</body>
 	 <script type='text/javascript' >
-   	
+   		angular.module('myApp',[])
+		.controller('myCtrl',['$scope',function($scope){
+			$scope.test = {};
+			$scope.test.name = '天才';
+		}]);
 		var angularApp = angular.module('angularApp',[]);
         angularApp
 		.run(function($rootScope){
@@ -64,6 +73,7 @@
 			$scope.send = function(){ console.log('send'); } ;
 			$scope.broadcast = 'father info' ;
 		}])
+		
 		.controller('formCtrl',['$scope',function($scope){
 				$scope.user ={} ;
 //				$scope.user.name='kk';
