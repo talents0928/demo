@@ -158,51 +158,25 @@
 
 <script type="text/javascript">
     
-ut.ready(function(){
-    ut.client.box(640, 1008);
+	
+	require(["http://map.qq.com/api/js?v=2.exp"]) ;
+//ut.ready(function(){ });
+
+	$(function(){
+		console.log('ready');
+		ut.client.box(640, 1008);
     
-    $.tmpl('baseTmpl').appendTo(body);
-    ut.iScroll('#mainWrap');
-    
-    $('.cdTp').countdown({
-        until: +2,
-        onExpiry: function(){
-            console.log('11111');
-        }
-    });
-	$('.box2').on('click',function(){
-		console.log('事件');
+	    $.tmpl('baseTmpl').appendTo(body);
+	    ut.iScroll('#mainWrap');
+	    
+	    $('.cdTp').countdown({
+	        until: +2,
+	        onExpiry: function(){
+	            console.log('11111');
+	        }
+	    });
+		
 	});
-	$('.box2').on('click',function(){
-		console.log('事件4');
-	});
-	$('.box2').on('click',function(){
-		console.log('事件6');
-	});
-	$('.box2').on('click',function(){
-		console.log('事件7');
-	});
-//	$('.click1Tp').on('click',function(){
-//		console.log('事件2');
-//	});
-	$('.click1Tp').on('keydown',function(){
-		console.log('事件');
-	});
-	$(document).on('click','.click1Tp',function(){
-		console.log('click事件3');
-	});
-	$(document).on('click','.click1Tp',function(){
-		console.log('click事件4');
-	});
-	$(document).on('click','.click1Tp',function(){
-		console.log('click事件5');
-	});
-	
-	
-	
-	
-	console.log('events',$(".click1Tp").data("event"));
-});
     
 </script>
 

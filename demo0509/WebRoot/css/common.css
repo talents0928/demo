@@ -4,12 +4,12 @@
 *	默认样式设定
 *	
 **/
-body {
-	background : white; -webkit-tap-highlight-color: rgba(0,0,0,0);
-	-webkit-backface-visibility: hidden; -webkit-user-select: none;
-	-webkit-text-size-adjust:none; font-size: 28px;
+body { 
+	background : white; -webkit-tap-highlight-color: rgba(0,0,0,0); 
+	-webkit-backface-visibility: hidden; -webkit-user-select: none; 
+	-webkit-text-size-adjust:none; font-size: 28px; 
 	font-family: "Microsoft YaHei","Apple LiGothic Medium","LiHei Pro Medium",Arial,Helvetica,sans-serif;
-	-webkit-font-smoothing: antialiased ;
+	 -webkit-font-smoothing: antialiased ;
 }
 
 table,td,th{ padding:0px; border:0px; }
@@ -22,18 +22,16 @@ textarea{ border:none; }
    border: 0;  border-radius: 0; padding-left:2em;
    height: 100%;  text-align : left; -webkit-appearance: none;
 }
-.select-box:after{
+.select-box:after{ 
 	content : ' ' ; position :absolute; display : block;
-	width:18px;height:18px;border:3px solid #d5d5d5;border-style:solid ;border-color:#555555 ;border-width:3px 3px 0 0;
+	width:18px;height:18px;border:3px solid #d5d5d5;border-style:solid ;
+	border-color:#555555 ;border-width:3px 3px 0 0;
 	-webkit-transform : rotateZ(135deg) ; top:22px;right:50px;
 }
 
 
 
-/**
-*	常用样式定义
-*
-**/
+/**		常用样式定义	**/
 
 .pa{ position: absolute; }
 .pa00{ position: absolute; top: 0; left: 0; }
@@ -67,173 +65,58 @@ textarea{ border:none; }
 .taj{ text-align: justify; }
 
 
-.tab>div {
-	display: table-cell;
-	vertical-align: middle;
-}
-.tab {
-	display: table;
-	border: 0px;
-	border-spacing: 0px;
-	text-align: center;
-}
+.tab>div { display: table-cell; vertical-align: middle; }
+.tab { display: table; border: 0px; border-spacing: 0px; text-align: center; }
 /**
 *	flex布局 css样式
 */
-.flex,.flexRow{
-	display : -webkit-box;
-	-webkit-box-orient : horizontal ;
-	display: flex ;
-	display: -webkit-flex ;
-	flex-direction : row ;
-	-webkit-flex-direction : row ;
+.flex,.flexRow{ 
+	display : -webkit-box; -webkit-box-orient : horizontal ; 
+	display: flex ; display: -webkit-flex ; flex-direction : row ;
+	 -webkit-flex-direction : row ;
 }
-.flexColumn{
-	display : -webkit-box;
-	-webkit-box-orient : vertical ;
-	display: flex ;
-	display: -webkit-flex ;
-	flex-direction : column ;
-	-webkit-flex-direction : column ;
+.flexColumn{ 
+	display : -webkit-box; -webkit-box-orient : vertical ; display: flex ;
+	 display: -webkit-flex ; flex-direction : column ; -webkit-flex-direction : column ;
 }
-.flex1{
-	box-flex:1;
-	-webkit-box-flex:1;
-	flex : 1 ;
-	-webkit-flex : 1 ;
-	position : relative;
-}
-.flex2{
-	box-flex:2;
-	-webkit-box-flex:2;
-	flex : 2 ;
-	-webkit-flex : 2 ;
-	position : relative;
-}
-.flex3{
-	box-flex:3;
-	-webkit-box-flex:3;
-	flex : 3 ;
-	-webkit-flex : 3 ;
-	position : relative;
-}
-.flexCenter{
-	-webkit-box-align : center ;
-	align-items : center ;
-	-webkit-align-items : center ;
-}
-.flexStart{
-	-webkit-box-align : start ;
-	align-items : flex-start ;
-	-webkit-align-items : flex-start ;
-}
-.flexEnd{
-	-webkit-box-align : end ;
-	align-items : flex-end ;
-	-webkit-align-items : flex-end ;
-}
-.flexBaseLine{
-	-webkit-box-align : baseline ;
-	align-items : baseline ;
-	-webkit-align-items : baseline ;
-}
-.flexStretch{
-	-webkit-box-align : stretch ;
-	align-items : stretch ;
-	-webkit-align-items : stretch ;
-}
+.flex1{ box-flex:1; -webkit-box-flex:1; flex : 1 ; -webkit-flex : 1 ; position : relative; }
+.flex2{ box-flex:2; -webkit-box-flex:2; flex : 2 ; -webkit-flex : 2 ; position : relative; }
+.flex3{ box-flex:3; -webkit-box-flex:3; flex : 3 ; -webkit-flex : 3 ; position : relative; }
+.flexCenter{ -webkit-box-align : center ; align-items : center ; -webkit-align-items : center ; }
+.flexStart{ -webkit-box-align : start ; align-items : flex-start ; -webkit-align-items : flex-start ; }
+.flexEnd{ -webkit-box-align : end ; align-items : flex-end ; -webkit-align-items : flex-end ; }
+.flexBaseLine{ -webkit-box-align : baseline ; align-items : baseline ; -webkit-align-items : baseline ; }
+.flexStretch{ -webkit-box-align : stretch ; align-items : stretch ; -webkit-align-items : stretch ; }
 .dn{ display: none; }
 
-.circle{
-	border-radius : 50% 50% ;
-	-webkit-border-radius : 50% 50% ;
-}
-.bb{
-	box-sizing:border-box;
-	-moz-box-sizing:border-box;
-	-webkit-box-sizing:border-box;
-}
+.circle{ border-radius : 50% 50% ; -webkit-border-radius : 50% 50% ; }
+.bb{ box-sizing:border-box; -moz-box-sizing:border-box; -webkit-box-sizing:border-box; }
 
-.tr0{
-	-webkit-transform:translate(0px,0px);
-}
-.tr2{
-	-webkit-transform:translate(2px,2px);
-}
-.tr4{
-	-webkit-transform:translate(4px,4px);
-}
-.op3{
-		position: relative;
-		overflow :hidden;
-	}
-.op3:before{
-	content : '';
-	display : block;
-	width:100%;height:100%;
-	position:absolute;
-	top:0;left:0;
-	background : rgba(0,0,0,0.3);
-}
-
-.auto{
-	position:absolute;
-	top:0;bottom:0;margin:auto;right:0;left:0;
-}
-.auto2{
-	position:absolute;
-	top:50%;left:50%;
-	transform : translate(-50%,-50%);
-	-webkit-transform : translate(-50%,-50%);
-	
-}
-.halfY{
-	transform: translateY(-50%);
-	-webkit-transform: translateY(-50%);
-}
-.transformOrigin,.origin{
-	transform-origin:0px 0px;
-	-webkit-transform-origin:0px 0px;
-}
+.tr0{ -webkit-transform:translate(0px,0px); }
+.tr2{ -webkit-transform:translate(2px,2px); }
+.tr4{ -webkit-transform:translate(4px,4px); }
+.op3{ 	position: relative; 	overflow :hidden; }
+.op3:before{ content : ''; display : block; width:100%;height:100%; position:absolute; top:0;left:0; background : rgba(0,0,0,0.3); }
+.auto{ position:absolute; top:0;bottom:0;margin:auto;right:0;left:0; }
+.auto2{ position:absolute; top:50%;left:50%; transform : translate(-50%,-50%); -webkit-transform : translate(-50%,-50%);  }
+.halfY{ transform: translateY(-50%); -webkit-transform: translateY(-50%); }
+.transformOrigin,.origin{ transform-origin:0px 0px; -webkit-transform-origin:0px 0px; }
 .wba{ word-break: break-all; }
-.text-ellipsis{ 
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
+.text-ellipsis{  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
 .text-bold{ font-weight: 800; }
 
-
-.color-black{
-	color:black;	
-}
-.color-white{
-	color:white;	
-}
-.color-orange{
-	color:#F3A310;
-}
-.color-grey{
-	color:#aaaaaa;
-}
-.color-grey2{
-	color:#747474;
-}
-.color-red{
-	color:#dd0000;
-}
-.color-red2{
-	color:#f81212;
-}
-.color-green{
-	color:#69BB1D;
-}
-.background-orange{
-	background:#F3A310;
-}
-.bg-white{
-	background:white;
-}
+/**		常用颜色定义	**/
+ 
+.c-black{ color:black;	 }
+.c-white{ color:white;	 }
+.c-orange{ color:#F3A310; }
+.c-grey{ color:#aaaaaa; }
+.c-grey2{ color:#747474; }
+.c-red{ color:#dd0000; }
+.c-red2{ color:#f81212; }
+.c-green{ color:#69BB1D; }
+.bg-orange{ background:#F3A310; }
+.bg-white{ background:white; }
 
 
 
@@ -252,60 +135,6 @@ textarea{ border:none; }
 .lh60{ line-height:60px; }
 .lh65{ line-height:65px; }
 .lh80{ line-height:80px; }
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
-*	调整foundation样式
-*
-**/
-
-
-html p{
-	margin : auto ;
-}
-
-
-
-
-
-/**
-*	调整slider默认样式
-*
-**/
-
-.orbit-caption{
-	height:1.8rem;
-	line-height:1.8rem;
-	padding:0 !important;
-	padding-left:0.5rem !important;
-}
-.orbit-bullets-container{
-	position :absolute;
-	transform: translateY(50%);
-	-webkit-transform: translateY(50%);
-	bottom : 0.9rem;
-	right : 0.8rem;
-}
-.orbit-bullets{
-    display: block !important;
-	margin: 0;
-	top:0;
-}
-
-
-
-
 
 
 

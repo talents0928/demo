@@ -25,37 +25,35 @@
 		.invalid input{ border-color: #dd4b39; box-shadow: none;  }
   	</style>
   
-	<body ng-app="angularApp">
+	<body >
+		<div ng-app='myApp'>
+				<div class='' ng-controller="myCtrl">{{test.name}}</div>
+			</div>
+		<div ng-app="angularApp">
 			<div>{{greeting.text}}</div>
 	  <div ng-controller='HelloController' >
-	    <input id='tt' type='text' ng-model='greeting.text' style='width:15em;height:2em;line-height:2em;' />
-	    <p >{{greeting.text}}, World</p>
-		<div style='width:100px;height:40px;background:wheat;' ng-click="send()"></div>
-		<div style='width:100px;height:20px;background:red;font-size:12px;' ng-if='0'>你看的到的</div>
-		<div ng-repeat="num in nums">{{$index}}</div>
-		<div ng-controller='childController'>
-			<div>能看到么</div>
-			<div>{{info}}</div>
-			<div>广播信息：{{broadcast}}</div>
-		</div>
-		<div ng-controller='formCtrl'>
-			<form novalidate name='form' ng-submit="sendForm()" >
-				<div class='ma ' style='width:600px;' ng-class="{invalid:form.nameCn.$dirty&&form.nameCn.$invalid}">
-				
-					<input type='text' name='nameCn' ng-model='user.name' required />
-				</div>
-				
-			</form>
-		</div>
-		
-		<div class='section' ng-include="'A1201.html'" > </div>
+	   		<input id='tt' type='text' ng-model='greeting.text' style='width:15em;height:2em;line-height:2em;' />
+		    <p >{{greeting.text}}, World</p>
+			<div style='width:100px;height:40px;background:wheat;' ng-click="send()"></div>
+			<div style='width:100px;height:20px;background:red;font-size:12px;' ng-if='0'>你看的到的</div>
+			<div ng-controller='childController'>
+				<div>能看到么</div>
+				<div>{{info}}</div>
+				<div>广播信息：{{broadcast}}</div>
+			</div>
+			<div ng-controller='formCtrl'>
+				<form novalidate name='form' ng-submit="sendForm()" >
+					<div class='ma ' style='width:600px;' ng-class="{invalid:form.nameCn.$dirty&&form.nameCn.$invalid}">
+						<input type='text' name='nameCn' ng-model='user.name' required />
+					</div>
+				</form>
+			</div>
+			<div class='section' ng-include="'A1201.html'" > </div>
 	  </div>
 	  		</div>
 			
+		</div>
 			
-			<div ng-app='myApp'>
-				<div class='' ng-controller="myCtrl">{{test.name}}</div>
-			</div>
 	</body>
 	 <script type='text/javascript' >
    		angular.module('myApp',[])
@@ -63,6 +61,8 @@
 			$scope.test = {};
 			$scope.test.name = '天才';
 		}]);
+		
+		
 		var angularApp = angular.module('angularApp',[]);
         angularApp
 		.run(function($rootScope){

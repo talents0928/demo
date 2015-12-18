@@ -108,15 +108,20 @@ var __listFunc = [],__listLoad=[];
 		//加载不等待的css资源
 		require(['normalizeCss','']);
 
-		$(function(){
+		+function(){
+			$.holdReady(true);
+			
 			var arr = getReqMap();
+			console.log(arr);
 			Array.prototype.push.apply(arr,['component','tmpl'].concat(__listLoad));
+			
 			require(arr,function(){
-				for(var i =0 ; i < __listFunc.length ; i++){
-					__listFunc.shift()();
-				}
+				console.log('required');
+//				$.holdReady(false);
 			});
-		});
+			
+		}();
+		
 		function getReqMap(){
 			var finded = {} , reqObj = helpMap.concat() ;
 			$("script").each(function(index,value){
