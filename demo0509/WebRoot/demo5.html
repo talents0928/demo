@@ -159,8 +159,9 @@
 <script type="text/javascript">
     
 	
-	require(["http://map.qq.com/api/js?v=2.exp"]) ;
-//ut.ready(function(){ });
+	ut.require(["http://map.qq.com/api/js?v=2.exp"],function(){
+		console.log('script');
+	}) ;
 
 	$(function(){
 		console.log('ready');

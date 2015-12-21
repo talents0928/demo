@@ -26,9 +26,6 @@
   	</style>
   
 	<body >
-		<div ng-app='myApp'>
-				<div class='' ng-controller="myCtrl">{{test.name}}</div>
-			</div>
 		<div ng-app="angularApp">
 			<div>{{greeting.text}}</div>
 	  <div ng-controller='HelloController' >
@@ -57,21 +54,52 @@
 	</body>
 	 <script type='text/javascript' >
    		angular.module('myApp',[])
-		.controller('myCtrl',['$scope',function($scope){
-			$scope.test = {};
-			$scope.test.name = '天才';
-		}]);
-		
-		
-		var angularApp = angular.module('angularApp',[]);
-        angularApp
-		.run(function($rootScope){
-			$rootScope.name = 'rencai';
+//		.factory('Page',function(){
+//			
+//			return {
+//				url : "www.baidu.com" ,
+//				setUrl : function(str){
+//					this.url = str ;
+//				},
+//				getUrl : function(){
+//					console.log(this.url);
+//				}
+//			};
+//		});
+		.config(function(Page){
+			Page.setUrl("baidu.com") ;
 		})
-		.controller('HelloController', [ '$scope','$http', function($scope,$http){
+//		.config(['PageProvider',function(PageProvider){
+//			PageProvider.setUrl("baidu.com") ;
+//		}])
+		.provider('Page',function(){
+			this.url = "www.baidu.com" ;
+			this.$get = function(){
+				var that = this ;
+				return {
+					setUrl : function(str){
+						that.url = str ;
+					},
+					getUrl : function(){
+						console.log(that.url);
+					}
+				};
+			}
+		});
+		
+		
+		angular.module('angularApp',['myApp'])
+//		.config(['PageProvider',function(PageProvider){
+//			PageProvider.setUrl("baidu.com") ;
+//		}])
+//		.run(function($rootScope){
+//			$rootScope.name = 'rencai';
+//		})
+		.controller('HelloController', [ '$scope','$http','Page',function($scope,$http,Page){
 			$scope.greeting = {text:'xxx rencai'} ;
 			$scope.send = function(){ console.log('send'); } ;
 			$scope.broadcast = 'father info' ;
+			Page.getUrl();
 		}])
 		
 		.controller('formCtrl',['$scope',function($scope){

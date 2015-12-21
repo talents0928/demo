@@ -69,8 +69,6 @@ var paths = {
 				'':''
 			};
 
-var __listFunc = [],__listLoad=[];
-
 /**
 *	初始化requireJs 配置 
 *	加载基本资源
@@ -94,33 +92,22 @@ var __listFunc = [],__listLoad=[];
 				}
 			},
 			shim : {
-
 				_easelJs : {
 					exports : 'cc'
 				},
 				_wxdt : {
 					exports : 'dd'
 				}
-				
 			}
 		});
 
-		//加载不等待的css资源
-		require(['normalizeCss','']);
-
-		+function(){
-			$.holdReady(true);
-			
-			var arr = getReqMap();
-			console.log(arr);
-			Array.prototype.push.apply(arr,['component','tmpl'].concat(__listLoad));
-			
-			require(arr,function(){
-				console.log('required');
-//				$.holdReady(false);
+		$.holdReady(true);
+		
+		require(['component','tmpl','normalizeCss'],function(){
+			require(getReqMap(),function(){
+				$.holdReady(false);
 			});
-			
-		}();
+		});
 		
 		function getReqMap(){
 			var finded = {} , reqObj = helpMap.concat() ;
@@ -140,13 +127,16 @@ var __listFunc = [],__listLoad=[];
 	
 })();
 
-ut.ready = function(arr,callback){
-	if(arr instanceof Array){
-		Array.prototype.push.apply(__listLoad, arr)
-	}else{
-		callback = arr ;
-	}
-	__listFunc.push(callback);
+
+/**
+ * 自定义require函数
+ */
+ut.require = function(arr,cb){
+	$.holdReady(true);
+	require(arr,function(){
+		cb&&cb();
+		$.holdReady(false);
+	})
 };
 
 /**
@@ -274,16 +264,17 @@ ut.define('velocity',['_velocity'],function(data){
 });
 
 
-(function(){
++function(){
 	
 	$(document).on('touchstart mousedown','[as]',function(e){
-		var $target  = $(this);
-		$target.addClass($target.attr('as')).one('touchend mouseup',function(){
-			$target.removeClass($target.attr('as'));
+		$(this).addClass(function(){
+			return $(this).attr('as') ;
+		}).one('touchend mouseup',function(){
+			$(this).removeClass($(this).attr('as'));
 		});
 	});
 	
-})();
+}();
 
 ut.loader = (function(){
 	
