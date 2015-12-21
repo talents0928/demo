@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="x-dns-prefetch-control" content="on" />
+	<meta name="viewport" content="width=device-width,initial-scale=0.5,user-scalable=0" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no, email=no" />
+	<meta name="x5-orientation" content="portrait">
+	<meta name="x5-fullscreen" content="true">
+	<meta name="x5-page-mode" content="app">
+	<meta name="msapplication-tap-highlight" content="no">
+
+	<title>demo 范例</title>
+	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
+	<!-- 	<script type='text/javascript' src='//cdn.bootcss.com/jquery/1.11.1/jquery.min.js'></script> -->
+	<script type="text/javascript" src='js/angularJs/angular.js'></script>
+	<script type="text/javascript" src='js/angularJs/angular-ui-router.js'></script>
+	<script type="text/javascript" src='js/desert/js/foundation.min.js'></script>
+	<link rel='stylesheet' href='css/common.css?version=3'></link>
+	
+</head>
+
+<body ng-app="app" class=''>
+	<div ng-controller="myCtrl">
+		{{user.name}}
+		<div style='width:800px;' class='ma'>
+			<a ui-sref="home">主页</a>
+			<a ui-sref="contact">联系列表</a>
+			<a ui-sref="contact.detail">联系详情</a>
+			<a ui-sref="contact.detail.items">产品列表</a>
+			<a ui-sref="detail2">产品详情</a>
+			<a href="/dd">返回</a>
+		
+		</div>
+		<div ui-view></div>
+		<div ui-view="viewB" attr="home"></div>
+	</div>
+		
+</body>
+</html>
+<script type='text/javascript'>
+	angular.module('app',['utils','ui.router'])
+	.config(['$stateProvider','$urlRouterProvider',function($stateProvider,$urlRouterProvider){
+		$urlRouterProvider
+		.when('/contact','home')
+		.otherwise("/");
+		
+		$stateProvider
+		.state('home',{
+			url : '/',
+			views : {
+				'viewB' :  { template : 'indexBbb' },
+				'viewA' :  { template : 'indexAaa' }
+			}
+			
+		})
+		.state('contact',{
+			url: '/contact' , 
+			templateUrl : 'route/contact/contact.list.html'
+		})
+		.state('contact.detail',{
+			url : '/detail',
+			
+			views:{
+				'' : {
+//					template : '<div>viewA</div>'
+					templateUrl : 'route/contact/contact.detail.html'
+				}
+				
+			}
+		})
+		.state('contact.detail.items',{
+			
+			
+			url : '/item',
+			views :{
+				"" : {
+					template : '<div>viewBBB</div>'
+				},
+				
+				"viewB@" : {
+					template : '<div>viewB</div>'
+//					templateUrl : 'route/contact/contact.detail.html'
+				}
+			}
+		})
+		.state('product',{
+			url : '/product/list',
+			template : 'product.list.html'
+		});
+//		.state('detail',{
+//			url : '/detail',
+//			template : 'product.detail.html'
+//		});
+		
+	}])
+//	.config(function($routeProvider){
+//		$routeProvider.when('/contact/detail.html',{
+//			templateUrl : "route/contact/contact.detail.html"
+//		})
+//		.when('/contact/list.html',{
+//			templateUrl : "route/contact/contact.list.html"
+//		})
+//		.when('/product/list.html',{
+//			templateUrl : "route/product/product.list.html"
+//		})
+//		.when('/product/detail.html',{
+//			templateUrl : "route/product/product.detail.html"
+//		});
+//	})
+	.controller('myCtrl',['$scope','User',function($scope,User){
+		$scope.user = {};
+		$scope.user.name = User.getName() ;
+	}]);
+	
+	
+	
+	angular.module('utils',[])
+	.factory('User',function(){
+		var name = "何川"
+		return {
+			getName : function(){
+				return name;
+			},
+			setName : function(str){
+				name = str ;
+			}
+			
+		}
+	});
+	;
+	
+</script>
+
+
+
+
+
