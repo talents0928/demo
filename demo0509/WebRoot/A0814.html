@@ -54,26 +54,9 @@
 	</body>
 	 <script type='text/javascript' >
    		angular.module('myApp',[])
-//		.factory('Page',function(){
-//			
-//			return {
-//				url : "www.baidu.com" ,
-//				setUrl : function(str){
-//					this.url = str ;
-//				},
-//				getUrl : function(){
-//					console.log(this.url);
-//				}
-//			};
-//		});
-		.config(function(Page){
-			Page.setUrl("baidu.com") ;
-		})
-//		.config(['PageProvider',function(PageProvider){
-//			PageProvider.setUrl("baidu.com") ;
-//		}])
-		.provider('Page',function(){
+		.provider('$myPath',function(){
 			this.url = "www.baidu.com" ;
+			this.path = 'aaa.sss' ;
 			this.$get = function(){
 				var that = this ;
 				return {
@@ -85,21 +68,28 @@
 					}
 				};
 			}
-		});
+		})
+		.config(function($myPathProvider){
+			$myPathProvider.url ;
+//			$myPath.setUrl("ppppp.com");
+			console.log($myPathProvider.setUrl);
+		})
+		;
+		
 		
 		
 		angular.module('angularApp',['myApp'])
-//		.config(['PageProvider',function(PageProvider){
+//		.config(['Page',function(page){
 //			PageProvider.setUrl("baidu.com") ;
 //		}])
 //		.run(function($rootScope){
 //			$rootScope.name = 'rencai';
 //		})
-		.controller('HelloController', [ '$scope','$http','Page',function($scope,$http,Page){
+		.controller('HelloController', [ '$scope','$http',function($scope,$http){
 			$scope.greeting = {text:'xxx rencai'} ;
 			$scope.send = function(){ console.log('send'); } ;
 			$scope.broadcast = 'father info' ;
-			Page.getUrl();
+//			Page.getUrl();
 		}])
 		
 		.controller('formCtrl',['$scope',function($scope){
