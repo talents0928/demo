@@ -20,7 +20,6 @@
 	<!-- 	<script type='text/javascript' src='//cdn.bootcss.com/jquery/1.11.1/jquery.min.js'></script> -->
 	<script type="text/javascript" src='js/angularJs/angular.js'></script>
 	<script type="text/javascript" src='js/angularJs/angular-ui-router.js'></script>
-	<script type="text/javascript" src='js/desert/js/foundation.min.js'></script>
 	<link rel='stylesheet' href='css/common.css?version=3'></link>
 	
 </head>
@@ -46,6 +45,7 @@
 <script type='text/javascript'>
 	angular.module('app',['utils','ui.router'])
 	.config(['$stateProvider','$urlRouterProvider',function($stateProvider,$urlRouterProvider){
+		console.log($stateProvider);
 		$urlRouterProvider
 		.when('/contact','home')
 		.otherwise("/");

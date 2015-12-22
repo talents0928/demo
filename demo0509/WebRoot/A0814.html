@@ -14,8 +14,8 @@
 	 <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
   </head>
   <script type='text/javascript' src='./js/jquery-1.10.2.min.js'></script>
-  <script src='./js/angularJs/angular.min.js'></script>
-  <script src='./js/angularJs/angular-route.js'></script>
+  <script type="text/javascript" src='js/angularJs/angular.js'></script>
+	<script type="text/javascript" src='js/angularJs/angular-ui-router.js'></script>
   <script type='text/javascript' src='./js/lib/jquery.tmpl.min.js'></script>
   
   	<style type='text/css'>
@@ -33,19 +33,7 @@
 		    <p >{{greeting.text}}, World</p>
 			<div style='width:100px;height:40px;background:wheat;' ng-click="send()"></div>
 			<div style='width:100px;height:20px;background:red;font-size:12px;' ng-if='0'>你看的到的</div>
-			<div ng-controller='childController'>
-				<div>能看到么</div>
-				<div>{{info}}</div>
-				<div>广播信息：{{broadcast}}</div>
-			</div>
-			<div ng-controller='formCtrl'>
-				<form novalidate name='form' ng-submit="sendForm()" >
-					<div class='ma ' style='width:600px;' ng-class="{invalid:form.nameCn.$dirty&&form.nameCn.$invalid}">
-						<input type='text' name='nameCn' ng-model='user.name' required />
-					</div>
-				</form>
-			</div>
-			<div class='section' ng-include="'A1201.html'" > </div>
+			
 	  </div>
 	  		</div>
 			
@@ -53,76 +41,95 @@
 			
 	</body>
 	 <script type='text/javascript' >
-   		angular.module('myApp',[])
-		.provider('$myPath',function(){
-			this.url = "www.baidu.com" ;
-			this.path = 'aaa.sss' ;
-			this.$get = function(){
-				var that = this ;
-				return {
-					setUrl : function(str){
-						that.url = str ;
-					},
-					getUrl : function(){
-						console.log(that.url);
-					}
-				};
-			}
-		})
-		.config(function($myPathProvider){
-			$myPathProvider.url ;
-//			$myPath.setUrl("ppppp.com");
-			console.log($myPathProvider.setUrl);
-		})
+	 	
+		
+		angular.module('angularApp',['myApp'])
+		.config(['$myPathProvider',function($myPathProvider){
+			$myPathProvider.setUrl("ppppp.com");
+		}])
+//		.run(function($rootScope){
+//			$rootScope.name = 'rencai';
+//		})
+		.controller('HelloController', [ '$scope','$http','$myPath',function($scope,$http,$myPath){
+			$scope.greeting = {text:'xxx rencai'} ;
+			$scope.send = function(){ console.log('send'); } ;
+			$scope.broadcast = 'father info' ;
+			console.log('fuck');
+			console.log($myPath);
+			$myPath.getUrl();
+		}])
+		
+		
 		;
 		
 		
 		
-		angular.module('angularApp',['myApp'])
-//		.config(['Page',function(page){
-//			PageProvider.setUrl("baidu.com") ;
-//		}])
-//		.run(function($rootScope){
-//			$rootScope.name = 'rencai';
-//		})
-		.controller('HelloController', [ '$scope','$http',function($scope,$http){
-			$scope.greeting = {text:'xxx rencai'} ;
-			$scope.send = function(){ console.log('send'); } ;
-			$scope.broadcast = 'father info' ;
-//			Page.getUrl();
-		}])
 		
-		.controller('formCtrl',['$scope',function($scope){
-				$scope.user ={} ;
-//				$scope.user.name='kk';
-				
-//				$('form').submit(function(){
-//					if($scope.form.$valid){
-//						console.log($scope.form.$valid);
-//					}else{
-//						return false ;
-//					}
-//				});
-//				$('form').submit(function(){
-//					return false;
-//				});
-				
-				$scope.sendForm = function(){
-					alert(1);
-					console.log($scope.form.$valid);
-					console.log('we has submit');
-					
-				};
+		
+		
+		
+		
+		function $myPathProviderXXX(){
+			this.url = "www.baidu.com" ;
+			this.log = function(){
+				console.log('logs');
+			}
+			this.setUrl = function(str){
+				this.url = str ;
+			}
+			this.$get = $get ;
+			function $get(){
+				var self = this ;
+				return {
+					getUrl : function(){
+						console.log(self.url);
+					}
+				}
+			}
+		}
+   		angular.module('myApp',['ui.router'])
+		.provider('$myPath',function(){
+			this.url = "www.baidu.com" ;
+			this.path  = 'wwww.dodo';
+			this.log = function(){
+				console.log('logs');
+			}
+			this.setUrl = function(str){
+				this.url = str ;
+			}
+			this.$get = function(){
+				var self = this ;
+				return {
+					getUrl : function(){
+						console.log(self.url);
+					}
+				}
+			}
+			
+		})
+//		.provider('$myPath',function(){
+//			var url = "www.baidu.com" ;
+			
+//			return {
+//				$get : {},
+//				setUrl : function(str){
+//					url = str ;
+//				},
+//				getUrl : function(){
+//					console.log(url);
+//				}
+//			}
+//		})
+		.config(['$myPathProvider','$urlRouterProvider',function($myPathProvider,$urlRouterProvider){
+//			console.log($urlRouterProvider);
+			console.log($myPathProvider);
+			$myPathProvider.setUrl('h5.game.cn') ;
 		}])
-		.controller('childController',['$scope',function($scope){
-			$scope.broadcast = 'child info';
-			$scope.$on('myCall',function(e,info){
-				$scope.broadcast = 'xxxxx' ;
-			});
-		}])
-		.controller('aController',['$scope',function($scope){
-			$scope.msg = '非常好好' ;
-		}]);
+		;
+		
+		
+		
+		
 		
 		
   		
