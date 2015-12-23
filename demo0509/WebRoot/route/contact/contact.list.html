@@ -7,14 +7,30 @@
 
 
 
-<div class='' >
+<div ng-controllerxx="pageCtr" >
 	<div>'文本22':contact.list.html</div>
 	<a ui-sref="contact.detail">联系列表</a>
-	<div>{{user.name}}1111</div>
+	<div class='pageCtr'>{{student.sex}}1111</div>
 	
 	<div ui-view></div>
 	<div ui-view="viewB" attr="list"></div>
 </div>
+
+<script type='text/javascript'>
+//	setTimeout
+	console.log(111);
+	angular.module('app') 
+	.controller('pageCtr',['$scope',function($scope){
+		$scope.student = {};
+		$scope.student.sex = 'famale' ;
+		console.log('I  am   here');
+	}])
+	;
+//	angular.module('app',['pageApp']) 
+	
+//	angular.bootstrap(angular.element('.pageApp'),['pageApp'])
+	;
+</script>
 
 
 

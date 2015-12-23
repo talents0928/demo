@@ -19,41 +19,47 @@
 	<title>demo 范例</title>
 	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
 	<!-- 	<script type='text/javascript' src='//cdn.bootcss.com/jquery/1.11.1/jquery.min.js'></script> -->
-	<script type="text/javascript" src='js/angularJs/Angular.js'></script>
+	<script type="text/javascript" src='js/angularJs/angular.js'></script>
 	<script type="text/javascript" src='js/angularJs/angular-ui-router.js'></script>
+	<script type="text/javascript" src='js/angularJs/autils.js'></script>
 	<link rel='stylesheet' href='css/common.css?version=3'></link>
 	
 </head>
 
-<body ng-app="app" class=''>
-	<div ng-controller="myCtrl">
+<body  class=''>
+	<div ng-app="app" ng-controller="myCtrl">
+		{{$state.current.name}}
 		{{user.name}}
+		{{user.nameCn}}
 		<div style='width:800px;' class='ma'>
 			<a ui-sref="home">主页</a>
 			<a ui-sref="contact">联系列表</a>
 			<a ui-sref="contact.detail">联系详情</a>
-			<a ui-sref="contact.detail.items">产品列表</a>
-			<a ui-sref="detail2">产品详情</a>
 			<a href="/dd">返回</a>
-		
 		</div>
 		<div ui-view></div>
 		<div ui-view="viewB" attr="home"  ></div>
 	</div>
-		
+	<div class='secend' >
+		<div>这里没有标</div>
+		<div ng-controller="myUserCtrl">{{info.name}}</div>
+	</div>
 </body>
 </html>
 <script type='text/javascript'>
-	angular.module('app',['utils','ui.router'])
+	angular.module('app',['ui.router','Autils','secend'])
+	.run(['$rootScope','$state',function($rootScope,$state){
+		$rootScope.$state = $state ;
+	}])
 	.config(['$stateProvider','$urlRouterProvider',function($stateProvider,$urlRouterProvider){
 		console.log($stateProvider);
 		$urlRouterProvider
 //		.when('/contact','home')
-		.otherwise("/");
+//		.otherwise("/");
 		
 		$stateProvider
 		.state('home',{
-			url : '/',
+			url : '',
 			views : {
 				'viewB' :  { template : 'indexBbb' },
 				'viewA' :  { template : 'indexAaa' }
@@ -61,8 +67,8 @@
 		})
 		.state('contact',{
 			url: '/contact' , 
-			templateUrl : 'route/contact/contact.list.html',
-			controller : 'contactCtrl'
+			templateUrl : 'route/contact/contact.list.html' ,
+			controller : 'uCtrl'
 		})
 		.state('contact.detail',{
 			url : '/detail',
@@ -74,58 +80,47 @@
 				}
 			}
 		})
-		.state('contact.detail.items',{
-			
-			
-			url : '/item',
-			views :{
-				"" : {
-					template : '<div>viewBBB</div>'
-				},
-				
-				"viewB@" : {
-					template : '<div>viewB</div>'
-//					templateUrl : 'route/contact/contact.detail.html'
-				}
-			}
-		})
-		.state('product',{
-			url : '/product/list',
-			template : 'product.list.html'
-		});
-//		.state('detail',{
-//			url : '/detail',
-//			template : 'product.detail.html'
-//		});
+		
 		
 	}])
 	.controller('contactCtrl',['$scope',function($scope){
 		var user = {};
-		$.scope.user = user ;
+		$scope.user = user ;
 		user.name='何人才	' ;
 	}])
-	.controller('myCtrl',['$scope','User',function($scope,User){
-		$scope.user = {};
-		$scope.user.name = User.getName() ;
+	.controller('myCtrl',['$scope',function($scope){
+		var user = {};
+		$scope.user = user ;
+		user.name='何人才	' ;
+		$scope.user.nameCn = '111111111xxxxxxxx';
+	}])
+//	.controller('myCtrl',['$scope',function($scope,User){
+//		$scope.user = $scope.user||{};
+//		$scope.user.nameCn = '090909';
+//	}])
+	;
+	
+	setTimeout(function(){
+		console.log('exec') ;
+		console.log(angular.module('app'));
+		angular.module('app')
+		.controller('myCtrl',['$scope',function($scope,User){
+			$scope.user = $scope.user||{};
+			$scope.user.nameCn = '090909';
+		}]) ;
+	},3000);
+	
+	
+	angular.module('secend',[])
+	.controller('myUserCtrl',['$scope',function($scope){
+		var info = {};
+		$scope.info = info ;
+		info.name='标' ;
 	}])
 	;
-	
-	
-	
-	angular.module('utils',[])
-	.factory('User',function(){
-		var name = "何川"
-		return {
-			getName : function(){
-				return name;
-			},
-			setName : function(str){
-				name = str ;
-			}
-			
-		}
-	});
+	angular.bootstrap(angular.element('.secend'),['secend'])
 	;
+	
 	
 </script>
 
