@@ -2,7 +2,9 @@
 
 
 
-angular.module('Autils',[])
+var R = angular.module('Autils',[]) ;
+//R.config(configure)
+R
 .controller('uCtrl',['$scope',function($scope){
 	var student = {};
 	$scope.student = student ;
@@ -10,5 +12,14 @@ angular.module('Autils',[])
 	student.age = '45' ;
 	
 }])
-
 ;
+
+configure.$inject = ['$controllerProvider','$compileProvider','$provide'];
+function configure($controllerProvider, $compileProvider, $provide) {
+	var module = app;
+	module.registerController = $controllerProvider.register;
+	module.registerDirective = $compileProvider.directive;
+	module.registerFactory = $provide.factory;
+	module.registerService = $provide.service;
+}
+

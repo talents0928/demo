@@ -39,20 +39,18 @@
 		</div>
 		<div ui-view></div>
 		<div ui-view="viewB" attr="home"  ></div>
-	</div>
-	<div class='secend' >
-		<div>这里没有标</div>
-		<div ng-controller="myUserCtrl">{{info.name}}</div>
+		<div ng-controller='contactCtrl'></div>
+		<div ng-controller="uCtrl">
+			{{student.age}}
+		</div>
 	</div>
 </body>
 </html>
 <script type='text/javascript'>
-	angular.module('app',['ui.router','Autils','secend'])
-	.run(['$rootScope','$state',function($rootScope,$state){
-		$rootScope.$state = $state ;
-	}])
+	var app = angular.module('app',['ui.router','Autils']) ;
+	app
 	.config(['$stateProvider','$urlRouterProvider',function($stateProvider,$urlRouterProvider){
-		console.log($stateProvider);
+
 		$urlRouterProvider
 //		.when('/contact','home')
 //		.otherwise("/");
@@ -68,29 +66,24 @@
 		.state('contact',{
 			url: '/contact' , 
 			templateUrl : 'route/contact/contact.list.html' ,
-			controller : 'uCtrl'
+			controller : ['$scope',function($scope){
+				console.log('gooooooog')
+			}]
 		})
 		.state('contact.detail',{
 			url : '/detail',
-			
-			views:{
-				'' : {
-//					template : '<div>viewA</div>'
-					templateUrl : 'route/contact/contact.detail.html'
-				}
-			}
+			templateUrl : 'route/contact/contact.detail.html'
 		})
 		
 		
 	}])
-	.controller('contactCtrl',['$scope',function($scope){
-		var user = {};
-		$scope.user = user ;
+	.controller('contactCtrl',['$scope','$controller',function($scope,$controller){
+//		console.log($controller) ;
+		var user = $scope.user = {} ;
 		user.name='何人才	' ;
 	}])
 	.controller('myCtrl',['$scope',function($scope){
-		var user = {};
-		$scope.user = user ;
+		var user = $scope.user = {} ;
 		user.name='何人才	' ;
 		$scope.user.nameCn = '111111111xxxxxxxx';
 	}])
@@ -102,24 +95,19 @@
 	
 	setTimeout(function(){
 		console.log('exec') ;
-		console.log(angular.module('app'));
-		angular.module('app')
-		.controller('myCtrl',['$scope',function($scope,User){
-			$scope.user = $scope.user||{};
+//		app.registerController('myCtrl',myCtrl) ;
+		
+		myCtrl.$inject = ['$scope'];
+	    function myCtrl($scope) {
+	        $scope.user = $scope.user||{};
 			$scope.user.nameCn = '090909';
-		}]) ;
+			$scope.$apply();
+			
+	    }
+		
+		
 	},3000);
 	
-	
-	angular.module('secend',[])
-	.controller('myUserCtrl',['$scope',function($scope){
-		var info = {};
-		$scope.info = info ;
-		info.name='标' ;
-	}])
-	;
-	angular.bootstrap(angular.element('.secend'),['secend'])
-	;
 	
 	
 </script>
