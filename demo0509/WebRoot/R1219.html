@@ -47,8 +47,20 @@
 </body>
 </html>
 <script type='text/javascript'>
+<<<<<<< Updated upstream
 	var app = angular.module('app',['ui.router','Autils']) ;
 	app
+=======
+	var app = angular.module('app',['ui.router','Autils','secend']);
+	app.config(function($controllerProvider,$compileProvider,$filterProvider){
+			app.$controllerProvider = $controllerProvider;
+			app.$compileProvider = $compileProvider;
+			app.$filterProvider = $filterProvider;
+	})
+	.run(['$rootScope','$state',function($rootScope,$state){
+		$rootScope.$state = $state ;
+	}])
+>>>>>>> Stashed changes
 	.config(['$stateProvider','$urlRouterProvider',function($stateProvider,$urlRouterProvider){
 
 		$urlRouterProvider
@@ -95,11 +107,17 @@
 	
 	setTimeout(function(){
 		console.log('exec') ;
+<<<<<<< Updated upstream
 //		app.registerController('myCtrl',myCtrl) ;
 		
 		myCtrl.$inject = ['$scope'];
 	    function myCtrl($scope) {
 	        $scope.user = $scope.user||{};
+=======
+		angular.module('app')
+		.controller('myCtrl',['$scope',function($scope,User){
+			$scope.user = $scope.user||{};
+>>>>>>> Stashed changes
 			$scope.user.nameCn = '090909';
 			$scope.$apply();
 			
