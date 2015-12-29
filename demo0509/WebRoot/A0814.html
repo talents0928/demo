@@ -32,8 +32,9 @@
 	   		<input id='tt' type='text' ng-model='greeting.text' style='width:15em;height:2em;line-height:2em;' />
 		    <p >{{greeting.text}}, World</p>
 			<div style='width:100px;height:40px;background:wheat;' ng-click="send()"></div>
-			<div style='width:100px;height:20px;background:red;font-size:12px;' ng-if='0'>你看的到的</div>
-			
+			<div class='' ng-if="isOpen">
+					这里需要{{name}}
+			</div>
 	  </div>
 	  		</div>
 			
@@ -43,89 +44,44 @@
 	 <script type='text/javascript' >
 	 	
 		
-		angular.module('angularApp',['myApp'])
-		.config(['$myPathProvider',function($myPathProvider){
-			$myPathProvider.setUrl("ppppp.com");
-		}])
-//		.run(function($rootScope){
-//			$rootScope.name = 'rencai';
-//		})
-		.controller('HelloController', [ '$scope','$http','$myPath',function($scope,$http,$myPath){
-			$scope.greeting = {text:'xxx rencai'} ;
-			$scope.send = function(){ console.log('send'); } ;
-			$scope.broadcast = 'father info' ;
-			console.log('fuck');
-			console.log($myPath);
-			$myPath.getUrl();
-		}])
+		var app = angular.module('angularApp',[]);
 		
-		
-		;
-		
-		
-		
-		
-		
-		
-		
-		
-		function $myPathProviderXXX(){
-			this.url = "www.baidu.com" ;
-			this.log = function(){
-				console.log('logs');
-			}
-			this.setUrl = function(str){
-				this.url = str ;
-			}
-			this.$get = $get ;
-			function $get(){
-				var self = this ;
-				return {
-					getUrl : function(){
-						console.log(self.url);
-					}
-				}
-			}
-		}
-   		angular.module('myApp',['ui.router'])
-		.provider('$myPath',function(){
-			this.url = "www.baidu.com" ;
-			this.path  = 'wwww.dodo';
-			this.log = function(){
-				console.log('logs');
-			}
-			this.setUrl = function(str){
-				this.url = str ;
-			}
-			this.$get = function(){
-				var self = this ;
-				return {
-					getUrl : function(){
-						console.log(self.url);
-					}
-				}
-			}
-			
+		app.config(function($controllerProvider, $compileProvider, $filterProvider, $provide){
+			console.log(111);
+			app.register = {
+			    controller: $controllerProvider.register,
+			    directive: $compileProvider.directive,
+			    filter: $filterProvider.register,
+			    factory: $provide.factory,
+			    service: $provide.service
+			  };
 		})
-//		.provider('$myPath',function(){
-//			var url = "www.baidu.com" ;
-			
-//			return {
-//				$get : {},
-//				setUrl : function(str){
-//					url = str ;
-//				},
-//				getUrl : function(){
-//					console.log(url);
-//				}
-//			}
-//		})
-		.config(['$myPathProvider','$urlRouterProvider',function($myPathProvider,$urlRouterProvider){
-//			console.log($urlRouterProvider);
-			console.log($myPathProvider);
-			$myPathProvider.setUrl('h5.game.cn') ;
+		
+		.controller('HelloController', [ '$scope','$http',function($scope,$http){
+			$scope.greeting = {text:'xxx rencai'} ;
+			$scope.send = function(){ 
+				console.log('send');
+				$scope.isOpen = true ;
+			} ;
 		}])
+		
 		;
+		setTimeout(function(){
+			app.register.controller('HelloController',['$scope',function($scope){
+				console.log(111);
+				$scope.name='何川' ;
+				$scope.isOpen = true ;
+				$scope.send = function(){ 
+					console.log('send it');
+				} ;
+			}]);
+		},1000);
+		
+		
+		
+		
+		
+		
 		
 		
 		
