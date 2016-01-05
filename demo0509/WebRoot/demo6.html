@@ -22,7 +22,10 @@
 	<script type="text/javascript" src='js/require.min.js'></script>
 	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
 	<script type="text/javascript" src='js/utils.js'></script>
+	<script type="text/javascript" src='flux/flux.js'></script>
+	
 	<link rel='stylesheet' href='css/common.css'></link>
+	
 	<!-- 
 	<script type='x' charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
 	 
@@ -37,102 +40,32 @@
 	.gbox{ background : wheat ; }
 	
 </style>
-<body class=''>
 
-			
-		
-</body>
 <script type='x' id='baseTmpl'>
 	<div class='pr oh full'>
-	<canvas id='myCanvas' width='640' height='1008'>
+		<div class='bannerTp pr fullw' id='slider' >
+			<img style='width:100%;' src='./img/imgs/1.jpg'></img>
+			<img style='width:100%;' src='./img/imgs/2.jpg'></img>
+			<img style='width:100%;' src='./img/imgs/3.jpg'></img>
+			<img style='width:100%;' src='./img/imgs/4.jpg'></img>
+		</div>
 		
-	
-	</canvas>
 	</div>
 </script>
 
 	<script type="text/javascript">
 		
-		ut.ready(function(){
-			ut.client.box(640,1008);
-			$.tmpl('baseTmpl').appendTo(body) ;
-			var pics = ['bg.jpg','p001.jpg','p002.jpg'] ;
-			ut.manage.add(pics,'./img/canvas').setCallback(function(){
-				
-				var createjs = ut.easelJs ;
-				
-				
-				
-				var stage = new createjs.Stage(document.getElementById('myCanvas'));
-				
-				
-				
-				createjs.Ticker.setFPS(10);
-				createjs.Ticker.addEventListener('tick',function(evt){
-					stage.update(evt);
-//					var a = createjs.Ticker.getMeasuredFPS();
-//					text.text = a ;
-//					console.log(a);
-				});
-				
-				
-				
-				var img1 = new createjs.Bitmap(ut.manage.getImgById('bg'));
-				img1.x = img1.y = 0 ; 
-				stage.addChild(img1);
-				
-				var text2 = new createjs.Text("加加","20px Arial","#ff7700");
-				text2.x= 0 ; text2.y = 0; text2.textBaseline = "alphabetic";
-				stage.addChild(text2);
-				
-//				var imgObj2 = ut.manage.getImgById('p001') ;
-//				var img2 = new createjs.Bitmap(imgObj2);
-//				img2.x = img2.y = 100 ; img2.regX = imgObj2.width/2 ;
-//				img2.regY = imgObj2.height/2 ;
-//				createjs.Tween.get(img2,{loop:true}).to({rotation:360},3000);
-				
-//				stage.addChild(img2);
-				
-				
-//				for(var i=0;i<18;i++){
-//					var tmp = img2.clone();
-//					tmp.x = tmp.y = i*50 ;
-//					stage.addChild(tmp);
-//					createjs.Tween.get(tmp,{loop:true}).to({rotation:360},2000);
-//				};
-//				
-//				
-//				console.log(img2);
-//				
-//				var img3 = new createjs.Bitmap(ut.manage.getImgById('p002'));
-//				img3.x = img3.y = 100 ; img3.y = 500;
-//				stage.addChild(img3);
-//				
-//				for(var i=0;i<18;i++){
-//					var tmp = img3.clone();
-//					tmp.x = tmp.y = i*50 ;
-//					tmp.y = tmp.y+200;
-//					stage.addChild(tmp);
-//					createjs.Tween.get(tmp,{loop:true}).to({rotation:360},2000);
-//				};
-//				
-//				for(var i=0;i<18;i++){
-//					var tmp = img2.clone();
-//					tmp.x = tmp.y = i*50 ;
-//					tmp.y = tmp.y+500;
-//					stage.addChild(tmp);
-//					createjs.Tween.get(tmp,{loop:true}).to({rotation:360},2000);
-//				};
-//				
-//				
-				
-				
-				
-	
-				
-				console.log('finish');
-			}).start();
-		});
+		
+		$(function(){
+			ut.client.box(640);
+			$.tmpl('baseTmpl').appendTo(body);
+			var f = new flux.slider('#slider',{
+				pagination: false,
+				transitions : ['zip'],
+				width:640,
+				height:500
+			}); 
+		}) ;
 
 
 	</script>

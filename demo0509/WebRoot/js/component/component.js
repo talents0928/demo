@@ -252,6 +252,124 @@ $.extend(cp,{
 		}
 		
 	},
+banner : function(options){
+		
+		options = $.extend({
+			auto : true , //是否自动轮播
+			interval : 4000, //播放间隔
+			bullets : true ,	//是否带轮播子弹提示
+			timer : 1000 ,	//切换速度
+			isFull :  false , //图片是否满屏
+			height : 'auto'	//轮播高度
+		},options);
+		
+		var status = [{left:'-100%'},{left:'0%'},{left:'100%'}];
+		var $ele = $('.bannerTp');
+		var $ul = $ele.find('ul').css({
+			position : 'relative',
+			height : options.height+'px' 
+		});
+		$ele.find('img').css({
+			'height': options.height+'px' ,
+			'max-width' : '100%',
+			'width' : options.isFull ? '100%' : 'auto' ,
+			'display' : 'block' ,
+			'margin' : 'auto'
+		});
+		var lis = $ele.find('li').css({
+			'webkitTransition' : 'all '+options.timer+'ms linear',
+			position : 'absolute',
+			'line-height' : 0,
+			top: '0px',
+			'background' : 'black' ,
+			height : options.height+'px' ,
+			width: '100%'
+		}).remove();;
+		
+		
+		var banner = {
+			move : false ,
+			curr : 0 ,
+			length : lis.length 
+		};
+		
+		$(lis.get(0)).css(status[1]).appendTo($ul);
+		//获取banner的高
+		if(options.height != 'auto'){
+			$ul.css({ height : options.height+'px'});
+		}else{
+			var minHeight = 0;
+			var interval = setInterval(function(){
+				var height = $ul.find('li').height() ;
+				if(height>minHeight){
+					minHeight = height ;
+					$ul.height(height);
+				}
+			},100);
+		}
+		
+		if(options.bullets){
+			var bullets = $('<div></div>').addClass('banner-bullets').appendTo($ele);
+			for(var i =0;i<banner.length;i++){
+				$('<div></div>').addClass('banner-bullet').appendTo(bullets);
+			}
+			$('.banner-bullet:eq(0)').addClass('banner-bullet-active');
+		}
+		
+		
+		$(document).on('swipeLeft','.bannerTp ul',function(){
+			if(banner.length==1||banner.move){
+				return ;
+			}
+			banner.move = true ;
+			var next = banner.curr +1 > banner.length-1 ? 0 : banner.curr +1 ;
+			var currEle = $(this).find('li').one('webkitTransitionEnd',function(){
+				banner.move = false ;
+				$(this).remove();
+			});
+			var addEle = $(lis.get(next)).css(status[2]).appendTo($ul);
+			setTimeout(function(){
+				currEle.css(status[0]) ;
+				addEle.css(status[1]);
+			},10);
+			banner.curr = next ;
+			activeBullet(banner.curr);
+		});
+		$(document).on('swipeRight','.bannerTp ul',function(){
+			if(banner.length==1||banner.move){
+				return ;
+			}
+			banner.move = true ;
+			var next = banner.curr -1<0? banner.length-1 : banner.curr-1 ;
+			var currEle = $(this).find('li').one('webkitTransitionEnd  ',function(){
+				banner.move = false ;
+				$(this).remove();
+			});
+			var addEle = $(lis.get(next)).css(status[0]).appendTo($ul);
+			setTimeout(function(){
+				currEle.css(status[2]) ;
+				addEle.css(status[1]);
+			},10);
+			banner.curr = next ;
+			activeBullet(banner.curr);
+		});
+		
+		if(options.auto){
+			setInterval(function(){
+				if(banner.move){
+					return false ;
+				}
+				$('.bannerTp ul').trigger('swipeLeft');
+			},options.interval);
+		}
+		
+		function activeBullet(curr){
+			$('.banner-bullet').removeClass('banner-bullet-active');
+			$('.banner-bullet:eq('+curr+')').addClass('banner-bullet-active');
+		}
+		
+	}
+	,
 	
 	
 	demo : function(){
