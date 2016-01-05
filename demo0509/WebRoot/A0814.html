@@ -32,7 +32,7 @@
 	   		<input id='tt' type='text' ng-model='greeting.text' style='width:15em;height:2em;line-height:2em;' />
 		    <p >{{greeting.text}}, World</p>
 			<div style='width:100px;height:40px;background:wheat;' ng-click="send()"></div>
-			<div class='' ng-if="isOpen">
+			<div class='' ng-controller="laterCtrl" ng-if="isOpen">
 					这里需要{{name}}
 			</div>
 	  </div>
@@ -48,13 +48,19 @@
 		
 		app.config(function($controllerProvider, $compileProvider, $filterProvider, $provide){
 			console.log(111);
-			app.register = {
-			    controller: $controllerProvider.register,
-			    directive: $compileProvider.directive,
-			    filter: $filterProvider.register,
-			    factory: $provide.factory,
-			    service: $provide.service
-			  };
+//			app.register = {
+//			    controller: $controllerProvider.register,
+//			    directive: $compileProvider.directive,
+//			    filter: $filterProvider.register,
+//			    factory: $provide.factory,
+//			    service: $provide.service
+//			  };
+			app.controller = 1||$controllerProvider.register ;
+			app.directive = $compileProvider.directive;
+			app.filter = $filterProvider.register;
+			app.factory = $provide.factory;
+			app.service = $provide.service;
+			
 		})
 		
 		.controller('HelloController', [ '$scope','$http',function($scope,$http){
@@ -67,14 +73,26 @@
 		
 		;
 		setTimeout(function(){
-			app.register.controller('HelloController',['$scope',function($scope){
-				console.log(111);
-				$scope.name='何川' ;
-				$scope.isOpen = true ;
-				$scope.send = function(){ 
-					console.log('send it');
-				} ;
-			}]);
+			
+			var d = app
+			.factory('lazy',function(){
+				var name = "何天成" ;
+				return {
+					getName : function(){
+						return name ;
+					}
+				}
+			})
+//			.controller('laterCtrl',['$scope','lazy',function($scope,lazy){
+//				console.log(111);
+//				$scope.name= lazy.getName();
+//				
+//			}])
+			
+			;
+			
+			console.log(d);
+			
 		},1000);
 		
 		
