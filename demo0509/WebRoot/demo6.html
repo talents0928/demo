@@ -59,9 +59,9 @@
 		$(function(){
 			ut.client.box(640);
 			$.tmpl('baseTmpl').appendTo(body);
-			var f = new flux.slider('#slider',{
+			window.f = new flux.slider('#slider',{
 				pagination: false,
-				transitions : ['zip'],
+				transitions : ['bars'],
 				width:640,
 				height:500
 			}); 
