@@ -57,6 +57,7 @@ var paths = {
 				_text : ['text.min','text'][isDebug],
 				_template : ['jquery.tmpl.min','jquery.tmpl'][isDebug],
 				_iscroll : ['iscroll.min','iscroll'][isDebug],
+				_flux : ['flux.min','flux'][isDebug],
 				_easelJs : ['easeljs-0.8.1.min','easeljs-0.8.1.combined'][isDebug],
 				_soundJs : ['soundjs-0.6.1.min','soundjs-0.6.1.combined'][isDebug],
 				_tweenJs : ['tweenjs-0.6.1.min','tweenjs-0.6.1.combined'][isDebug],
@@ -103,11 +104,11 @@ var paths = {
 
 		$.holdReady(true);
 		
-		require(['component','tmpl','normalizeCss'],function(){
-			require(getReqMap(),function(){
+		window.onload = function(){
+			require(['component','tmpl','normalizeCss'].concat(getReqMap()),function(){
 				$.holdReady(false);
 			});
-		});
+		};
 		
 		function getReqMap(){
 			var finded = {} , reqObj = helpMap.concat() ;
@@ -207,6 +208,25 @@ ut.define('countdown',['_custom'],function(){
 		},options));
 	};
 });
+ut.define('flux',['_flux','jquery'],function(data){
+	ut.flux = function($ele,opts){
+		var f = new flux.slider('#slider',$.extend({
+			autoplay: true,
+			pagination: false,
+			transitions : ['blocks2'],
+			delay: 4500,
+			controls : false,
+			captions: true,
+			bullets : true ,
+			captionsStyle : { 'font-size':'24px',padding: '14px 1em' },
+			bulletsStyle : {bottom : '17px',right:'12px'} ,
+			width:640,
+			height:380,
+			onTransitionEnd : null
+		},opts)); 
+		return f ;
+	};
+});
 ut.define('wx',['_wx'],function(data){
 	ut.wx = data ;
 });
@@ -280,7 +300,7 @@ ut.loader = (function(){
 	
 	var path = $('script[src*=utils]').attr('src') ;
 		path = path.slice(0,path.indexOf('js/utils'));
-	var href = path+"js/asset/load.gif" ;
+	var href = path+"js/asset/loading.gif" ;
 	var element = "<div class='' ><div><img/></div></div>" ;
 	var centerClass = {'position' : 'absolute','top' : '0', 'left' : '0','bottom' : '0' , 'right' : '0', 'margin' : 'auto' };
 	var size1 = '28px',size2 = '70px' ;
@@ -303,7 +323,7 @@ ut.loader = (function(){
 		expand : function(){
 			this.remove();
 			curr = create().appendTo('body');
-			setTimeout(function(){ curr && curr.find('div').show(); },350);
+			setTimeout(function(){ curr && curr.find('div').show(); },250);
 		},
 		remove : function(){ curr && curr.remove(); curr = null ; }
 	}

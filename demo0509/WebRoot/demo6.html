@@ -38,16 +38,19 @@
 	
 	body{ background:black; }
 	.gbox{ background : wheat ; }
+	.img1{ background:url('./img/imgs/1.jpg');background-size:100% 100%; }
+	.img2{ background:url('./img/imgs/1.jpg'); }
+	
 	
 </style>
 
 <script type='x' id='baseTmpl'>
 	<div class='pr oh full'>
-		<div class='bannerTp pr fullw' id='slider' >
-			<img style='width:100%;' src='./img/imgs/1.jpg'></img>
-			<img style='width:100%;' src='./img/imgs/2.jpg'></img>
-			<img style='width:100%;' src='./img/imgs/3.jpg'></img>
-			<img style='width:100%;' src='./img/imgs/4.jpg'></img>
+		<div class=' pr fullw' id='slider' >
+			<img style='width:100%;' title="标题1" src='./img/imgs/1.jpg'></img>
+			<a href='www.baidu.com'><img style='width:100%;' title="标题2"  src='./img/imgs/2.jpg'></img></a>
+			<img style='width:100%;' title="标题3" src='./img/imgs/3.jpg'></img>
+			<img style='width:100%;' title="标题4" src='./img/imgs/4.jpg'></img>
 		</div>
 		
 	</div>
@@ -59,12 +62,21 @@
 		$(function(){
 			ut.client.box(640);
 			$.tmpl('baseTmpl').appendTo(body);
-			window.f = new flux.slider('#slider',{
+			
+			
+			
+			
+			
+			var f = ut.flux($('#slider'),{
+				captions: true,
 				pagination: false,
-				transitions : ['bars'],
-				width:640,
-				height:500
-			}); 
+				transitions : ['blocks2'],
+				height:380
+			});
+			
+			
+			
+
 		}) ;
 
 
