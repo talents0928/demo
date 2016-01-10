@@ -92,6 +92,14 @@ var paths = {
 					text : '_text'
 				}
 			},
+			config : {
+				_text : {
+					useXhr : function(url, protocol, hostname, port){
+						return true;
+					}
+				}
+			},
+			
 			shim : {
 				_easelJs : {
 					exports : 'cc'
