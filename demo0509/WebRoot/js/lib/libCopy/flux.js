@@ -41,6 +41,7 @@ window.flux = {
 			captions: false,
 			width: null,
 			height: null,
+			bullets : true ,
 			onTransitionEnd: null
 		}, opts);
 
@@ -270,19 +271,17 @@ window.flux = {
 					'text-align': 'center'
 				},this.options.bulletsStyle||{}));
 
-				
+				//添加 bullet 样式
+				_this.bulletStyle = this.options.bulletStyle = $.extend({
+					display: 'inline-block',
+					'margin-left': '8px',
+					width:'16px',height:'16px',
+					background : '#DDDDDD',
+					'border-radius' : '50%'
+				},this.options.bulletStyle) ;
 				$(this.images).each(function(index, image){
-					var li = $('<li data-index="'+index+'"></li>').css({
-						display: 'inline-block',
-						'margin-left': '8px',
-						width:'16px',height:'16px',
-						background : '#DDDDDD',
-						'border-radius' : '50%'
-						
-					}).appendTo(_this.bullets);
-
+					var li = $('<li data-index="'+index+'"></li>').css(_this.bulletStyle).appendTo(_this.bullets);
 				});
-
 				this.container.append(this.bullets);
 			}
 			this.updateBullets();
@@ -441,8 +440,8 @@ window.flux = {
 		updateBullets: function(){
 			if(this.options.bullets && this.bullets)
 			{
-				this.bullets.find('li.active').css({background:'#DDDDDD'});
-				$(this.bullets.find('li')[this.currentImageIndex]).addClass('active').css({background:'#EF2D36'});
+				this.bullets.find('li.active').css(this.options.bulletStyle);
+				$(this.bullets.find('li')[this.currentImageIndex]).addClass('active').css(this.options.bulletActiveStyle);
 			}
 		},
 		updateCaption: function() {

@@ -99,7 +99,6 @@ var paths = {
 					}
 				}
 			},
-			
 			shim : {
 				_easelJs : {
 					exports : 'cc'
@@ -204,6 +203,7 @@ ut.define('component',['text!_component','_template','_componentJs'],function(da
 ut.define('cookie',['_cookie'],function(){
 	//console.log(cookie);
 });
+
 ut.define('countdown',['_custom'],function(){
 	var countdown = $.fn.countdown ;
 	$.fn.countdown = function(options){
@@ -278,6 +278,16 @@ ut.define('iScroll',['_iscroll'],function(){
     };
     
 });
+ut.bookmark = function(eleTp,iscroll){
+	var scrollY = Number(localStorage.getItem('scrollY'));
+	if(scrollY){
+		iscroll.scrollTo(0,scrollY,0);
+		localStorage.removeItem('scrollY') ;
+	}
+	$(document).on('tap',eleTp,function(){
+		localStorage.setItem('scrollY',iscroll.y);
+	});
+};
 
 ut.define('easelJs',['_easelJs','_tweenJs','_soundJs'],function(data){
 	
@@ -300,6 +310,10 @@ ut.define('velocity',['_velocity'],function(data){
 		}).one('touchend mouseup',function(){
 			$(this).removeClass($(this).attr('as'));
 		});
+	});
+	//设置默认href属性效果
+	$(document).on('tap','[href]',function(e){
+		location.href  = $(this).attr('href') ;
 	});
 	
 }();

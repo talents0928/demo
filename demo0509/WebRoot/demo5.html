@@ -21,7 +21,7 @@
 	<title>demo 范例</title>
 	<script type="text/javascript" src='js/require.min.js'></script>
 	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
-	<script type="text/javascript" src='js/utils.js'></script>
+	<script type="text/javascript" src='http://192.168.3.111:8080/demo0509/js/utils.js'></script>
 	<link rel='stylesheet' href='css/common.css?version=3'></link>
 	<!-- 
 	<script type='x' charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
@@ -123,7 +123,7 @@
 <script type='x' id='baseTmpl'>
 	<div class='full contentTp pa oh ' id='mainWrap' >
 		<div class='fullw oh'>
-			{{each ut.getArray(5)}}
+			{{each ut.getArray(45)}}
 				{{if @index==0}}
 					<div class='box1 pr' style='background:url(./img/imgs/@{@index%4+1}.jpg);background-size:100% 100%;'>
 						
@@ -146,8 +146,8 @@
 				{{else @index==15}}
 				<div class='box3'><input type='text' style='width:80%;margin:auto;'></input></div>
 				{{else}}
-				<div class='box1' 
-					onclick="javascript:console.log('');"
+				<div class='box1 bookmarkTp' 
+					href = "www.baidu.com"
 					style='background:url(./img/imgs/@{@index%4+1}.jpg);background-size:100% 100%;'>
 					
 				</div>
@@ -159,16 +159,16 @@
 <script type="text/javascript">
     
 	
-	ut.require(["http://map.qq.com/api/js?v=2.exp"],function(){
-		console.log('script');
-	}) ;
 
 	$(function(){
 		console.log('ready');
 		ut.client.box(640, 1008);
+		
     
 	    $.tmpl('baseTmpl').appendTo(body);
-	    ut.iScroll('#mainWrap');
+	    var s = ut.iScroll('#mainWrap');
+//		s.scrollTo(0,-800,0);
+		ut.bookmark('.bookmarkTp',s);
 	    
 	    $('.cdTp').countdown({
 	        until: +2,
