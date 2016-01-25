@@ -21,7 +21,7 @@
 	<title>demo 范例</title>
 	<script type="text/javascript" src='js/require.min.js'></script>
 	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
-	<script type="text/javascript" src='http://192.168.3.111:8080/demo0509/js/utils.js'></script>
+	<script type="text/javascript" src='js/utils.js'></script>
 	<link rel='stylesheet' href='css/common.css?version=3'></link>
 	<!-- 
 	<script type='x' charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
@@ -42,7 +42,7 @@
 	.bg4{ color : #331ffb; }
 	.bg5{ color : #e86439; }
 	.box1{ width:100%;height:200px;margin:5px 0; }
-	.box2{ width:100%;height:200px;margin:5px 0;color:darkred;font-size:68px;text-align:center;line-height:100px; }
+	.box2{ width:100%;min-height:200px;margin:5px 0;color:darkred;font-size:68px;text-align:center;line-height:100px; }
 	.box3{ width:100%;height:200px;margin:5px 0;color:darkred;font-size:68px;text-align:center;line-height:200px; }
 	.btn1{ width:120px;height:60px;text-align:center;line-height:60px;font-size:32px;margin:auto;background:white; }
 	
@@ -113,6 +113,8 @@
 	margin:auto;
 	background:red;
 }
+.tab1{ widht:400px;height:300px;border:1px solid red; }
+.tab1 td{ border-style:solid;border-width:0 1px 1px 0; border-color:red; }
 </style>
 <body class=''>
 
@@ -134,9 +136,12 @@
 					</div>
 				{{else @index==1}}
 				<div class='box2'>
+					<table class='tab1 ma' style='border:1px solid red;'>
+						<tr><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+						<tr><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+						<tr><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+					</table>
 					<div class='redb shake'>0</div>
-					<div class='btn1 click2Tp' as='op3'>按钮</div>
-					<div class='btn1 click1Tp' >按钮</div>
 				</div>
 				{{else  @index==3}}
 				<div class=' fs32 tac' style='padding:20px; height:auto;'>
@@ -169,6 +174,15 @@
 	    var s = ut.iScroll('#mainWrap');
 //		s.scrollTo(0,-800,0);
 		ut.bookmark('.bookmarkTp',s);
+		
+		$(document).on('tap','.box2',function(){
+			console.log('box2');
+			return false;
+		});
+		$(document).on('tap','.redb',function(){
+			console.log('redb');
+			
+		});
 	    
 	    $('.cdTp').countdown({
 	        until: +2,
