@@ -21,7 +21,7 @@
 	<title>demo 范例</title>
 	<script type="text/javascript" src='js/require.min.js'></script>
 	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
-	<script type="text/javascript" src='js/utils.js'></script>
+	<script type="text/javascript" debug='true' src='js/utils.js'></script>
 	
 	<link rel='stylesheet' href='css/common.css'></link>
 	
@@ -66,8 +66,9 @@
 			var f = ut.flux($('#slider'),{
 				captions: true,
 				pagination: false,
-				transitions : ['blocks2'],
-				bulletStyle : {background:'darkred'},
+				transitions : ['dissolve'],
+				animDelay : '1600ms' ,
+//				bulletStyle : {background:'darkred'},
 				bulletActiveStyle : {background:'yellow'},
 				height:380
 			});

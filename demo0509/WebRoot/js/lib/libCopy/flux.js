@@ -42,6 +42,8 @@ window.flux = {
 			width: null,
 			height: null,
 			bullets : true ,
+			bulletStyle : {} ,
+			bulletActiveStyle : {background:'red'},
 			onTransitionEnd: null
 		}, opts);
 
@@ -1610,7 +1612,7 @@ window.flux = {
 					'background-image': this.slider.image1.css('background-image')	,
 					'background-size' : '100% 100%'
 				}).css3({
-					'transition-duration': '600ms',
+					'transition-duration': fluxslider.options.animDelay||'600ms',
 					'transition-timing-function': 'ease-in',
 					'transition-property': 'opacity'
 				});

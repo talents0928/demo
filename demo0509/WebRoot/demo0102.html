@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="x-dns-prefetch-control" content="on" />
+	<meta name="viewport" content="width=device-width,initial-scale=0.5,user-scalable=0" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no, email=no" />
+	<meta name="x5-orientation" content="portrait">
+	<meta name="x5-fullscreen" content="true">
+	<meta name="x5-page-mode" content="app">
+	<meta name="msapplication-tap-highlight" content="no">
+
+
+	<title>demo 范例</title>
+	<script type="text/javascript" src='js/require.min.js'></script>
+	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
+	<script type="text/javascript" src='js/utils.js'></script>
+	<link rel='stylesheet' href='css/common.css?version=3'></link>
+<!--
+ 	<script type='text/javascript' src='./picker/js/mobiscroll.core.js'></script>
+	<script type='text/javascript' src='./picker/js/mobiscroll.frame.js'></script>
+	<script type='text/javascript' src='./picker/js/mobiscroll.scroller.js'></script>
+	
+	<script type='text/javascript' src='./picker/js/mobiscroll.datetime.js'></script>
+	<script type='text/javascript' src='./picker/js/mobiscroll.util.datetime.js'></script>
+	<script type='text/javascript' src='./picker/js/mobiscroll.datetimebase.js'></script>
+ 	<script type='text/javascript' src='./picker/js/mobiscroll.i18n.zh.js'></script>
+-->
+	
+	<script type='text/javascript' src='./picker/js/mobiscroll.min.js'></script>
+	
+	<link href="./picker/css/mobiscroll.min.css" rel="stylesheet" type="text/css" />
+	<!--
+	<link href="./picker/css/mobiscroll.animation.css" rel="stylesheet" type="text/css" />
+    <link href="./picker/css/mobiscroll.icons.css" rel="stylesheet" type="text/css" />
+    <link href="./picker/css/mobiscroll.frame.css" rel="stylesheet" type="text/css" />
+    <link href="./picker/css/mobiscroll.scroller.css" rel="stylesheet" type="text/css" />
+	-->
+	
+
+	
+</head>
+
+<style type="text/css" id='style'>
+	
+	body{ background:black; }
+	.gbox{ background : wheat ; }
+	.mbsc-mobiscroll .dwwr{ font-size:24px !important; }
+	.inputBox{
+		display:block;
+		width:100%;
+		border: 1px solid red;
+		//-webkit-appearance: none;
+		height:60px;
+	}
+	.box1{
+		display:block;width:100%;height:60px;
+	}
+	.dwb{ font-size:25px !important; }
+	
+</style>
+<body class=''>
+
+			
+		
+</body>
+
+<script type='x' id='baseTmpl'>
+	<div class='full contentTp pa oh ' id='mainWrap' >
+		<div class='fullw oh'>
+			<div style='width:400px;height:300px;margin-top:300px;' class='ma'>
+				 <div data-role="fieldcontain" class="demo-cont" id="demo_cont_datetime">
+			            <label for="demo_datetime">Try Date & Time</label>
+						<div style='background:red;'>
+			            <input type="text" class='box1' id="demo_datetime" />  
+						</div>
+						<!-- <inputxx type="time" class='inputBox'  id="demo_datetime" /> -->
+			        </div>
+				
+			</div>
+		</div>
+</script>
+
+<script type="text/javascript">
+    
+	
+
+	$(function(){
+		ut.client.box(640, 1008);
+	    $.tmpl('baseTmpl').appendTo(body);
+		
+		$('#demo_datetime').mobiscroll().datetime({
+			context : body ,
+			minWidth:110,
+			height:60,
+            theme: undefined,     // Specify theme like: theme: 'ios' or omit setting to use default 
+            mode: 'mixed',       // Specify scroller mode like: mode: 'mixed' or omit setting to use default 
+            display: 'modal', // Specify display mode like: display: 'bottom' or omit setting to use default 
+            lang: 'zh',       // Specify language like: lang: 'pl' or omit setting to use default
+            minDate: new Date(2012,3,10,9,22),  // More info about minDate: http://docs.mobiscroll.com/2-14-0/datetime#!opt-minDate
+            maxDate: new Date(2018,7,30,15,44),   // More info about maxDate: http://docs.mobiscroll.com/2-14-0/datetime#!opt-maxDate
+            stepMinute: 1  // More info about stepMinute: http://docs.mobiscroll.com/2-14-0/datetime#!opt-stepMinute
+        });
+		
+	   
+		
+	});
+    
+</script>
+
+
+</html>
+
+
+
+
+

@@ -39,7 +39,7 @@ var asset = (function(){
 	var path = $('script[src*=utils]').attr('src') ;
 	path = path.slice(0,path.indexOf('js/utils'));
 	return {
-		baseUrl : [path+'js/lib',path+'js/lib'][isDebug],
+		baseUrl : [path+'js/lib',path+'js/lib/libCopy'][isDebug],
 		cssPath : ['../../css/','../../../css/'][isDebug],
 		conponentPath : ['../component','../../component'][isDebug],
 	}
@@ -223,6 +223,7 @@ ut.define('flux',['_flux','jquery'],function(data){
 			pagination: false,
 			transitions : ['blocks2'],
 			delay: 4500,
+			animDelay : false ,
 			controls : false,
 			captions: true,
 			bullets : true ,
