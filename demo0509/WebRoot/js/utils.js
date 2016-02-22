@@ -16,7 +16,6 @@ window.cdnHost = window.cdnHost || (function(){
 **/
 
 var body = body ? body : 'body';
-
 var ut = {};
 
 /**
@@ -319,38 +318,6 @@ ut.define('velocity',['_velocity'],function(data){
 	
 }();
 
-ut.loader = (function(){
-	
-	var path = $('script[src*=utils]').attr('src') ;
-		path = path.slice(0,path.indexOf('js/utils'));
-	var href = path+"js/asset/loading.gif" ;
-	var element = "<div class='' ><div><img/></div></div>" ;
-	var centerClass = {'position' : 'absolute','top' : '0', 'left' : '0','bottom' : '0' , 'right' : '0', 'margin' : 'auto' };
-	var size1 = '28px',size2 = '70px' ;
-	var curr ;
-	
-	function create(){
-		var $this = $(element) ;
-		$this.css($.extend(centerClass,{'z-index' : '999'}));
-		$this.children('div').css($.extend({},centerClass,{
-			'width' : size2 , 'height' : size2, 'display' : 'none' , 'webkitTransform':'scale(2) translateY(-25%)',
-			'border-radius' : '10px' , 'background' : 'rgba(0,0,0,0.55)'
-		}));
-		$this.find('img').css($.extend({},centerClass,{
-			'display' : 'block' , 'width' : size1 , 'height' : size1 
-		})).attr('src',href);
-		return $this ;
-	};
-	
-	return {
-		expand : function(){
-			this.remove();
-			curr = create().appendTo('body');
-			setTimeout(function(){ curr && curr.find('div').show(); },250);
-		},
-		remove : function(){ curr && curr.remove(); curr = null ; }
-	}
-})();
 
 
 /**
@@ -596,6 +563,140 @@ ut.toArray = function(obj){
     return re;
 };
 
+//ut.loader = (function(){
+//	
+//	var path = $('script[src*=utils]').attr('src') ;
+//		path = path.slice(0,path.indexOf('js/utils'));
+//	var href = path+"js/asset/loading.gif" ;
+//	var element = "<div class='' ><div><img/></div></div>" ;
+//	var centerClass = {'position' : 'absolute','top' : '0', 'left' : '0','bottom' : '0' , 'right' : '0', 'margin' : 'auto' };
+//	var size1 = '28px',size2 = '70px' ;
+//	var curr ;
+//	
+//	function create(){
+//		var $this = $(element) ;
+//		$this.css($.extend(centerClass,{'z-index' : '999'}));
+//		$this.children('div').css($.extend({},centerClass,{
+//			'width' : size2 , 'height' : size2, 'display' : 'none' , 'webkitTransform':'scale(2) translateY(-25%)',
+//			'border-radius' : '10px' , 'background' : 'rgba(0,0,0,0.55)'
+//		}));
+//		$this.find('img').css($.extend({},centerClass,{
+//			'display' : 'block' , 'width' : size1 , 'height' : size1 
+//		})).attr('src',href);
+//		return $this ;
+//	};
+//	
+//	return {
+//		expand : function(){
+//			this.remove();
+//			curr = create().appendTo('body');
+//			setTimeout(function(){ curr && curr.find('div').show(); },250);
+//		},
+//		remove : function(){ curr && curr.remove(); curr = null ; }
+//	}
+//})();
+
+ut.loader = (function(){
+	var Loader = new Function();
+	var path = $('script[src*=utils]').attr('src') ;
+		path = path.slice(0,path.indexOf('js/utils'));
+	var timer = 0;
+	
+	Loader.prototype = {
+		constructor : 'Loader',
+		path : path ,
+		delay : 1100 ,
+		expand : function(){ 
+			this.create();
+			var _this = this ; _this.timer = 0;
+			_this.inter = setInterval(function(){ _this.timer += 100 ; },100);
+//			setTimeout(function(){ _this.over(); },430);
+			
+		},
+		over : function(cb){ 
+			console.log('i do over');
+			var _this = this;
+			setTimeout(function(){
+				_this.destory();
+				cb&&cb() ;
+			},this.delay-this.timer);
+			clearInterval(this.inter);
+		},
+		clone : function(){ 
+			return $.extend(true,{},this);
+		}
+		
+	};
+	Loader.prototype.create = function(){
+		
+		var element = "<div><div><img/></div></div>" ;
+		var centerClass = {'position' : 'absolute','top' : '0', 'left' : '0','bottom' : '0' , 'right' : '0', 'margin' : 'auto' };
+		var size1 = '28px',size2 = '70px' ; 
+		
+		var $this = $(element) ;
+		$this.css($.extend(centerClass,{'z-index' : '999'}));
+		$this.children('div').css($.extend({},centerClass,{
+			'width' : size2 , 'height' : size2, 'display' : 'block' , 'webkitTransform':'scale(2) translateY(-25%)',
+			'border-radius' : '10px' , 'background' : 'rgba(0,0,0,0.55)'
+		}));
+		$this.find('img').css($.extend({},centerClass,{
+			'display' : 'block' , 'width' : size1 , 'height' : size1 
+		})).attr('src',this.path+"js/asset/load.gif");
+		$this.appendTo('body'); 
+		this.ele = $this ;
+	};
+	Loader.prototype.destory = function(){
+		var $ele = this.ele ;
+		$ele && $ele.remove(), $ele=null;
+	};
+	return (new Loader());
+})();
+//加载更多的效果
++function(){
+	var m = ut.loaderMore = ut.loader.clone();
+	m.create = function(){
+		var element = "<div class='tac loaderingTp'><img></img><span>加载中，请稍后...</span></div>" ;
+		this.loaderTp = $('.loaderTp').clone() ;
+		var $this = $(element) ;
+		$this.css({color:'#fff','line-height':'60px','padding-bottom':'6px','font-size':'22px'});
+		$this.find('img').css({display:'inline-block',position:'relative',top:'10px',right:'15px'})
+		.attr('src',this.path+"js/asset/load.gif");
+		$('.loaderTp').replaceWith($this);
+		
+	};
+	m.destory = function(){
+		$('.loaderingTp').replaceWith(this.loaderTp);
+	};
+}();
+
+
+//整合参数调用
+!function(){
+	var grep = function(func){
+		return $.grep(this,func)[0];
+	};
+	ut.params = function(args){
+		var pas = {obj:[],func:[],bool:[],other:[]};
+		pas.obj.grep = pas.func.grep = pas.bool.grep = pas.other.grep = grep ;
+		for(var i=0;i<args.length;i++){
+			var type = typeof args[i] ;
+			if(type == 'object'){
+				pas.obj.push(args[i]);
+			}
+			else if(type == 'function'){
+				pas.func.push(args[i]);
+			}
+			else if(type == 'boolean'){
+				pas.bool.push(args[i]);
+			}
+			else {
+				pas.other.push(args[i]);
+			}
+		}
+		return pas;
+	};
+	
+}() ;
 
 
 (function (){
@@ -603,33 +704,28 @@ ut.toArray = function(obj){
 	var origin = window.pageData || {} ;
 	window.root  = origin.data || {};
 	//向后台发送ajax请求
-	ut.send = function(url,cb,failcb,errorcb,options){
+	ut.send = function(url,cb,failcb,errorcb,params,loader){
+		
+		var pas = ut.params(arguments);
+		cb = pas.func[0] ; 
+		failcb = pas.func[1] ; 
+		errorcb = pas.func[2] ; 
+		params = pas.obj.grep(function(value){
+			return value instanceof jQuery;
+		});
+		loader = pas.obj.grep(function(value){
+			return value.constructor == 'Loader';
+		})||ut.loader;
 
-		if(cb && typeof cb != 'function'){
-			options = cb ;
-			cb = false ;
-		}
-		if(failcb && (typeof failcb != 'function')){
-			options = failcb ;
-			failcb = false ;
-		}
-		if(errorcb && (typeof errorcb != 'function')){
-			options = errorcb ;
-			errorcb = false ;
-		}
-		if(options instanceof jQuery){
-			options = options.serialize() ;
-		}
-
-		ut.loader.expand();
+		loader.expand();
 		$.ajax({
 			method : 'post',
 			url : serverHost + url,
 			timeout: 60000,
-			data : options||{},
+			data : params||{},
 			success : function(data){
 				console.log(data);
-				ut.loader.remove();
+				loader.over();
 				$.extend(true,origin,data);
 				if( data && data.callback === true ){
 					cb && cb(data.data,data);
@@ -639,7 +735,7 @@ ut.toArray = function(obj){
 				}
 			},
 			error : function(XMLHttpRequest, textStatus, errorThrown){
-				ut.loader.remove();
+				loader.over();
 				errorcb && errorcb(textStatus);
 				console.log(textStatus);
 			}
@@ -702,7 +798,9 @@ ut.manage = (function(){
 	};
 	function loadList ( manage ) {
 		var size = _list.length , count = size , miss = 0;
-
+		if(size==0){
+			excuEnd() ;
+		}
 		for( var i=0; i<size; i++ ){
 			
 			var img = new Image(); var obj = _list.pop() ;
@@ -741,13 +839,15 @@ ut.manage = (function(){
 
 				if(isArray(args)){
 					for(var i=0; i< args.length; i++ ){
-						
-						if( !isObject(args[i]) ){
-							args[i] = { id: args[i].match(/(\w+)\./)[1] , src:args[i] };
+						if(args[i]&&args[i]!=''){
+							if( !isObject(args[i]) ){
+								args[i] = { id: args[i].match(/(\w+)\./)[1] , src:args[i] };
+							}
+							args[i].src = url ? url + '/' + args[i].src : args[i].src ;
+							_list.push(args[i]);
 						}
-						args[i].src = url ? url + '/' + args[i].src : args[i].src ;
+						
 					}
-					Array.prototype.push.apply(_list,args);
 				}
 				return this;
 			},
