@@ -11,11 +11,11 @@
 	<meta http-equiv="x-dns-prefetch-control" content="on">
    
 	<link rel='stylesheet' href='css/common.css'></link>
-	 <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="img/favicon.ico" type="image/x-icon" />
   </head>
   <script type='text/javascript' src='./js/jquery-1.10.2.min.js'></script>
   <script type="text/javascript" src='js/angularJs/angular.js'></script>
-	<script type="text/javascript" src='js/angularJs/angular-ui-router.js'></script>
+  <script type="text/javascript" src='js/angularJs/angular-ui-router.js'></script>
   <script type='text/javascript' src='./js/lib/jquery.tmpl.min.js'></script>
   
   	<style type='text/css'>
@@ -55,7 +55,7 @@
 //			    factory: $provide.factory,
 //			    service: $provide.service
 //			  };
-			app.controller = 1||$controllerProvider.register ;
+			app.controller = $controllerProvider.register ;
 			app.directive = $compileProvider.directive;
 			app.filter = $filterProvider.register;
 			app.factory = $provide.factory;
