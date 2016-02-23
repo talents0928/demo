@@ -63,12 +63,12 @@
 			ut.client.box(640);
 			$.tmpl('baseTmpl').appendTo(body);
 			var scroll = ut.iScroll('#mainWarp');
-			scroll.on('scrollEnd',function(){
-				if(this.y == this.maxScrollY){
-					console.log('3232323');
-					ut.pretend(ut.loaderMore);
-				}
-			});
+//			scroll.on('scrollEnd',function(){
+//				if(this.y == this.maxScrollY){
+//					console.log('3232323');
+//					ut.pretend(ut.loaderMore);
+//				}
+//			});
 			
 			
 			var f = ut.flux($('#slider'),{

@@ -563,39 +563,6 @@ ut.toArray = function(obj){
     return re;
 };
 
-//ut.loader = (function(){
-//	
-//	var path = $('script[src*=utils]').attr('src') ;
-//		path = path.slice(0,path.indexOf('js/utils'));
-//	var href = path+"js/asset/loading.gif" ;
-//	var element = "<div class='' ><div><img/></div></div>" ;
-//	var centerClass = {'position' : 'absolute','top' : '0', 'left' : '0','bottom' : '0' , 'right' : '0', 'margin' : 'auto' };
-//	var size1 = '28px',size2 = '70px' ;
-//	var curr ;
-//	
-//	function create(){
-//		var $this = $(element) ;
-//		$this.css($.extend(centerClass,{'z-index' : '999'}));
-//		$this.children('div').css($.extend({},centerClass,{
-//			'width' : size2 , 'height' : size2, 'display' : 'none' , 'webkitTransform':'scale(2) translateY(-25%)',
-//			'border-radius' : '10px' , 'background' : 'rgba(0,0,0,0.55)'
-//		}));
-//		$this.find('img').css($.extend({},centerClass,{
-//			'display' : 'block' , 'width' : size1 , 'height' : size1 
-//		})).attr('src',href);
-//		return $this ;
-//	};
-//	
-//	return {
-//		expand : function(){
-//			this.remove();
-//			curr = create().appendTo('body');
-//			setTimeout(function(){ curr && curr.find('div').show(); },250);
-//		},
-//		remove : function(){ curr && curr.remove(); curr = null ; }
-//	}
-//})();
-
 ut.loader = (function(){
 	var Loader = new Function();
 	var path = $('script[src*=utils]').attr('src') ;
@@ -846,7 +813,6 @@ ut.manage = (function(){
 							args[i].src = url ? url + '/' + args[i].src : args[i].src ;
 							_list.push(args[i]);
 						}
-						
 					}
 				}
 				return this;
