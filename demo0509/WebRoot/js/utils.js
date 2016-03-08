@@ -565,14 +565,13 @@ ut.toArray = function(obj){
 
 ut.loader = (function(){
 	var Loader = new Function();
-	var path = $('script[src*=utils]').attr('src') ;
-		path = path.slice(0,path.indexOf('js/utils'));
+	var path = (function(){ return this.slice(0,this.indexOf('js/utils')) }).call($('script[src*=utils]').attr('src'));
 	var timer = 0;
 	
 	Loader.prototype = {
 		constructor : 'Loader',
 		path : path ,
-		delay : 1100 ,
+		delay : 800 ,
 		expand : function(){ 
 			this.create();
 			var _this = this ; _this.timer = 0;
@@ -678,8 +677,9 @@ ut.loader = (function(){
 		failcb = pas.func[1] ; 
 		errorcb = pas.func[2] ; 
 		params = pas.obj.grep(function(value){
-			return value instanceof jQuery;
+			return value.constructor != 'Loader';
 		});
+		params = params instanceof jQuery ? params.serialize() : params ;
 		loader = pas.obj.grep(function(value){
 			return value.constructor == 'Loader';
 		})||ut.loader;

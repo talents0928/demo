@@ -252,6 +252,17 @@ $.extend(cp,{
 		}
 		
 	},
+	sift : function(obj,cb){
+		
+		var mode = { SINGLE : 1,MULTI :2 ,MORE :3 } ;
+		var $siftTp = $('.siftTp') ;
+		
+		var base = $.tmpl('siftTmpl',obj).appendTo($siftTp) ;
+		
+		
+		
+		
+	},
 banner : function(options){
 		
 		options = $.extend({

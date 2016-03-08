@@ -13,7 +13,6 @@
 
 
 
-
 <script type='text/x' id='messageTmpl'>
 	<div class='pa00 full' style='background:rgba(0,0,0,0.3);z-index:99;font-size:28px;' id='message'>
 		<div class='pa auto2 oh' style='width:400px;border-radius:10px;top:45%;'>
@@ -159,6 +158,42 @@
 		background: linear-gradient(to bottom,  rgba(0,0,0,0.01) 0%,rgba(0,0,0,0.6) 80%,rgba(0,0,0,0.8) 100%); /* W3C */
 	}
 </style>
+
+
+
+<style type='text/css' id='sift'>
+	.sift{
+		height : 80px; font-size : 28px; line-height : 80px; background : white ;z-index:2;
+		border-width : 0 0 1px 0; border-style : solid ; border-color : #ADADAD ;
+	}
+	.sift-vline{ height:72%;width:1px; background : #ADADAD ;position:relative;top:14%; }
+	.sift-head{ font-size : 28px; line-height : 40px; text-align : center ; }
+	.sift-active.sift-head{ color : #d7000f; }
+	.sift-active.sift-head:before{ content : ' '; display : block; width:80%;height:4px;background:#d7000f;position: absolute; left:10%;bottom:0; }
+	.sift-arrow{ 
+		width: 16px;height:16px; border-style: solid ; border-color :#ADADAD ; border-width : 3px 3px 0 0; -webkit-transform : rotateZ(135deg);
+		position : relative; top : 7px; float : left ; -webkit-transition : all 200ms ease ;
+	}
+	.sift-active .sift-arrow{ -webkit-transform : rotateZ(-45deg); border-color :#d7000f ; top : 15px; }
+	
+</style>
+
+<script type='x' id='siftTmpl'>
+	<div class='sift flex pr'>
+		{{each ut.getArray(4)}}
+			{{if @index!=0}}<div class='sift-vline'></div>{{/if}}
+			{{tmpl(@value) 'navHeadTmpl'}}
+		{{/each}} 
+	</div>
+</script>
+<script type='x' id='siftHeadTmpl'>
+	<div class='flex1 tac sift-head'>
+		<div class='auto2 flex' style='width:80%;'>
+			<div class='text-ellipsis flex1' >{{if @data.marks}}{{else}}标题几{{/if}}</div>
+			<div style='width:30px;'><div class='sift-arrow '></div></div>
+		</div>
+	</div>
+</script>
 
 
 
