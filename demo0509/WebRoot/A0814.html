@@ -27,10 +27,11 @@
   
 	<body >
 		<div ng-app="angularApp">
-			<div>{{greeting.text}}</div>
+			<div >{{greeting.text}}</div>
 	  <div ng-controller='HelloController' >
 	   		<input id='tt' type='text' ng-model='greeting.text' style='width:15em;height:2em;line-height:2em;' />
 		    <p >{{greeting.text}}, World</p>
+			<myname></myname>
 			<div style='width:100px;height:40px;background:wheat;' ng-click="send()"></div>
 			<div class='' ng-controller="laterCtrl" ng-if="isOpen">
 					这里需要{{name}}
@@ -46,8 +47,11 @@
 		
 		var app = angular.module('angularApp',[]);
 		
-		app.config(function($controllerProvider, $compileProvider, $filterProvider, $provide){
-			console.log(111);
+		app
+		.config(function(){
+			console.log('这里是第一次配置');
+		})
+		.config(function($controllerProvider, $compileProvider, $filterProvider, $provide){
 //			app.register = {
 //			    controller: $controllerProvider.register,
 //			    directive: $compileProvider.directive,
@@ -63,6 +67,7 @@
 			
 		})
 		
+		
 		.controller('HelloController', [ '$scope','$http',function($scope,$http){
 			$scope.greeting = {text:'xxx rencai'} ;
 			$scope.send = function(){ 
@@ -72,33 +77,18 @@
 		}])
 		
 		;
-		setTimeout(function(){
-			
-			var d = app
-			.factory('lazy',function(){
-				var name = "何天成" ;
-				return {
-					getName : function(){
-						return name ;
-					}
-				}
-			})
-//			.controller('laterCtrl',['$scope','lazy',function($scope,lazy){
-//				console.log(111);
-//				$scope.name= lazy.getName();
-//				
-//			}])
-			
-			;
-			
-			console.log(d);
-			
-		},1000);
 		
 		
 		
-		
-		
+		app.directive('myname',function(){
+			return {
+				restrict : 'AE',
+//				replace : true ,
+				
+				templateUrl : "A1201.html"
+//				template : "<div class=''>我的名字：{{nameCn}}</div>"
+			}
+		});
 		
 		
 		

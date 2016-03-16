@@ -318,6 +318,42 @@ ut.define('velocity',['_velocity'],function(data){
 	
 }();
 
+//设备嗅探
+ut.UA = (function(){
+	var s = navigator.userAgent.toLowerCase();
+	var match = /(os)[ \/]([\w_]+)/.exec(s) || /(android)[ \/]([\w.]+)/.exec(s) ||[];
+	var _version = match[2] || "0" , _system = match[1] || "" ;
+	function compareVer(v1){
+		v1 = v1.toString().split('.') ; 
+		var v2 = _system == 'os'? _version.split('_') : _version.split('.') , result = 0;
+		for(var i =0;i<v1.length&&i<v2.length;i++){
+			result = v2[i] - v1[i] ;
+			if(result!=0) break ;
+		}
+		return result ;
+	};
+	return { 
+		system : _system ,
+		version : _version ,
+		isIpad : /ipad/.test(s) ,
+		isIphone : /iphone/.test(s) ,
+		isAndroid : _system == 'android' ,
+		verEq : function(str){
+			return compareVer(str) == 0 ? true : false ;
+		},
+		verLess : function(str){
+			return compareVer(str) < 0 ? true : false ;
+		},
+		verGreater : function(str){
+			return compareVer(str) >= 0 ? true : false ;
+		},
+		is : function(str){
+			str = str.toLowerCase();
+			return s.indexOf(str)==-1? false : true ;
+		}
+	} ;
+})();
+
 
 
 /**
@@ -377,6 +413,7 @@ ut.client = (function(){
 			position : 'absolute', overflow : 'hidden', left : 0, top : 0, transformOrigin : '0 0', transform : 'scale('+this.scaleW+','+this.scaleH+')'
 		});
 		$('body').css('background','black');
+		
 	};
 	
 	function setDefault(){
@@ -389,7 +426,32 @@ ut.client = (function(){
 			}
 		});
 		
-	}
+	};
+	function viewPort(){
+		
+		function toString(obj){
+			var arr = [];
+			$.each(obj, function(index,value){
+				arr.push(index+"="+value);
+			});
+			return arr.join(','); ;
+		};
+		var content = {
+			"user-scalable" : "0" ,
+//			"width" : "device-width" ,
+			"initial-scale" : "0.4"
+		} ;
+		//如果android6以上版本 调整为正常1
+		if(ut.UA.isAndroid&&ut.UA.verGreater(6)){
+			content["initial-scale"] = "1" ;
+		}
+		var str = "<meta name='viewport' content='"+toString(content)+"' />" ;
+//		<meta name="viewport" content="width=device-width,initial-scale=0.5,user-scalable=0" />
+//		$(str).appendTo('head');
+		$('head').find('meta[name=viewport]').remove().end().append(str);
+		return ;
+	};
+	viewPort();
 	client.flex = function(modeW){
 		this.modeW = modeW ? modeW : this.modeW ;
 		$('meta[name=viewport]').attr('content','width='+this.modeW+',user-scalable=no') ;
@@ -401,41 +463,7 @@ ut.client = (function(){
 	
 })();
 
-//设备嗅探
-ut.UA = (function(){
-	var s = navigator.userAgent.toLowerCase();
-	var match = /(os)[ \/]([\w_]+)/.exec(s) || /(android)[ \/]([\w.]+)/.exec(s) ||[];
-	var _version = match[2] || "0" , _system = match[1] || "" ;
-	function compareVer(v1){
-		v1 = v1.toString().split('.') ; 
-		var v2 = _system == 'os'? _version.split('_') : _version.split('.') , result = 0;
-		for(var i =0;i<v1.length&&i<v2.length;i++){
-			result = v2[i] - v1[i] ;
-			if(result!=0) break ;
-		}
-		return result ;
-	};
-	return { 
-		system : _system ,
-		version : _version ,
-		isIpad : /ipad/.test(s) ,
-		isIphone : /iphone/.test(s) ,
-		isAndroid : this.system == 'android' ,
-		verEq : function(str){
-			return compareVer(str) == 0 ? true : false ;
-		},
-		verLess : function(str){
-			return compareVer(str) < 0 ? true : false ;
-		},
-		verGreater : function(str){
-			return compareVer(str) >= 0 ? true : false ;
-		},
-		is : function(str){
-			str = str.toLowerCase();
-			return s.indexOf(str)==-1? false : true ;
-		}
-	} ;
-})();
+
 
 
 //数组方法

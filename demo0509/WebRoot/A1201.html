@@ -1,5 +1,35 @@
-<div ng-controller='aController'>
+<div >
 	
 	<div>这里需要angularjs{{msg}}</div>
-	
+	<div ng-controller='info'>
+		<div>这里需要angularjs{{info}}</div>
+		<div go ></div>
+	</div>
 </div>
+
+<script>
+//	alert('1111111111111111111');
+	console.log(app);
+	
+	app.controller('info',['$scope','myFac',function($scope,myFac){
+		$scope.info= "我成功了"+myFac.getName() ;
+		
+	}]) ;
+	app.factory('myFac',function(){
+		return {
+			name : 'myFac' ,
+			getName : function(){
+				return this.name ;
+			}
+		}
+	});
+	
+	app.directive('go',function(){
+		return {
+			restrict : 'AE' ,
+			replace : false ,
+			templateUrl : 'A0311.html'
+		}
+	});
+	;
+</script>
