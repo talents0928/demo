@@ -26,9 +26,10 @@
   	</style>
   
 	<body >
-		<div ng-app="angularApp">
+		<div class='target' ng-app="angularApp">
 			<div >{{greeting.text}}</div>
 	  <div ng-controller='HelloController' >
+	  	<div class='redTp ' style='background:red;width:100px;height:40px;'></div>
 	   		<input id='tt' type='text' ng-model='greeting.text' style='width:15em;height:2em;line-height:2em;' />
 		    <p >{{greeting.text}}, World</p>
 			<myname></myname>
@@ -48,9 +49,6 @@
 		var app = angular.module('angularApp',[]);
 		
 		app
-		.config(function(){
-			console.log('这里是第一次配置');
-		})
 		.config(function($controllerProvider, $compileProvider, $filterProvider, $provide){
 //			app.register = {
 //			    controller: $controllerProvider.register,
@@ -65,15 +63,51 @@
 			app.factory = $provide.factory;
 			app.service = $provide.service;
 			
+//			$(document).on('click','.redTp',function(){
+//				console.log('i am click');
+//				var scope = angular.element(this).scope();
+//				scope.greeting.text = "do my click" ;
+//				scope.$apply();
+//				console.log(scope);
+//			}) ;
+			
 		})
 		
 		
-		.controller('HelloController', [ '$scope','$http',function($scope,$http){
+		.controller('HelloController', [ '$scope','$http','$showMsg',function($scope,$http,$showMsg){
 			$scope.greeting = {text:'xxx rencai'} ;
+			$showMsg($scope);
 			$scope.send = function(){ 
 				console.log('send');
 				$scope.isOpen = true ;
 			} ;
+		}])
+		.controller('zsControl',[function(){
+			$scope.name  = '你怎么这么屌' ;
+			
+		}])
+		.factory('$showMsg',['$compile',function($compile){
+			var $div = $("<div ng-controller='zsControl' class='hereTp'><div >text:{{name}}</div></div>") ;
+			return function($scope){
+				console.log('我好难过呀！');
+				
+//				var scope = angular.element('.redTp').scope() ;
+//				console.log(scope);
+				var ele = $compile($div)($scope);
+				console.log(ele);
+				$(document.body).append(ele);
+				
+//				angular.element('.target').injector().invoke(function($compile) {
+//					console.log($compile);
+//					var scope = angular.element('.target').scope();
+//					console.log(scope);
+//					$compile($div)(scope);
+//				});
+
+				
+				
+			};
+			
 		}])
 		
 		;
@@ -85,8 +119,8 @@
 				restrict : 'AE',
 //				replace : true ,
 				
-				templateUrl : "A1201.html"
-//				template : "<div class=''>我的名字：{{nameCn}}</div>"
+//				templateUrl : "A1201.html"
+				template : "<div class=''>我的名字：{{nameCn}}</div>"
 			}
 		});
 		
