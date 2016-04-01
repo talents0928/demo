@@ -25,8 +25,8 @@
 		.invalid input{ border-color: #dd4b39; box-shadow: none;  }
   	</style>
   
-	<body >
-		<div class='target' ng-app="angularApp">
+	<body ng-app="angularApp">
+		<div class='target' >
 			<div >{{greeting.text}}</div>
 	  <div ng-controller='HelloController' >
 	  	<div class='redTp ' style='background:red;width:100px;height:40px;'></div>
@@ -76,36 +76,58 @@
 		
 		.controller('HelloController', [ '$scope','$http','$showMsg',function($scope,$http,$showMsg){
 			$scope.greeting = {text:'xxx rencai'} ;
-			$showMsg($scope);
+			$showMsg('你看到我给的信息麽');
 			$scope.send = function(){ 
 				console.log('send');
 				$scope.isOpen = true ;
 			} ;
 		}])
-		.controller('zsControl',[function(){
-			$scope.name  = '你怎么这么屌' ;
+//		.controller('zsControl',['$scope',function($scope){
+//			
+//			$scope.name  = '你怎么这么这么屌' ;
+//			
+//		}])
+		.factory('$showMsg',['$compile','$templateRequest','$q',function($compile,$templateRequest,$q){
 			
-		}])
-		.factory('$showMsg',['$compile',function($compile){
-			var $div = $("<div ng-controller='zsControl' class='hereTp'><div >text:{{name}}</div></div>") ;
-			return function($scope){
-				console.log('我好难过呀！');
+			var defer = $q.defer();
+			var promise1  = defer.promise ;
+			setTimeout(function(){
+//				defer.resolve({name:'杨盼'});
+				defer.reject({name:'杨盼'});
+			},2200);
+			promise1.then(function(){
+				console.log('then4');
+			},function(){
+				console.log('then5');
+			}) ;
+			console.log('then 测试开始');
+			var all = $q.all([promise1]).then(function(back){
+				console.log('then3');
+				console.log(back);
+			},function(){
+				console.log('all fail');
+			}).then(function(){
+				console.log('这里没有失败');
+			});
+			
+			$q.all([all]).then(function(){
+				console.log('一样的');
+			},function(){
+				console.log('不一样的');
+			});
+			
+			promise1.then(function(back){
+				return {name:'何川'} ;
+			}).then(function(back){
 				
-//				var scope = angular.element('.redTp').scope() ;
-//				console.log(scope);
-				var ele = $compile($div)($scope);
-				console.log(ele);
-				$(document.body).append(ele);
+			});
+			
+			
+			
+			
+			return function(msg){
 				
-//				angular.element('.target').injector().invoke(function($compile) {
-//					console.log($compile);
-//					var scope = angular.element('.target').scope();
-//					console.log(scope);
-//					$compile($div)(scope);
-//				});
-
-				
-				
+				return {};
 			};
 			
 		}])

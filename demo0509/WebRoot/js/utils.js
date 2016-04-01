@@ -404,10 +404,13 @@ ut.client = (function(){
 
 		this.init();
 		this.gbox.parent().css({
-			width : this.seeW + 'px', height : this.seeH + 'px',
-			margin : 'auto', overflow : 'hidden',
+			width : this.seeW + 'px', height : this.seeH + 'px',overflow : 'hidden',
 			position : 'absolute', top : '0', left : '0', right : '0'
 		});
+		//解决屏幕,body不同宽的问题
+		if(this.w == $('body').width()){
+			this.gbox.parent().css({margin:'auto'}) ;
+		}
 		this.gbox.css({
 			width : this.modeW + 'px', height : this.modeH ? (this.modeH + 'px') : this.seeH/this.scaleW+'px',
 			position : 'absolute', overflow : 'hidden', left : 0, top : 0, transformOrigin : '0 0', transform : 'scale('+this.scaleW+','+this.scaleH+')'

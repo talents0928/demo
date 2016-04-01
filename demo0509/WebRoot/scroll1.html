@@ -1,62 +1,231 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-status-bar-style" content="black">
-	<meta name="format-detection" content="telephone=no">
-	<meta http-equiv="x-dns-prefetch-control" content="on">
-
-	<title>demo 范例</title>
-	<script type="text/javascript" src='js/require.min.js'></script>
-	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
-	<script type="text/javascript" src='js/utils.js'></script>
-	<link rel="icon" href="img/favicon.ico" type="image/x-icon" />
-	<link rel='stylesheet' href='css/common.css'></link>
-	<!--  -->
-
-</head>
 <style type='text/css'>
-	.box1{
-		width:100% ;
-		height:100px;
-	}
-	.bg1{ background : #ffdb13; }
-	.bg2{ background : #fe1622; }
-	.bg3{ background : #fa25e9; }
-	.bg4{ background : #3a24f5; }
-	.bg5{ background : #1bff27; }
-	.bg6{ background : #ff7830; }
-	.bg7{ background : #f829ff; }
+	.base-width { width:1200px; }
+	.base-header{ box-shadow:0 0 8px rgba(0,0,0,0.5);min-height: 50px; }
+	.bg-green{ background : #00a65a ; } 
+	.base-foot{  color: #f1f1f1; text-align: center; background-color: #b8b9b9; border-top: 1px solid #d2d6de; height:70px; }
+	.base-silent{ padding:12px 5px 12px 29px !important;color:#8d8d8d; } 
+	.base-main { border: 1px solid #d2d6de;background-color: #ecf0f5;margin :30px auto 60px auto; }
+	.base-menu a{ padding-left:26px !important; }
+	.base-menu .glyphicon{ width:30px !important; }
+	.base-menu .group{ padding-left:56px !important; }
+	
+	.base-tabs{ line-height:42px;border-bottom: 1px solid #d2d6de ;margin-top:-15px; }
+	.base-tabs a{ display:inline-block;font-size:14px;color:#222;padding:0 30px;padding-bottom:3px; }
+	.base-tabs a.active{ border-bottom:3px solid #00a65a;padding-bottom:0px; }
+	
+	/**  修复样式 **/
+	.skin-green-light .sidebar-menu > li.active > a{ color : #fff ; background : #00a65a ; }
 </style>
-<script type='x' id='baseTmpl'>
-	<div class='full oh pr' id='mainWrap' >
-		<div class='fullw oh'>
-			{{each ut.getArray(25)}}
-			<div class='bg@{@index%7+1} box1'></div>
-			{{/each}}
-		</div>
-	</div>
-</script>
-<body>
-	
-	
 
-</body>
+
+<script type='x' id='adminTabsTmpl'>
+	{{if @data.list}}
+	<div class='h4' style='padding:0 30px;line-height:55px;'>
+		<span class='glyphicon glyphicon-th-large' style='margin-right:10px;'></span>@{title}
+	</div>
+	<div class='base-tabs'>
+		{{each list}}
+		<a href='@{url}' class='' >@{title}</a>
+		{{/each}}
+	</div>
+	{{/if}}
+</script>
+
+
+<script type='x' id='menuLiTmpl'>
+	{{if @data.group}}
+	<li class='base-silent'>
+		<span class='glyphicon glyphicon-th-large'></span><span>@{title}</span>
+	</li>
+		{{each group}}
+			{{tmpl(@value) 'menuLiTmpl2'}}
+		{{/each}}
+	{{else}}
+		<li><a href='@{url}'><span class='glyphicon glyphicon-th-large'></span><span>@{title}</span></a></li>
+	{{/if}}
+</script>
+<script type='x' id='menuLiTmpl2'>
+	<li><a class='group' href='@{url}'><span>@{title}</span></a></li>
+</script>
+
+<section ng-controller="menuListCtrl" class='sidebar' style='min-height:900px;background:#f9fafc;width:210px;'>
+	<div class='text-muted' style='padding:20px 30px;border-bottom: 1px solid #d2d6de;'>
+		<h4><span class='glyphicon glyphicon-home' style='margin-right:10px;'></span>主菜单</h5>
+		<h6>MAIN NAVIGATION</h6>
+	</div>
+	<ul class='sidebar-menu base-menu'>
+		<help ng-repeat="row in $data">
+			<li class='base-silent'>
+				<help ng-if='row.group' ><span class='glyphicon glyphicon-th-large'></span><span>{{row.title}}</span></help>
+				<a href='{{row.url}}' ng-if='!row.group'><span class='glyphicon glyphicon-th-large'></span><span>{{row.title}}</span></a>
+			</li>
+			<li ng-repeat="group in row.group"><a class='group' href='{{group.url}}'><span>{{group.title}}</span></a></li>
+		</help>
+	</ul>
+</section>
 
 <script type='text/javascript'>
-		
 	
-	ut.ready(function(){
-		ut.client.flex(640);
-		$.tmpl('baseTmpl').appendTo(body);
-		ut.iScroll('#mainWrap');
+	angular.module('app')
+	.controller('menuListCtrl', ['$scope',function($scope){
+		var data = $scope.$data = [] ;
+		data.push({ 
+			'title' : '预约维修', 
+			'url' : 'repair/showRepairs.admin?page=0' ,
+		});
+		data.push({ 
+			'title' : '查看后台用户', 
+			'url' : 'managerAdmin/viewUser.admin?page=0' 
+		});
+		data.push({ 
+			'title' : '查看商铺', 
+			'url' : 'tradeAdmin/viewTrades.admin?page=0' 
+		});
+		data.push({ 
+			'title' : '跳蚤街', 
+			'url' : 'fleaAdmin/fleaList.admin?page=0' 
+		});
+		data.push({ 
+			'title' : '快递服务', 
+			'url' : 'articleAdmin/view.admin?listId=1&listName=kdfw&page=0' ,
+			'list' : [
+				{title:'快递服务',url:'articleAdmin/view.admin?listId=1&listName=kdfw&page=0'}
+			] 
+		});
+		
+	}])
+	
+	;
+	$(function(){
+		return false ;
+		var data = [] ;
+		
+//		data.push({ 
+//			'title' : '新闻展示', 
+//			'url' : 'articleAdmin/view.admin?listId=1&listName=xwzs&page=0' ,
+//			'list' : [
+//				{title:'列表页',url:'articleAdmin/view.admin?listId=1&listName=xwzs&page=0'},
+//				{title:'banner页',url:'articleAdmin/viewBanner.admin?listId=1&listName=xwzs'},
+//				{title:'数据统计',url:'newsAdmin/viewStat.admin?listId=1&listName=xwzs'}
+//			] 
+//		});
+		data.push({ 
+			'title' : '预约维修', 
+			'url' : 'repair/showRepairs.admin?page=0' ,
+		});
+		data.push({ 
+			'title' : '查看后台用户', 
+			'url' : 'managerAdmin/viewUser.admin?page=0' 
+		});
+		data.push({ 
+			'title' : '查看商铺', 
+			'url' : 'tradeAdmin/viewTrades.admin?page=0' 
+		});
+		data.push({ 
+			'title' : '跳蚤街', 
+			'url' : 'fleaAdmin/fleaList.admin?page=0' 
+		});
+		data.push({ 
+			'title' : '快递服务', 
+			'url' : 'articleAdmin/view.admin?listId=1&listName=kdfw&page=0' ,
+			'list' : [
+				{title:'快递服务',url:'articleAdmin/view.admin?listId=1&listName=kdfw&page=0'}
+			] 
+		});
+//		data.push({ 
+//			'title' : '场馆介绍', 
+//			'url' : 'articleAdmin/view.admin?listId=2&listName=chjs&page=0' ,
+//			'list' : [
+//				{title:'列表页',url:'articleAdmin/view.admin?listId=2&listName=cgjs&page=0'},
+//				{title:'banner页',url:'articleAdmin/viewBanner.admin?listId=2&listName=cgjs'}				
+//			] 
+//		});
+//		data.push({ 
+//			'title' : '教练介绍', 
+//			'url' : 'articleAdmin/view.admin?listId=3&listName=jljs&page=0' 
+//		});
+		data.push({ 
+			'title' : '物业公告', 
+			'url' : 'articleAdmin/view.admin?listId=4&listName=wygg&page=0' 
+		});
+		data.push({ 
+			'title' : '中天教育', 
+			'url' : 'articleAdmin/view.admin?listId=5&listName=ztjy&page=0' 
+		});
+		data.push({ 
+			'title' : '健身预约', 
+			'url' : 'detailAdmin/viewDetail.admin?detailId=6&detailName=jsyy',
+			'list' : [
+				{title:'健身预约',url:'detailAdmin/viewDetail.admin?detailId=6&detailName=jsyy'},
+				{title:'健身预约banner页',url:'detailAdmin/viewBanner.admin?listId=6&listName=jsyyBanner'},
+				{title:'场馆介绍',url:'articleAdmin/view.admin?listId=2&listName=cgjs&page=0'},
+				{title:'场馆介绍banner页',url:'articleAdmin/viewBanner.admin?listId=2&listName=cgjs'},	
+				{title:'教练介绍',url : 'articleAdmin/view.admin?listId=3&listName=jljs&page=0' }		
+			]    
+
+		});
+		data.push({ 
+			'title' : '查看一级分类', 
+			'url' : 'categoryAdmin/viewCategory.admin?modelName=trade' 
+
+		});
+		data.push({ 
+			'title' : '医院挂号', 
+			'url' : 'articleAdmin/view.admin?listId=7&listName=yygh&page=0' 
+		});
+//		data.push({ 
+//			'title' : '课程信息', 
+//			'url' : 'articleAdmin/view.admin?listId=9&listName=kcxx&page=0' 
+//  		});
+		data.push({ 
+			'title' : '家政干洗', 
+			'url' : 'domesticAdmin/domesticList.admin?page=0',
+			'list' : [
+				{title:'家政列表',url:'domesticAdmin/domesticList.admin?page=0'},
+				{title:'预约结果',url:'domesticResultAdmin/domesticResultListByDate.admin?page=0'}				
+			] 
+		});
+		$.tmpl('menuLiTmpl',data).appendTo('.base-menu');
+		
+		$(document).on('mousedown','.base-menu li:not(.slient)',function(e){
+			var index = $(this).index();
+			$.removeCookie('ACTIVE1',{path:'/'});
+			$.cookie('ACTIVE1',index,{path:'/'});
+		});
+		$(document).on('mousedown','.base-tabs a',function(){
+			var index = $(this).index();
+			$.removeCookie('ACTIVE2',{path:'/'});
+			$.cookie('ACTIVE2',index,{path:'/'});
+		});
+		
+		window.markActive = function (object){
+			$('.base-menu li,.base-tabs a').removeClass('active');
+			$('.base-menu li:not(.slient)').eq(object.ACTIVE1).addClass('active');
+			if(!$('.base-tabs').length){
+				$.tmpl('adminTabsTmpl',$('.base-menu .active').tmplItem().data).appendTo('.admin-tabs');
+			}
+			$('.base-tabs a').eq(object.ACTIVE2).addClass('active');
+		};
+		
+		var active1 , active2 ;var mark = $.cookie(location.href) ;
+		if( mark == 'null' || mark == undefined ){
+			mark = {'ACTIVE1':$.cookie('ACTIVE1') , 'ACTIVE2':$.cookie('ACTIVE2')||0 }
+			$.cookie(location.href,JSON.stringify(mark));
+		}
+		mark = JSON.parse($.cookie(location.href));
+		markActive(mark);
+		
 	});
-		 
 </script>
-</html>
+
+
+
+
+
+
 
 
 
