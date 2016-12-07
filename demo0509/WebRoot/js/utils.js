@@ -1,55 +1,37 @@
 /**
- * @author xiong
+ * @author viggo
+ * @date 2016-12-01
  */
-
-
-
 var serverHost = 'http://' + window.location.host+'/'+window.location.pathname.split('/')[1]+'/';
+window.cdnHost = window.cdnHost || serverHost ;
 
-window.cdnHost = window.cdnHost || (function(){
-	return 'http://' + window.location.host+'/'+window.location.pathname.split('/')[1]+'/';
-})();
-
-/**
-*	设置一个全局的body对象;
-*	所有文本的容器
-**/
-
-var body = body ? body : 'body';
-var ut = {};
-
-/**
-*	引用对象映射组
-**/
-var helpMap = [] ;
+var ut = ut||{};
+var body = body ? body : 'body'; //全局对象，所有文本容器
+var helpMap = [] ; //引用对象映射组
 
 (function(){
-
-
-/**
- *	是否开启debug模式
- *	<script type='text/javascript' debug='true' src='utils.js'></script>
- */
-var isDebug = $('script[src*=utils][debug=true]').length == 0 ? 0 : 1 ;
-/**
- *  资源路径配置
- */
-var asset = (function(){
-	var path = $('script[src*=utils]').attr('src') ;
-	path = path.slice(0,path.indexOf('js/utils'));
-	return {
-		baseUrl : [path+'js/lib',path+'js/lib/libCopy'][isDebug],
-		cssPath : ['../../css/','../../../css/'][isDebug],
-		conponentPath : ['../component','../../component'][isDebug],
-	}
-})();
-var paths = {
+	/**
+	*	是否开启debug模式
+	*	<script type='text/javascript' debug='true' src='utils.js'></script>
+	*/
+	var isDebug = $('script[src*=utils][debug=true]').length ;
+	var asset = (function(){
+		// 资源路径配置
+		var path = $('script[src*=utils]').attr('src') ;
+		path = path.slice(0,path.indexOf('js/utils'));
+		return {
+			baseUrl : [path+'js/lib',path+'js/lib/unZip'][isDebug],
+			cssPath : ['../../css/','../../../css/'][isDebug],
+			conponentPath : ['../component','../../component'][isDebug],
+		}
+	})();
+	var paths = {
 
 //				_common : cssPath+'/common',
 				_normalize : asset.cssPath + '/normalize',
-				_component :  asset.conponentPath + '/component.html' ,
+				_ueditor : asset.cssPath + '/ueditor',
 				_componentJs :  asset.conponentPath + '/component' ,
-
+				_mobiscrollCss : asset.cssPath + 'mobiscroll.min',
 
 				//jquery : 'jquery-1.10.2.min',
 				_css : ['css.min','css'][isDebug],
@@ -63,6 +45,7 @@ var paths = {
 				_velocity : ['velocity.min','velocity'][isDebug],
 				_cookie : ['jquery.cookie.min','jquery.cookie'][isDebug],
 				_custom : ['custom.min','custom'][isDebug],
+				_mobiscroll : ['mobiscroll.min','mobiscroll.min'][isDebug],
 				_wx : ['http://res.wx.qq.com/open/js/jweixin-1.0.0'],
 				_wxdt : ['http://map.qq.com/api/js?v=2.exp'],
 
@@ -81,128 +64,114 @@ var paths = {
 		return false ;
 	}
 	
-		require.config({
-
-			baseUrl : asset.baseUrl,
-			paths : paths,
-			map : {
-				'*' : {
-					css : '_css',
-					text : '_text'
-				}
-			},
-			config : {
-				_text : {
-					useXhr : function(url, protocol, hostname, port){
-						return true;
-					}
-				}
-			},
-			shim : {
-				_easelJs : {
-					exports : 'cc'
-				},
-				_wxdt : {
-					exports : 'dd'
-				}
+	require.config({
+		baseUrl : asset.baseUrl,
+		paths : paths,
+		map : {
+			'*' : {
+				css : '_css',
+				text : '_text'
 			}
+		},
+		shim : {
+			_easelJs : { exports : 'cc' },
+			_wxdt : { exports : 'dd' }
+		}
+	});
+
+	$.holdReady(true);
+	window.onload = function(){
+		require(['_componentJs','tmpl','normalizeCss'].concat(getReqMap()),function(){
+			$.holdReady(false);
 		});
-
-		$.holdReady(true);
-		
-		window.onload = function(){
-			require(['component','tmpl','normalizeCss'].concat(getReqMap()),function(){
-				$.holdReady(false);
+	};
+	function getReqMap(){
+		var finded = {} , reqObj = helpMap.concat() ;
+		$("script").each(function(index,value){
+			var html = $(value).html().replace(/\/\/.*\n/g,'');
+			var arr = html.match(/\.\s*\w+(?=\W*)/g);
+			$.each(arr||[],function(index,value){
+				value = value.match(/[^\.\s]+/g)[0];
+				finded[value] = true;
 			});
-		};
-		
-		function getReqMap(){
-			var finded = {} , reqObj = helpMap.concat() ;
-			$("script").each(function(index,value){
-				var html = $(value).html().replace(/\/\/.*\n/g,'');
-				var arr = html.match(/\.\s*\w+(?=\W*)/g);
-				$.each(arr||[],function(index,value){
-					value = value.match(/[^\.\s]+/g)[0];
-					finded[value] = true;
-				});
-			});
-			for( var i=0 ; i<reqObj.length ; i++ ){
-				if(!finded[reqObj[i]]){ delete reqObj[i] ; }
-			}
-			return reqObj ;
-		};
-	
+		});
+		for( var i=0 ; i<reqObj.length ; i++ ){
+			if(!finded[reqObj[i]]){ delete reqObj[i] ; }
+		}
+		return reqObj ;
+	};
 })();
 
 
-/**
- * 自定义require函数
- */
+/** 本地require函数 */
 ut.require = function(arr,cb){
 	$.holdReady(true);
 	require(arr,function(){
-		cb&&cb();
-		$.holdReady(false);
-	})
+		cb&&cb();$.holdReady(false);
+	});
 };
-
-/**
- * 自定义define函数，自动收集映射
- */
+/** 自定义define函数，自动收集映射 */
 ut.define = function(name,deps,cb){
 	helpMap.push(name);
 	define(name,deps,cb) ;
 };
+
+/** 
+ * 多行字符串处理函数
+ * @param {Object} fn
+ */
+ut.mutiStr = function(fn) {
+	return fn.toString().split('\n').slice(1,-1).join('\n') + '\n' ;
+};
+/**
+ * 使用字符串创建函数
+ * @param {Object} fn
+ */
+ut.template = function(fn){
+	var $tmpl = $(ut.mutiStr(fn));
+	$.template($tmpl.attr('id'),$tmpl.html().replace(/.{1}@/g,function(str){
+		return str=='\\@' ? '@' : str.replace(/@/g,'$');
+	}));
+};
+
+
 ut.define('tmpl',['_template','jquery'],function(){
-	$.each( $('script:not([type*=javascript])'), function(index,value){
-		var $value = $(value);
+	$.each( $('script[type]:not([type*=javascript])'), function(index,value){
+		var $value = $(value).remove();
 		$.template($value.attr('id'),$value.html().replace(/.{1}@/g,function(str){
 			return str=='\\@' ? '@' : str.replace(/@/g,'$');
 		}));
 	});
 });
-ut.define('component',['text!_component','_template','_componentJs'],function(data){
-	var ele = createStyle();
-	var cpMap = getCpMap();
-	$.each($(data),function(index,value){
-		var $value = $(value);
-		if($value.is('script')){
-			$.template($value.attr('id'),$value.html().replace(/.{1}@/g,function(str){
-				return str=='\\@' ? '@' : str.replace(/@/g,'$');
-			}));
-		}else if( $value.is('style')){
-			var cpFunc = $value.attr('cpFunc') ;
-			if( !cpFunc || cpMap[cpFunc] ){
-				$value.appendTo(ele);
-			}
-		}
-	});
-	function createStyle(){
-		var head = document.getElementsByTagName('head')[0];
-		var ele = document.createElement('style');
-		ele.type='text/css';
-		head.appendChild(ele);
-		return ele ;
-	};
-	function getCpMap(){
-		var cpMap = {} ;
-		$('script').each(function(index,value){
-			var html = $(value).html().replace(/\/\/.*\n/g,'');
-			var arr = html.match(/\s+cp\s*\.\s*\w+(?=\W*)/g);
-			$.each(arr||[],function(index,value){
-				value = /.*\.\s*(\w+)/g.exec(value)[1];
-				cpMap[value] = true;
-			});
-		});
-		return cpMap ;
-		
-	};
-});
 
 ut.define('cookie',['_cookie'],function(){
 	//console.log(cookie);
 });
-
+ut.define('mobiscroll',['_mobiscroll','css!_mobiscrollCss'],function(){
+	
+	ut.mobiscroll = function($,opts){
+		var curr = new Date();
+		
+		$.mobiscroll().datetime($.extend({
+			context : body ,
+			minWidth:110,
+			height:60,
+	        theme: undefined,     // Specify theme like: theme: 'ios' or omit setting to use default 
+	        mode: 'mixed',       // Specify scroller mode like: mode: 'mixed' or omit setting to use default 
+	        display: 'modal', // Specify display mode like: display: 'bottom' or omit setting to use default 
+	        lang: 'zh',       // Specify language like: lang: 'pl' or omit setting to use default
+	        headerText : "<div class='fullw flex tac' style='font-size:28px;line-height:60px;'><div class='flex1'>年</div><div class='flex1'>月</div><div class='flex1'>日</div>"
+	        				+
+	        			"<div class='flex1'>时</div><div class='flex1'>分</div></div>" ,
+	        minDate: curr,  // More info about minDate: http://docs.mobiscroll.com/2-14-0/datetime#!opt-minDate
+	        maxDate: (new Date()).setFullYear(curr.getFullYear+2),   // More info about maxDate: http://docs.mobiscroll.com/2-14-0/datetime#!opt-maxDate
+	        cancelText : "<div style='font-size:28px;'>取消</div>" ,
+			setText : "<div style='font-size:28px;'>确定</div>" ,
+	        stepMinute: 1  // More info about stepMinute: http://docs.mobiscroll.com/2-14-0/datetime#!opt-stepMinute
+	    },opts));
+	};
+	
+});
 ut.define('countdown',['_custom'],function(){
 	var countdown = $.fn.countdown ;
 	$.fn.countdown = function(options){
@@ -215,29 +184,53 @@ ut.define('countdown',['_custom'],function(){
 		},options));
 	};
 });
-ut.define('flux',['_flux','jquery'],function(data){
-	ut.flux = function($ele,opts){
-		var f = new flux.slider('#slider',$.extend({
-			autoplay: true,
-			pagination: false,
-			transitions : ['blocks2'],
-			delay: 4500,
-			animDelay : false ,
-			controls : false,
-			captions: true,
-			bullets : true ,
-			captionsStyle : { 'font-size':'24px',padding: '14px 1em' },
-			bulletsStyle : {bottom : '17px',right:'12px'} ,
-			width:640,
-			height:380,
-			onTransitionEnd : null
-		},opts)); 
-		return f ;
-	};
-});
 ut.define('wx',['_wx'],function(data){
 	ut.wx = data ;
 });
+ut.define('wxPay',function(){
+	var wechatCfg ;
+	function onBridgeReady(){
+        WeixinJSBridge.invoke('getBrandWCPayRequest', {
+            "appId": wechatCfg.appId, //公众号名称，由商户传入     
+            "timeStamp": wechatCfg.timeStamp, //时间戳，自1970年以来的秒数     
+            "nonceStr": wechatCfg.nonceStr, //随机串     
+            "package": wechatCfg.pkg,
+            "signType": wechatCfg.signType, //微信签名方式:     
+            "paySign": wechatCfg.paySign //微信签名 
+        }, function(res){
+            if (res.err_msg == "get_brand_wcpay_request:ok") {
+				wechatCfg.cb && wechatCfg.cb();
+            }else{
+            	if(wechatCfg.failcb){
+            		wechatCfg.failcb(res)
+            	}else{
+            		alert('支付失败');
+            	}
+			}
+        });
+	} ;
+	/**
+	 * @param config{object} 微信支付配置
+	 * @param cb{function} 微信支付后回掉
+	 */
+	ut.wxPay = function(config,cb,failcb){
+		wechatCfg = config ;
+		wechatCfg.cb = cb ;
+		wechatCfg.failcb = failcb ;
+		if (typeof WeixinJSBridge == "undefined") {
+	        if (document.addEventListener) {
+	            document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+	        }
+	        else if (document.attachEvent) {
+	            document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+	            document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+	        }
+	    }else {
+	        onBridgeReady();
+	    }
+	};
+});
+/** 微信地图 **/
 ut.define('wxdt',['_wxdt'],function(data){
 	ut.wxdt = function(elementId,x,y){
 		var map = new qq.maps.Map(document.getElementById(elementId),{
@@ -246,25 +239,180 @@ ut.define('wxdt',['_wxdt'],function(data){
 	    });
 		return map ; 
 	} ;
+});
+/**
+ * ut.jumpMap 根据经纬度跳转地图
+ * @param x 经度
+ * @param y 纬度
+ * @param title 地图标题（必填）
+ */
+ut.jumpMap = function(x,y,title){
+	if(x&&y&&title){
+		var href = "http://apis.map.qq.com/uri/v1/marker?marker=coord:"+x+","+y+";title:"+title+";";
+		location = href ;
+	}else{
+		var str = !x ? 'x' : !y ? 'y' : 'title' ;
+		try{
+			ut.showMsg('未传入参数'+str);
+		}catch(e){}
 		
+	}
+} ;
+/**
+ * 手机摇一摇函数
+ * @param {Function} start 起摇函数
+ * @param {Function} end 结束函数
+ */
+ut.mutation = function(start,end){
+	 if (window.DeviceMotionEvent) { 
+		 window.addEventListener('devicemotion',deviceMotionHandler, false);  
+	 }
+
+	   var SHAKE_THRESHOLD = 500;  
+	   var last_update = 0 ;  
+	   var x, y, z, last_x, last_y, last_z;  
+	   var setTimer  ;
+     
+	   function deviceMotionHandler(eventData) { 
+		   
+	     var curTime = new Date().getTime();  
+	     if ((curTime - last_update)> 500) {  
+	    	 var acceleration =eventData.accelerationIncludingGravity;  
+	         var diffTime = curTime -last_update;  
+	         last_update = curTime;  
+	         x = acceleration.x;  
+	         y = acceleration.y;  
+	         z = acceleration.z;  
+	         var speed = Math.abs(x +y + z - last_x - last_y - last_z) / diffTime * 10000;  
+	         
+	          if (speed > SHAKE_THRESHOLD) {  
+	                 if(setTimer){
+	                 	clearTimeout(setTimer) ;
+	                 }else{
+	                 	start && start();
+	                 	SHAKE_THRESHOLD = 300 ;
+	                 }
+	                 setTimer = setTimeout(function(){
+	                 	setTimer  = null ;
+	                 	SHAKE_THRESHOLD = 500 ;
+	                 	end&&end();
+	                 },1200) ;
+	     		}  
+	         last_x = x;  
+	         last_y = y;  
+	         last_z = z;  
+	      }  
+	   }  
+};
+/** 获得GPS地理位置列表 */
+ut.define('addr',['iScroll'],function(){
+	ut.addr = function(position,cb){
+		ut.template(function(){/*
+			<script type='x' id='cpAddrTmpl'>
+				<div class='full pa00 bb' style='background:white;padding:10px 0px;z-index:99;' id='ADDEESSWrap'>
+					<ul class='fs28'>
+					<div class='ADDRESSTp' style='line-height:72px;padding:15px 20px; '>
+						<div class='' style='color:#161616;'>不显示位置</div>
+					</div>
+					<div style='margin:auto 20px;height:1px;background:#EEEEEE;'></div>
+					<div class='ADDRESSTp' style='line-height:72px;padding:15px 20px;' name='@{result.address_component.city}'>
+						<div class='' style='color:#161616;'>@{@data.result.address_component.city}</div>
+					</div>
+					<div style='margin:auto 20px;height:1px;background:#EEEEEE;'></div>
+					{{each @data.result.pois||[]}}
+					<div class='ADDRESSTp' style='line-height:1.4;padding:15px 20px;' name='@{title}' as='op3' >
+						<div class='' style='color:#161616;'>@{title}</div>
+						<div class='fs24' style='color:#737373;'>@{address}</div>
+					</div>
+					<div style='margin:auto 20px;height:1px;background:#EEEEEE;'></div>
+					{{/each}}
+					</ul>
+				</div>
+			</script>
+		*/});
+		var key = 'F6QBZ-HTB3W-I32RN-OBDBO-2A5SS-5EFT4';
+		ONSUCC =  function(back){
+			$.tmpl('cpAddrTmpl',back).appendTo(sky).on('tap','.ADDRESSTp',function(){
+				var name = $(this).attr('name') ;
+				$('#ADDEESSWrap').fadeOut(350,function(){
+					$(this).remove();
+				}) ;
+				cb && cb(name) ;
+			});
+			ut.iScroll('#ADDEESSWrap');
+		} ;
+		$.ajax({
+			type:'GET',
+			dataType: 'jsonp',
+			url : 'http://apis.map.qq.com/ws/geocoder/v1/?location='+position.latitude+','+position.longitude+'&key='+key+'&get_poi=1&output=jsonp&callback=ONSUCC',
+		});
+	};
+});
+ut.define('playVideo',['http://qzs.qq.com/tencentvideo_v1/js/tvp/tvp.player.js'],function(data){
+	
+	//介绍地址：http://blog.sina.com.cn/s/blog_7f95e24b0101db2r.html
+	function getVideoId(url){
+		url = url||'';
+		var id = url.match(/(?:vid=)(\w{11})/i);
+		id = id ? id[1] : id ;
+		var arr = url.split('/');
+		return id || arr[arr.length-1].split('.')[0] ;
+	};
+	function configParam(player,obj){
+		$.each(obj,function(i,v){
+			player.addParam(i,v) ;
+		});
+	};
+	/**
+	 * 腾讯视频播放调起函数
+	 * @param {Object} express
+	 * @param {Object} url
+	 * @param {Object} opts
+	 */
+	ut.playVideo = function(express,url,opts){
+		if(typeof url=='object'){
+			opts = url ;
+			url = null ;
+		}
+		opts = opts||{};
+		var id = getVideoId(url);
+		//定义视频对象
+		var video = new tvp.VideoInfo();
+		video.setVid(id||"a01225kc3i9");
+		var player = new tvp.Player(opts.width||640,opts.height||360);
+	    player.setCurVideo(video);
+	    
+	    configParam(player,$.extend({
+	    	//设置精简皮肤，仅点播有效
+	    	flashskin : "http://imgcache.qq.com/minivideo_v1/vd/res/skins/TencentPlayerMiniSkin.swf" ,
+	    	//是否自动播放 0 不 1 是
+	    	autoplay : 0,
+			wmode : 'transparent',
+			adplay : 0 ,
+			//给视频开始添加默认图片
+//			pic : "http://img1.gtimg.com/ent/pics/hv1/75/182/1238/80547435.jpg" ,
+			showcfg : 1
+	    },opts));
+	    
+	    player.write(express);
+	    return player ;
+	}
 });
 
-//define('commonCss',['css!_common']);
 ut.define('normalizeCss',['css!_normalize']);
-
 
 ut.define('iScroll',['_iscroll'],function(){
     ut.iScroll = function(wrapId,options){
     	if(typeof options == 'boolean' && options === true ){
     		options = { scrollX: true, scrollY: false } ;
     	}
-    	
+    	$(wrapId).addClass('preventDefault');
     	var scroll = new IScroll(wrapId,$.extend({
     		useTransition: true,
     		scrollX: false, scrollY: true,
 	    	scrollbars: false ,fadeScrollbars: true ,
-    		preventDefault: false , deceleration : 0.004 ,
-	    	HWCompositing : ut.UA.system != 'os'
+    		preventDefault: false , deceleration : 0.008 ,
+	    	HWCompositing : ut.UA().system != 'os'
 	    },options||{}));
     	
     	//this.y == this.maxScrollY 表示划至最后
@@ -278,16 +426,26 @@ ut.define('iScroll',['_iscroll'],function(){
     };
     
 });
-ut.bookmark = function(eleTp,iscroll){
-	var scrollY = Number(localStorage.getItem('scrollY'));
-	if(scrollY){
-		iscroll.scrollTo(0,scrollY,0);
-		localStorage.removeItem('scrollY') ;
-	}
-	$(document).on('tap',eleTp,function(){
-		localStorage.setItem('scrollY',iscroll.y);
-	});
-};
+
+ut.define('flux',['_flux','jquery'],function(data){
+	ut.flux = function($ele,opts){
+		var f = new flux.slider('#slider',$.extend({
+			autoplay: true,
+			pagination: false,
+			transitions : ['blocks2'],
+			delay: 4500,
+			controls : false,
+			captions: true,
+			bullets : true ,
+			captionsStyle : { 'font-size':'24px',padding: '14px 1em' },
+			bulletsStyle : {bottom : '17px',right:'12px'} ,
+			width:640,
+			height:380,
+			onTransitionEnd : null
+		},opts)); 
+		return f ;
+	};
+});
 
 ut.define('easelJs',['_easelJs','_tweenJs','_soundJs'],function(data){
 	
@@ -295,10 +453,88 @@ ut.define('easelJs',['_easelJs','_tweenJs','_soundJs'],function(data){
 
 });
 ut.define('soundJs',['_soundJs'],function(data){
-	ut.soundJs = createjs ;
+
+	var Sound = (function(){
+		var _instances = {} ;
+		return {
+			createSound : function(rgt,cb){
+				var _this = this ;
+				createjs.Sound.addEventListener("fileload", function(){
+					createjs.Sound.removeAllEventListeners("fileload") ;
+					cb&&cb(_instances[rgt.id]) ;
+				});
+				createjs.Sound.registerSound(rgt);
+				_instances[rgt.id] = createjs.Sound.createInstance(rgt.id) ;
+			},
+			getSound : function(path,cb){
+				var rgt = typeof path == 'object' ? path : {id:path,src:path} ;
+				var sound = _instances[rgt.id] ;
+				if(sound){
+					cb && cb(sound);
+				}else{
+					this.createSound(rgt,cb) ;
+				}
+			}
+		};
+	})();
+	
+	ut.soundJs = function(path,cb){
+		Sound.getSound(path,cb);
+	};
+
 });
+/**
+ * velocity
+ * 一个高效的动画函数
+ */
 ut.define('velocity',['_velocity'],function(data){
 	
+});
+
+/**
+ * ueditorText
+ * 实现文本编辑前后同步
+ * 2016-10-31
+ */
+ut.define('ueditor',['css!_ueditor'],function(data){
+	ut.ueditor = function(context,rate){
+		context = context || "<div></div>" ;
+		rate = rate || 2 ;
+		ut.template(function(){/*
+			<script type='x' id='ueditorTmpl'>
+				<ueditor>
+				<style type='text/css'>
+					.ueditorTp{ 
+						-webkit-transform-origin : 0 0 ;
+						-webkit-transform:scale(rate);
+						font-size: 16px;
+						text-align:justify;
+					}
+					.ueditorTp *{
+						box-sizing: border-box;
+					    -webkit-box-sizing: border-box;
+					    max-width:100%;
+					}
+				</style>
+				<div class='ueditorHTp'>
+					<div class='ueditorTp'>{{html @data}}</div>
+				</div>
+				</ueditor>
+			</script>
+		*/});
+		setTimeout(function(){
+			$('.ueditorTp img').css({'max-width':'100%','height':'auto'});
+			$('.ueditorTp').width($('.ueditorHTp').width()/rate);
+			$('.ueditorHTp').height($('.ueditorTp').height()*rate);
+			ut.watch("$('.ueditorTp').height()",function(now,old){
+				$('.ueditorHTp').height(now*rate);
+			});
+		},100);
+		
+		return $.tmpl('ueditorTmpl',context).html().replace(/scale\(rate\)/g,function(b){
+			return 'scale('+rate+')';
+		});
+	};
 });
 
 
@@ -315,11 +551,101 @@ ut.define('velocity',['_velocity'],function(data){
 	$(document).on('tap','[href]',function(e){
 		location.href  = $(this).attr('href') ;
 	});
-	
+	//设置阻止事件冒泡的div
+	$(document).on('touchmove','.preventDefault',function(e){
+		if( !$(e.target).is('textarea,video') ){
+			e.preventDefault();
+		}
+	});
 }();
 
-//设备嗅探
-ut.UA = (function(){
+	/**
+	 * <input required="＊＊必填" pattern="number" error="＊＊输入有误"  />
+	 * #pattern 匹配格式
+	 * #error 错误提示
+	 * #required 标识必填字段
+	 * date 2016-09-28
+	 */	
+	function Verify(failcb){
+		this.settings = {
+				alpha : /^[a-zA-Z]+$/,
+		        alpha_numeric : /^[a-zA-Z0-9]+$/,
+		        integer : /^[-+]?\d+$/,
+		        number : /^[-+]?\d*(?:[\.\,]\d+)?$/,
+	
+		        // amex, visa, diners
+		        card : /^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/,
+		        cvv : /^([0-9]){3,4}$/,
+		        //身份证号码
+		        cardId : /^(\d{17}|\d{14})[\dXx]{1}$/,
+		        //电话号码
+		        tel : /^\d{11}$/ ,
+		        //中文名
+		        nameCn : /^[\u2E80-\uFE4F]+$/,
+	
+		        // http://www.whatwg.org/specs/web-apps/current-work/multipage/states-of-the-type-attribute.html#valid-e-mail-address
+		        email : /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/,
+	
+		        // http://blogs.lse.ac.uk/lti/2008/04/23/a-regular-expression-to-match-any-url/
+		        url: /^(https?|ftp|file|ssh):\/\/([-;:&=\+\$,\w]+@{1})?([-A-Za-z0-9\.]+)+:?(\d+)?((\/[-\+~%\/\.\w]+)?\??([-\+=&;%@\.\w]+)?#?([\w]+)?)?/,
+	
+		        // #FFF or #FFFFFF
+		        color : /^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/
+		} ;
+		this.failcb = failcb || function(){};
+	};
+	Verify.prototype.canPass = function($value){
+		
+		var val = $value.val()||'' ;
+		if( $value.prop('required') && val == '' ){
+			this.target = $value ;
+			var required = $value.get(0).getAttribute('required') ;
+			this.error = required== '' ? '内容填写不全' : required ;
+			return false ;
+		}
+		var pattern = $value.attr('pattern') ;
+		if( pattern){
+			pattern = this.settings[pattern] || pattern ;
+			this.target = $value ;
+			this.error = $value.attr('error') || '填写格式不正确' ;
+			return typeof pattern == 'function' ? pattern($value) : val==''||new RegExp(pattern).test(val) ;
+		}
+		return true ;
+	};
+	Verify.prototype.check = function($form){
+		$form = $form || $(document) ;
+		var isPass = true ;
+		var _this = this ;
+		$form.find('[required],[pattern]').each(function(index,value){
+			if(!_this.canPass($(value))){
+				return isPass = false ;
+			}
+		});
+		if(!isPass){
+			this.failcb(this.error , this.target);
+		}
+		return isPass ;
+	};
+	
+	ut.verify = function($form,failcb){
+		if(typeof $form == 'function'){
+			$form = $(document) ;
+			failcb = $form ;
+		}
+		var v = new Verify(failcb);
+		return v.check();
+	};
+
+
+/** 智能转换json对象 **/
+ut.jsonTo = function(str){
+	try{
+		return JSON.parse(str||null)||{} ;
+	}catch(e){ return {} ; }
+};
+/** 设备嗅探 **/
+//date 2016-10-11
+ut.UA = function(){
 	var s = navigator.userAgent.toLowerCase();
 	var match = /(os)[ \/]([\w_]+)/.exec(s) || /(android)[ \/]([\w.]+)/.exec(s) ||[];
 	var _version = match[2] || "0" , _system = match[1] || "" ;
@@ -338,6 +664,8 @@ ut.UA = (function(){
 		isIpad : /ipad/.test(s) ,
 		isIphone : /iphone/.test(s) ,
 		isAndroid : _system == 'android' ,
+		isPC : !/ipad|iphone|android/.test(s) ,
+		isWX : /MicroMessenger/i.test(s),
 		verEq : function(str){
 			return compareVer(str) == 0 ? true : false ;
 		},
@@ -352,187 +680,330 @@ ut.UA = (function(){
 			return s.indexOf(str)==-1? false : true ;
 		}
 	} ;
+};
+
+
+(function(){
+	//date 2016-9-27
+	function Heartbeat(){
+		var vendors = ['webkit', 'moz'];
+	    for (var i = 0; i < vendors.length && !this.requestAnimationFrame; ++i) {
+	        var vp = vendors[i];
+	        window.requestAnimationFrame = window[vp+'RequestAnimationFrame'];
+	        window.cancelAnimationFrame = (window[vp+'CancelAnimationFrame']
+	                                   || window[vp+'CancelRequestAnimationFrame']);
+	    }
+		if(!window.requestAnimationFrame || !window.cancelAnimationFrame){
+			var lastTime = 0;
+	        window.requestAnimationFrame = function(callback) {
+	            var now = Date.now();
+	            var nextTime = Math.max(lastTime + 16, now);
+	            return setTimeout(function() { 
+					callback(lastTime = nextTime);
+				},nextTime - now);
+	        };
+	        window.cancelAnimationFrame = clearTimeout;
+		};
+	}
+	Heartbeat.prototype.watch = function(fn,callback,self){
+		var _this = this ;
+		self = self || window ;
+		function loop(timestamp){
+			var result = fn&&fn.call(self,timestamp);
+			callback && callback(result);
+			_this.RAFID = window.requestAnimationFrame(loop) ;
+		};
+		loop() ;
+		return this;
+	};
+	Heartbeat.prototype.stop = function(){
+		window.cancelAnimationFrame(this.RAFID||null);
+	};
+	window.Heartbeat = Heartbeat ;
+	ut.watch = function(express,listener,self){
+		var fn ;
+		self = self || window ;
+		if(typeof express == 'string'){
+			try{
+				fn = new Function("return "+express);
+			}catch(e){
+				console.error('表达式错误');
+				return ;
+			}
+		}else{
+			fn = express ;
+		}
+		var old = fn.call(self);
+		return new Heartbeat().watch(fn,function(res){
+			if(res !== old){
+				listener(res,old) ;
+				old = res ;
+			}
+		},self);
+	};
+	
 })();
 
 
 
 /**
-*	client 适配对象
+*	client  
 *	调用方法 ut.client.box();
 *	@param modeW{int} 设计宽度
 *	@parse modeH{int} 设计高度
 **/
-ut.client = (function(){
-	var client = {}; client.modeH = 1008; client.modeW = 640;
-	
+ut.client = window.client = (function(){
+	//date 2016-11-9
+	var client = { 
+		modeW : 640 , modeH : 1008 , error : 1.3 , perW : 0.72 ,
+		config : function(config){
+			return $.extend(client,config) , this;
+		}
+	};
+	client.config({
+		ZI02 : -200 ,
+		ZI01 : -100 ,
+		ZI00 : 0 ,
+		ZI11 : 100 ,
+		ZI12 : 200 ,
+		ZI13 : 300 
+	});
 	Object.defineProperties(client,{
 		w : { get : function(){ return window.innerWidth ; } },
-		h : { get : function(){ return window.innerHeight ; } }
+		h : { get : function(){ return window.innerHeight ; } },
+		//屏幕宽高比率
+		ratio : { get : function(){ return this.w / this.h ; } }
 	});
-
-	//正确屏幕的宽高比
-	client.ratio = client.modeW/client.modeH; client.error = 1.35;
+	client.getX = function(x){ return ( x - this.gbox.offset().left ) / this.scaleW ; };
+	client.getY = function(y){ return y / this.scaleH ; };
 	
-	client.init = function(){
-		//屏幕宽度失调率
-		this.imbalance = this.w/(this.h*this.ratio);
-		this.isBalance = this.imbalance>this.error?false:true;
-		//实际显示高宽
-		this.seeH = this.h;
-		this.seeW = this.isBalance ? this.w : this.h*this.ratio;
-		
-		this.scaleW = this.seeW/this.modeW;
-		this.modeH = this.isSingle ? this.seeH/this.scaleW : this.modeH ;
-		this.scaleH = this.seeH/this.modeH ;
-	};
 	
-	client.gbox = $("<div class='gbox'></div>");
-
-	// 解析正确的手势位置  
-	client.unX = function(x){ return ( x - this.gbox.offset().left ) / this.scaleW ; };
-	client.unY = function(y){ return y / this.scaleH ; };
 	client.box = function(modeW,modeH){
-
-		if( window.body== undefined || window.body == 'body'){
-			//如果body未定义或指向非适配后的值则认为未适配
-			this.gbox.append($('body').children(':not(script,style)')).wrap("<div></div>").parent().appendTo('body');
-			setDefault(); window.body = this.gbox ;
-		}
-		client.modeW = modeW || client.modeW ;
-		client.isSingle = client.isSingle || (!modeH && modeW) ? true : false;
-		client.modeH = modeH || ( modeW ? null : client.modeH ) ;
-
-		this.init();
-		this.gbox.parent().css({
-			width : this.seeW + 'px', height : this.seeH + 'px',overflow : 'hidden',
-			position : 'absolute', top : '0', left : '0', right : '0'
-		});
-		//解决屏幕,body不同宽的问题
-		if(this.w == $('body').width()){
-			this.gbox.parent().css({margin:'auto'}) ;
-		}
-		this.gbox.css({
-			width : this.modeW + 'px', height : this.modeH ? (this.modeH + 'px') : this.seeH/this.scaleW+'px',
-			position : 'absolute', overflow : 'hidden', left : 0, top : 0, transformOrigin : '0 0', transform : 'scale('+this.scaleW+','+this.scaleH+')'
-		});
-		$('body').css('background','black');
 		
-	};
-	
-	function setDefault(){
-		$(window).on('resize orientationchange',function(){
-			if(!$(document.activeElement).is('input,textarea')){ client.box(); }
+		var self = this ;
+		this.modeW = modeW || this.modeW ;
+		this.modeH = modeH || (modeW ? false : this.modeH ) ;
+		
+		//添加必须样式
+		this.gboxlayer = self.createCss(".gboxLayer {pointer-events: none;}.gboxLayer * {pointer-events: auto;}");
+		var content = $('body').children(':not(script,style,title,meta,link)') ;
+		window.body = this.gbox = this.addLayer({
+			name : 'gbox' ,
+			parent : { position : 'relative','z-index' : self.ZI00 }
+		}).append(content);
+		this.sky = this.addLayer({
+			name : 'sky' ,
+			parent : { top:'auto', 'z-index' : self.ZI12 }
 		});
-		$(document).on('touchstart touchmove',function(e){ 
-			if( !(e.type=='touchstart' && $(e.target).is('input,textarea,select,video,a')) ){
-				e.preventDefault();
+		this.underground = this.addLayer({
+			name : 'underground' ,
+			parent : {'z-index' : self.ZI02}
+		});
+		this.exec();
+		this.events();
+	} ;
+	client.events = function(){
+		var self = this;
+		$(window).on('resize orientationchange',function(){
+			if(!$(document.activeElement).is('input,textarea')){ 
+				self.exec();
 			}
 		});
-		
+		var timer = null ;
+		$(window).on('scroll',function(e){
+			var abs = Math.abs($('body').scrollTop()+self.seeH - self.gbox.parent().height()) ;
+			if(abs<=5){
+				timer = timer||setTimeout(function(){
+					$(window).trigger('scrollEnd');
+					timer = null ;
+				},100) ;
+			}
+		});
+		self.gbox.parent().height(self.gbox.height()*self.scaleH);
+		ut.watch("this.gbox.height()*this.scaleH",function(now,old){
+			self.gbox.parent().height(now);
+		},this);
+		this.mutationObserver(this.gbox.get(0),function(mutations){
+			self.gbox.find('[fixed]').appendTo(self.sky);
+		},{
+			'attributeFilter' : ['fixed']
+		});
 	};
-	function viewPort(){
+	client.exec = function(){
 		
-		function toString(obj){
-			var arr = [];
-			$.each(obj, function(index,value){
-				arr.push(index+"="+value);
-			});
-			return arr.join(','); ;
-		};
-		var content = {
-			"user-scalable" : "0" ,
-//			"width" : "device-width" ,
-			"initial-scale" : "0.4"
-		} ;
-		//如果android6以上版本 调整为正常1
-		if(ut.UA.isAndroid&&ut.UA.verGreater(6)){
-			content["initial-scale"] = "1" ;
+		if(ut.UA().isPC){
+//			如果pc窗体同高设置
+			this.perW = this.modeH ? this.modeW*this.h/this.modeH/this.w : 0.6 ;
 		}
-		var str = "<meta name='viewport' content='"+toString(content)+"' />" ;
-//		<meta name="viewport" content="width=device-width,initial-scale=0.5,user-scalable=0" />
-//		$(str).appendTo('head');
-		$('head').find('meta[name=viewport]').remove().end().append(str);
-		return ;
+		if(this.modeH){
+			this.imbalance  = this.ratio / (this.modeW/this.modeH) ;
+			this.isBalance = this.imbalance <= this.error ? true : false ;
+		}else{
+			this.isBalance = false ;
+		}
+		
+		this.seeH = this.h ;
+		/** 还未判断modeH的情况 **/
+		this.minPerW = this.modeH ? this.modeW*this.seeH/(this.modeH * this.w ) : 0 ;
+		this.factPerW = this.perW >= this.minPerW ? this.perW : this.minPerW ;
+		
+		this.seeW = this.ratio >= 1 ? this.w * this.factPerW : this.w ;
+		
+		
+		this.scaleW = this.seeW/this.modeW;
+		this.scaleH = this.isBalance ? this.seeH / this.modeH : this.scaleW ;
+		//调整显示比例,使div等比显示
+		this.adjust = this.scaleW/this.scaleH ;
+		//屏幕对象参数
+		this.screenW = this.modeW ;
+		this.screenH = this.seeH / this.scaleH ;
+		
+		this.refreshLayers();
 	};
-	viewPort();
+	client.refreshLayers = function(){
+		
+		var self = this ;
+		$.each(this.layers||[],function(i,v){
+			self[v.name].config = v ;
+			self[v.name].parent().css($.extend({
+				width : self.seeW + 'px', 
+				'min-height' : self.seeH + 'px',
+				'pointer-events' : 'none' ,
+				margin : 'auto' ,
+				position : 'fixed',
+				top:0,right:0,left:0,bottom:0,
+				overflow : 'hidden'
+			},v.parent));
+			self[v.name].css($.extend({
+				width : self.modeW + 'px',
+				
+				'min-height': ( v.name=='gbox' &&  self.modeH ) ? self.modeH : self.seeH/self.scaleH ,
+//				'min-height' : self.seeH/self.scaleH+'px',
+				overflow : 'hidden',
+				position : 'absolute',
+				transformOrigin : '0 0',
+				transform : 'scale('+self.scaleW+','+self.scaleH+')'
+			},v.self)).addClass('flexColumn gboxLayer');
+		});
+		self.rectify = self.createCss(".rectify{-webkit-transform:scaleY("+self.scaleW/self.scaleH+")}",self.rectify) ;
+		return ;
+	} ;
+	client.addLayer = function(config){
+		this.layers = this.layers || [] ;
+		this.layers.push(config);
+		return this[config.name] = $("<div><div class='"+config.name+"'></div></div>").appendTo('body').children();
+	};
+	client.mutationObserver = function(target,cb,config){
+		var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver ;
+		cb = cb || new Function() ;
+		var observer = new MutationObserver(cb);
+		config = $.extend({ 
+			'childList': true,
+	        'subtree': true ,
+	        'attributeFilter' : ['style','fixed','class'] ,
+	        'attributes' : true ,
+	        'characterData' : false,
+	        'attributeOldValue' : false,
+	        'characterDataOldValue' : false
+		},config) ;
+		observer.observe(target,config);
+		return observer ;
+	};
+	/**
+	 * 创建临时css样式
+	 * @param {Object} styles  例：'.box{width:100px;}'
+	 */
+	client.createCss = function(styles){
+		var ele = document.createElement('style');
+		ele.type = 'text/css';
+		ele.innerHTML=ele.innerHTML+styles;
+		$('head').append(ele);
+	};
+	
 	client.flex = function(modeW){
-		this.modeW = modeW ? modeW : this.modeW ;
-		$('meta[name=viewport]').attr('content','width='+this.modeW+',user-scalable=no') ;
+		this.modeW = modeW || this.modeW ;
+		$('meta[name=viewport]').attr('content','width=device-width,initial-scale=1.0,user-scalable=no') ;
 		$('html,body').css({'height':'100%'});
 		this.gbox = $(body).addClass('gbox') ;
 		this.modeH = this.gbox.height();
+		if(this.preventDefault){
+			$(document).on('touchstart touchmove',function(e){ 
+				if( !$(e.target).is('input,textarea,select,video,a') ){
+					e.preventDefault();
+				}
+			});
+		}
 	};
-	return client;
 	
-})();
+	return client ;
+})() ;
 
-
-
-
-//数组方法
-
+/** 数组拓展 */
 
 (function(){
-	
-	function toArray(obj){
-		return $.map(obj ||{},function(value, index){
-            if ($.isPlainObject(value))
-                value._key = index;
-            return value;
-		});
+	/**
+	 * 数组填充
+	 * @param {Number} minLength 最小长度
+	 * @param {Number} colum 长度倍数填充
+	 */
+	Array.prototype.fill = function(minLength , colum){
+		minLength = Math.max(minLength,this.length);
+		var fix = ( colum ? Math.ceil(minLength / colum)*colum : minLength ) - this.length  ;
+		return this.concat(new Array(fix));
 	};
-	ut.get = function(obj){
-		return toArray(obj);
+	Array.prototype.remove = function(index){
+		var target = this[index] ;
+		var $this = this.slice(0,index).concat(this.slice(index+1,this.length)) ;
+		this.length = 0 ;
+		Array.prototype.push.apply(this,$this) ;
+		return target ;
 	};
-	//拓展数组方法
-	Array.prototype.fill = function(colum, minLength){
-		var re = toArray(this);
-	    if (minLength && re.length < minLength) 
-	        re = re.concat(new Array(minLength - re.length));
-	    else {
-	        var fix = Math.ceil(re.length / colum) * colum - re.length;
-	        if (fix) 
-	            re = re.concat(new Array(fix));
-	    }
-	    return re;
-	};
-	Array.prototype.filter = function(rule, isother){
+	/** 
+	 * 数组筛选
+	 * @param {String|Function} rules 筛选字符串或函数 'name:1,age:12' | function(){ return true }
+	 * @param {boolean} inv 是否反选
+	 */
+	Array.prototype.grep = function(rules,inv){
+		var ret = [] , retVal ;
+		inv = !!inv ;
+		var callback = typeof rules =="function" ? rules : function(v,i){
+			return isMatch(v,rules.split(','));
+		};
+		for ( var i = 0, length = this.length; i < length; i++ ) {
+			retVal = !!callback( this[ i ], i );
+			if ( inv !== retVal ) {
+				ret.push( this[ i ] );
+			}
+		}
+		return ret ;
 		
-	    var copy = $.extend({}, this);
-	    
-	    function isChild(ob, rule){
-	        for(var i in rule){
-	        	if(ob[i]==undefined)
-	        		return false;
-	        }
-	        return true;
-	    };
-	    function find(ob,rule){
-	    	if(isChild(ob,rule)){
-	    		for(var i in rule){
-	    			if(ob[i]!=rule[i])
-	    				return false;
-	    		}
-	    		return true;
-	    	}else{
-	    		for(var i in ob){
-	    			if (typeof ob[i] == 'object' && ob[i] != null && find(ob[i],rule)) {
-	    				return true;
-	    			}
-	    		}
-	    	}
-	    	return false;
-	    };
-	    
-	    for(var i in copy){
-	    	if( (isother&&find(copy[i], rule)) || (!isother&&!find(copy[i],rule)) ){
-	    		 delete copy[i];
-	    	}
-	    }
-	    return toArray(copy);
+		function isMatch(value,arr){
+			var match = true ;
+			for(v in arr){
+				var ar  = arr[v].split(':');
+				if( toString(value[ar[0]]) != ar[1] ){
+					match = false
+					break;
+				}
+			}
+			return match ;
+		};
+		function toString(value){
+			if(value === undefined){
+				return "undefined" ;
+			}
+			if(value === null){
+				return "null" ;
+			}
+			return value.toString();
+		};
 	};
-	//通用方法，按照某个字段对data进行排序，data可以是array或者object
-	//key是排序用的字段，desc表示是否降序，desc为true表示降序，不传则默认升序
+	/**
+	 * 数组排序
+	 * @param {Array|String} keys 排序字段
+	 * @param {Array|Boolean} descs 是否降序对应排序字段 true表示降序
+	 * @param {Function} custom 自定义函数
+	 */
 	Array.prototype.sortData = function(keys, descs ,custom){
 	    //key是数组;
 	    var re =  this ;
@@ -551,8 +1022,6 @@ ut.client = (function(){
 	    		av = custom[key][av];
 	    		bv = custom[key][bv];
 	    	}
-	    	
-	    	
 	    	if( av === bv ){
 	    		return compare(a, b, i + 1) ;
 	    	}else{
@@ -565,35 +1034,20 @@ ut.client = (function(){
 	    	}
 	    	
 	    };
-	    
 	    return re.sort(function(a,b){
 	    	return compare(a,b);
 	    });
-	   
 	};
 
-	$.each('fill sortData filter'.split(' '),function(index,value){
+	$.each('fill sortData grep remove'.split(' '),function(index,value){
 		Object.defineProperty(Array.prototype, value , {enumerable : false });
 	});
-	
 })();
 
-
-
-ut.getArray = function(num){
-	return (new Array(num));
-};
-ut.toArray = function(obj){
-		
-	var re = $.map(obj ||
-    {}, function(value, index){
-        if ($.isPlainObject(value)) 
-            value._key = index;
-        return value;
-    });
-    return re;
-};
-
+/**
+ * 加载效果函数
+ * date 2016-10-11
+ */
 ut.loader = (function(){
 	var Loader = new Function();
 	var path = (function(){ return this.slice(0,this.indexOf('js/utils')) }).call($('script[src*=utils]').attr('src'));
@@ -602,38 +1056,47 @@ ut.loader = (function(){
 	Loader.prototype = {
 		constructor : 'Loader',
 		path : path ,
-		delay : 800 ,
+		delay : 300 ,
+		loopTime : 800 ,
 		expand : function(){ 
-			this.create();
-			var _this = this ; _this.timer = 0;
-			_this.inter = setInterval(function(){ _this.timer += 100 ; },100);
-//			setTimeout(function(){ _this.over(); },430);
-			
+			var self  = this ;
+			if(!this.timeoutId){
+				this.startTime = Date.now();
+				this.timeoutId = setTimeout(function(){
+					self.create();
+				},this.delay);
+			}
 		},
-		over : function(cb){ 
-			console.log('i do over');
-			var _this = this;
+		over : function(){ 
+			var self = this;
+			var timer  = Date.now() - this.startTime;
+			timer = this.loopTime - timer + this.delay ;
 			setTimeout(function(){
-				_this.destory();
-				cb&&cb() ;
-			},this.delay-this.timer);
-			clearInterval(this.inter);
+				clearTimeout(self.timeoutId);
+				self.timeoutId = null ;
+				self.destory();
+			},timer);
 		},
-		clone : function(){ 
-			return $.extend(true,{},this);
+		clone : function(isCommon){
+			var L =  $.extend(true,{},this);
+			if(isCommon){
+				L.expand = L.over = new Function();
+			}
+			return L ;
 		}
 		
 	};
 	Loader.prototype.create = function(){
 		
 		var element = "<div><div><img/></div></div>" ;
-		var centerClass = {'position' : 'absolute','top' : '0', 'left' : '0','bottom' : '0' , 'right' : '0', 'margin' : 'auto' };
-		var size1 = '28px',size2 = '70px' ; 
+		var centerClass = {'position' : 'fixed','top' : '0', 'left' : '0','bottom' : '0' , 'right' : '0', 'margin' : 'auto' };
+		var size1 = '56px',size2 = '140px' ; 
 		
 		var $this = $(element) ;
-		$this.css($.extend(centerClass,{'z-index' : '999'}));
+		$this.css($.extend(centerClass,{'z-index' : '999'})).addClass('preventDefault');
 		$this.children('div').css($.extend({},centerClass,{
-			'width' : size2 , 'height' : size2, 'display' : 'block' , 'webkitTransform':'scale(2) translateY(-25%)',
+			'width' : size2 , 'height' : size2, 'display' : 'block' ,
+			'webkitTransform':'scale('+ut.client.scaleW+') translateY(-25%)',
 			'border-radius' : '10px' , 'background' : 'rgba(0,0,0,0.55)'
 		}));
 		$this.find('img').css($.extend({},centerClass,{
@@ -652,130 +1115,304 @@ ut.loader = (function(){
 +function(){
 	var m = ut.loaderMore = ut.loader.clone();
 	m.create = function(){
-		var element = "<div class='tac loaderingTp'><img></img><span>加载中，请稍后...</span></div>" ;
+		var element = "<div class='loadingTp' style='text-index:1.4em;'><span class='pr'><img></img>加载中，请稍后...</span></div>" ;
 		this.loaderTp = $('.loaderTp').clone() ;
 		var $this = $(element) ;
-		$this.css({color:'#fff','line-height':'60px','padding-bottom':'6px','font-size':'22px'});
-		$this.find('img').css({display:'inline-block',position:'relative',top:'10px',right:'15px'})
+		$this.find('img').css({display:'inline-block',position:'absolute',top:'-6px',left:'-45px'})
 		.attr('src',this.path+"js/asset/load.gif");
-		$('.loaderTp').replaceWith($this);
-		
+		$('.loaderTp').empty().append($this);
 	};
 	m.destory = function(){
-		$('.loaderingTp').replaceWith(this.loaderTp);
+		$('.loaderTp').replaceWith(this.loaderTp);
 	};
 }();
 
-
-//整合参数调用
-!function(){
-	var grep = function(func){
-		return $.grep(this,func)[0];
+/**
+ * 数据融合,增删改演示
+ * 
+ * 属性 ： 增，改
+ * 对象 ： 增，删 ，改
+ * 数组 ： 增，删 ，改
+ * 
+ * {	
+ * 		teacher1 : {
+ * 			identiy : 'teacher',
+ * 			age : 35 ,
+ * 			family : {
+ * 				sons : 3,
+ * 				father : 'angular'
+ * 			}
+ * 			children : [
+ * 				{id : 1, name:'andy',age:10},
+ * 				{id : 2, name:'tader',age:11}，
+ * 				{id : 5, name:'spring',age:10}
+ *			],
+ * 			students: [1,2]
+ * 		}
+ * }
+ * +
+ * {	
+ * 		teacher1 : {
+ * 			age : 36 ，
+ * 			family : {} //传递空的对象，则删除该对象
+ * 			addrees : '海淀一路' ，//添加新的属性
+ * 			children : [
+ * 				{id : 2}, //根据所包含的id找到对应的对象进行修改，如果只包含id删除否则修改操作
+ * 				{id : 4, name:'viggo',age:10},
+ * 				{id : 1, name:'andy',age:13} 修改数组中id为1的对象 
+ * 			]
+ * 			students: []
+ * 		}
+ * }
+ * ==>
+ * {	
+ * 		teacher1 : {
+ * 			identiy : 'teacher',
+ * 			age : 36 ,
+ * 			addrees : '海淀一路' ，
+ * 			children : [
+ * 				{id : 1, name:'andy',age:13},
+ * 				{id : 4, name:'viggo',age:10},
+ * 				{id : 5, name:'spring',age:10}
+ *			],
+ * 			students: []
+ * 		}
+ * }
+ * 
+ */
+ut.extend = function(){
+	//date 2016-09-29
+	addMark(Array.prototype.slice.call(arguments,1)) ;
+	return tidy(extend.apply(null, arguments));
+	
+	function addMark(args){
+		//如果对象为空或只含有id属性，添加标记destory:true 
+		$.each(args||[],function(index,value){
+			if( typeof value == 'object' && value!= null ){
+				addMark(value) ;
+				var len  = Object.keys(value).length ;
+				if(('id' in value && len ==1)|| len == 0 ){
+					value.destory  = true ;
+				}
+			}
+		}) ;
 	};
-	ut.params = function(args){
-		var pas = {obj:[],func:[],bool:[],other:[]};
-		pas.obj.grep = pas.func.grep = pas.bool.grep = pas.other.grep = grep ;
-		for(var i=0;i<args.length;i++){
-			var type = typeof args[i] ;
-			if(type == 'object'){
-				pas.obj.push(args[i]);
+	function tidy(data){
+		$.each(data||[],function(index,value){
+			//防止无限循环
+			if(value===data){
+				return ;
 			}
-			else if(type == 'function'){
-				pas.func.push(args[i]);
+			if(index == 'destory'){
+				delete data[index] ;
+				return ;
 			}
-			else if(type == 'boolean'){
-				pas.bool.push(args[i]);
+			if(jQuery.isPlainObject(value)||jQuery.isArray(value)){
+				if(value['destory']){
+					if(jQuery.isArray(data)){
+						data = data.slice(0,index).concat(data.slice(index+1,data.length));
+						tidy(data);
+						return false;
+					}else{
+						delete data[index] ;
+					}
+				}else{
+					data[index] = tidy(value);
+				}
 			}
-			else {
-				pas.other.push(args[i]);
-			}
-		}
-		return pas;
+		});
+		return data;
 	};
 	
-}() ;
+	function extend(){
+		var options, name, src, copy, copyIsArray, clone,
+		target = arguments[0] || {},
+		i = 1,
+		length = arguments.length,
+		deep = true;
+
+		if ( typeof target === "boolean" ) {
+			deep = target;
+			target = arguments[1] || {};
+			i = 2;
+		}
+		if ( typeof target !== "object" && !jQuery.isFunction(target) ) {
+			target = {};
+		}
+		if ( length === i ) {
+			target = this;
+			--i;
+		}
+		for ( ; i < length; i++ ) {
+			if ( (options = arguments[ i ]) != null ) {
+				
+				//清除数组
+				if(jQuery.isArray(options)&&jQuery.isArray(target)&&!options.length){
+					target = [] ;
+				}
+				
+				// Extend the base object
+				for ( name in options ) {
+					src = target[ name ];
+					copy = options[ name ];
+
+					// Prevent never-ending loop
+					if ( target === copy ) {
+						continue;
+					}
+
+					if( jQuery.isPlainObject(copy) && ('id' in copy)&&jQuery.isArray(options)&&jQuery.isArray(target)){
+						src = $.grep(target,function(value,index){
+							return (value.id === copy.id)&&((name = index)||true)?true:false;
+						})[0];
+						if(src){
+							target[ name ] = extend( deep, src, copy );
+						}else{
+							target.push(extend( deep, {}, copy )) ;
+						}
+					}
+					// Recurse if we're merging plain objects or arrays
+					else if ( deep && copy && ( jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)) ) ) {
+						if ( copyIsArray ) {
+							copyIsArray = false;
+							clone = src && jQuery.isArray(src) ? src : [];
+
+						} else {
+							clone = src && jQuery.isPlainObject(src) ? src : {};
+						}
+
+						// Never move original objects, clone them
+						target[ name ] = extend( deep, clone, copy );
+
+					} else if ( copy !== undefined ) {
+						target[ name ] = copy;
+					}
+				}
+				
+			}
+		};
+		return target ;
+	}
+	
+};
 
 
 (function (){
-	
+	//date 2016-10-12
 	var origin = window.pageData || {} ;
 	window.root  = origin.data || {};
+	
 	//向后台发送ajax请求
-	ut.send = function(url,cb,failcb,errorcb,params,loader){
-		
-		var pas = ut.params(arguments);
-		cb = pas.func[0] ; 
-		failcb = pas.func[1] ; 
-		errorcb = pas.func[2] ; 
-		params = pas.obj.grep(function(value){
-			return value.constructor != 'Loader';
-		});
-		params = params instanceof jQuery ? params.serialize() : params ;
-		loader = pas.obj.grep(function(value){
-			return value.constructor == 'Loader';
-		})||ut.loader;
-
-		loader.expand();
-		$.ajax({
+	ut.send = function(url,cb,failcb,errorcb,params,loader,options){
+		var args = analyse(arguments);
+		//设置默认失败回调
+		args.failcb = args.failcb || function(back){
+			try{ ut.showMsg(back.msg); }catch(e){}
+		} ; 
+		args.params = args.params instanceof jQuery ? args.params.serialize() : args.params ;
+		args.loader = args.loader || ut.loader;
+		args.loader.expand();
+		$.ajax($.extend({
 			method : 'post',
-			url : serverHost + url,
+			url : serverHost + args.url,
 			timeout: 60000,
-			data : params||{},
-			success : function(data){
-				console.log(data);
-				loader.over();
-				$.extend(true,origin,data);
-				if( data && data.callback === true ){
-					cb && cb(data.data,data);
+			data : args.params||{},
+			success : function(back){
+				console.log(back);
+				back = back || {};
+				ut.extend(origin,$.extend(true,{},back)) ;
+				back.data = back.data||{};
+				root.result = back.data.result ;
+				//移动msg 到back.data下面
+				back.msg && ( back.data.msg = back.msg ) ;
+				if( back.callback === true ){
+					args.cb && args.cb(back.data,back);
 				}else{
 					console.error('callback false') ;
-					failcb && failcb(data);
+					args.failcb(back.data,back);
 				}
+				args.loader.over();
 			},
 			error : function(XMLHttpRequest, textStatus, errorThrown){
-				loader.over();
-				errorcb && errorcb(textStatus);
+				args.loader.over();
+				args.errorcb && args.errorcb(textStatus);
 				console.log(textStatus);
 			}
-		});
+		},args.options));
 	};
 	
+	function analyse(pas){
+		var args = {} ;
+		args.url = $.grep(pas,function(v,i){
+			return typeof v == 'string' ;
+		})[0];
+		var funs = $.grep(pas,function(v,i){
+			return typeof v == 'function' ;
+		}) ;
+		args.cb = funs[0];
+		args.failcb = funs[1];
+		args.errorcb = funs[2];
+		args.loader = $.grep(pas,function(v,i){
+			return v.constructor == 'Loader';
+		})[0];
+		args.options = $.grep(pas,function(v,i){
+			return typeof v == 'object' && isOption(v);
+		})[0];
+		args.params = $.grep(pas,function(v,i){
+			return typeof v == 'object' && !isOption(v) && v.constructor != 'Loader';
+		})[0];
+		return args ;
+		function isOption(obj){
+			var need = ['url','timeout','async','beforeSend','cache','complete','contentType','data','dataType','error','global','success'].join(' ');
+			var flag = true ;
+			for(var i in obj){
+				if(! new RegExp("\\b"+i+"\\b").test(need) ){
+					flag = false ;
+					break ;
+				}
+			};
+			return flag ;
+		};
+	};
 	
 })();
 
-
-
-
+/**
+ * 拓展日前对象
+ * @param {Object} fmt 日期格式
+ */
+Date.prototype.format = function(fmt){
+	fmt = fmt || "yyyy-MM-dd" ;
+    var o = {
+        "M+": this.getMonth() + 1, //月份 
+        "d+": this.getDate(), //日 
+        "h+": this.getHours(), //小时 
+        "m+": this.getMinutes(), //分 
+        "s+": this.getSeconds(), //秒 
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+        "S": this.getMilliseconds() //毫秒 
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+    if (new RegExp("(" + k + ")").test(fmt)) 
+		fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+};
 /**
  * 时间处理对象
  */
-ut.timer = (function(){
-	function format (fmt) { //author: meizz 
-		fmt = fmt || "yyyy-MM-dd" ;
-	    var o = {
-	        "M+": this.getMonth() + 1, //月份 
-	        "d+": this.getDate(), //日 
-	        "h+": this.getHours(), //小时 
-	        "m+": this.getMinutes(), //分 
-	        "s+": this.getSeconds(), //秒 
-	        "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
-	        "S": this.getMilliseconds() //毫秒 
-	    };
-	    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-	    for (var k in o)
-	    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-	    return fmt;
+ut.timer = function(t){
+	if(!t){
+		return new Date();
 	}
-	return {
-		getTime : function(nS,fmt){
-			var date = new Date(parseInt(nS) * 1);
-			return format.call(date, fmt) ;
-		},
-		getOldTime : function(nS){
-			return new Date(parseInt(nS) * 1).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");     
-		}
+	t = t.toString();
+	return t.length==13 ? new Date(Number(t)) : getDate(t);
+	function getDate(str){
+		var arr = str.match(/\d+/g) ;
+		arr[1] = parseInt(arr[1] , 10) - 1 ;
+		return eval('new Date(' + arr + ')');
 	};
-})();
+};
 
 	
 /**
@@ -863,9 +1500,8 @@ ut.manage = (function(){
 
 /**
  * copy touch.js 手势事件
- * 
+ * 来自 Zepto.js
  */
-
 //Zepto.js
 //(c) 2010-2015 Thomas Fuchs
 //Zepto.js may be freely distributed under the MIT license.

@@ -7,28 +7,34 @@
 body { 
 	background : white; -webkit-tap-highlight-color: rgba(0,0,0,0); 
 	-webkit-backface-visibility: hidden; -webkit-user-select: none; 
-	-webkit-text-size-adjust:none; font-size: 28px; 
+	-webkit-text-size-adjust:none; 
 	font-family: "Microsoft YaHei","Apple LiGothic Medium","LiHei Pro Medium",Arial,Helvetica,sans-serif;
 	 -webkit-font-smoothing: antialiased ;
+	  word-wrap:break-word ;word-break:break-all ;
+	  -webkit-overflow-scrolling: touch;
 }
-
+input,select{ display:block; }
 table,td,th{ padding:0px; border:0px; }
 ul{ list-style: none outside none; padding:0px; margin:0px; }
 input{ padding:0px; border:0px; }
 textarea{ border:none; }
 .select-box{ position : relative ; }
 .select-box select {
-   background: transparent; width: 100%;  font-size: 26px; line-height: 1.4;
-   border: 0;  border-radius: 0; padding-left:2em;
+   background: transparent; width: 100%; 
+   border: 0;  border-radius: 0;
    height: 100%;  text-align : left; -webkit-appearance: none;
 }
 .select-box:after{ 
 	content : ' ' ; position :absolute; display : block;
-	width:18px;height:18px;border:3px solid #d5d5d5;border-style:solid ;
-	border-color:#555555 ;border-width:3px 3px 0 0;
-	-webkit-transform : rotateZ(135deg) ; top:22px;right:50px;
+	border-style:solid ;
+	border-color:transparent ;
+	border-top: 10px solid #C8C4CC;
+	border-right: 10px solid #C8C4CC;
+	border-left: 10px solid transparent;
+	border-bottom: 10px solid transparent;
+	-webkit-transform : rotateZ(135deg) ; top:35%;right:20px;
 }
-
+.alert-input{ border: 1px solid #dd4b39 !important;box-shadow: none !important; }
 
 
 /**		常用样式定义	**/
@@ -40,7 +46,8 @@ textarea{ border:none; }
 .pa11{ position: absolute; bottom: 0; right: 0; }
 .pr{ position: relative; }
 .pf{ position: fixed; }
-
+.pf00{ position: fixed;top:0;left:0; }
+.fixed{ position: absolute; }
 .ma{ margin: auto; }
 .full{ width: 100%; height: 100%; }
 .fullw{ width: 100%; }
@@ -53,6 +60,9 @@ textarea{ border:none; }
 .oh{ overflow: hidden; }
 .nE{ pointer-events: none; }
 .aE{ pointer-events: auto; }
+.sky * {pointer-events: auto;}
+.gboxLayer {pointer-events: none;}
+.gboxLayer * {pointer-events: auto;}
 
 .fl{ float: left; }
 .fr{ float: right; }
@@ -87,6 +97,12 @@ textarea{ border:none; }
 .flexEnd{ -webkit-box-align : end ; align-items : flex-end ; -webkit-align-items : flex-end ; }
 .flexBaseLine{ -webkit-box-align : baseline ; align-items : baseline ; -webkit-align-items : baseline ; }
 .flexStretch{ -webkit-box-align : stretch ; align-items : stretch ; -webkit-align-items : stretch ; }
+
+/** 省略显示 **/
+.limit1{ overflow: hidden;text-overflow: ellipsis;white-space: nowrap; }
+.limit2{ overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;}
+.limit3{ overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 3;-webkit-box-orient: vertical;}
+
 .dn{ display: none; }
 
 .circle{ border-radius : 50% 50% ; -webkit-border-radius : 50% 50% ; }
@@ -95,56 +111,17 @@ textarea{ border:none; }
 .tr0{ -webkit-transform:translate(0px,0px); }
 .tr2{ -webkit-transform:translate(2px,2px); }
 .tr4{ -webkit-transform:translate(4px,4px); }
+.sc95{ -webkit-transform:scale(0.95); }
 .op3{ 	position: relative; 	overflow :hidden; }
 .op3:before{ content : ''; display : block; width:100%;height:100%; position:absolute; top:0;left:0; background : rgba(0,0,0,0.3); }
 .auto{ position:absolute; top:0;bottom:0;margin:auto;right:0;left:0; }
 .auto2{ position:absolute; top:50%;left:50%; transform : translate(-50%,-50%); -webkit-transform : translate(-50%,-50%);  }
 .halfY{ transform: translateY(-50%); -webkit-transform: translateY(-50%); }
+.z0{ transform:translateZ(0);-webkit-transform:translateZ(0);}
 .transformOrigin,.origin{ transform-origin:0px 0px; -webkit-transform-origin:0px 0px; }
 .wba{ word-break: break-all; }
 .text-ellipsis{  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
 .text-bold{ font-weight: 800; }
-
-/**		常用颜色定义	**/
- 
-.c-black{ color:black;	 }
-.c-white{ color:white;	 }
-.c-orange{ color:#F3A310; }
-.c-grey{ color:#aaaaaa; }
-.c-grey2{ color:#747474; }
-.c-red{ color:#dd0000; }
-.c-red2{ color:#f81212; }
-.c-green{ color:#69BB1D; }
-.bg-orange{ background:#F3A310; }
-.bg-white{ background:white; }
-
-
-
-.fs24{ font-size : 24px ; }
-.fs28{ font-size : 28px ; }
-.fs32{ font-size : 32px ; }
-.fs36{ font-size : 36px ; }
-
-.lh28{ line-height:28px; }
-.lh30{ line-height:30px; }
-.lh35{ line-height:35px; }
-.lh36{ line-height:36px; }
-.lh40{ line-height:40px; }
-.lh45{ line-height:45px; }
-.lh50{ line-height:50px; }
-.lh60{ line-height:60px; }
-.lh65{ line-height:65px; }
-.lh80{ line-height:80px; }
-
-
-
-
-
-
-
-
-
-
 
 
 

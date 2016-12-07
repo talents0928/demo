@@ -6,7 +6,7 @@
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<meta http-equiv="x-dns-prefetch-control" content="on" />
-	<meta name="viewport" content="width=device-width,initial-scale=0.5,user-scalable=0" />
+	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0" />
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 	<meta name="format-detection" content="telephone=no, email=no" />
@@ -21,6 +21,7 @@
 	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
 	<script type="text/javascript" src='js/utils.js'></script>
 	<link rel='stylesheet' href='css/common.css?version=3'></link>
+	<link rel='stylesheet' href='css/app.css?version=3'></link>
 	<!-- 
 	<script type='x' charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
 	 
@@ -119,8 +120,19 @@
 			
 		
 </body>
-
+<style>
+	.stone{ width:80px;height:80px;line-height:80px;text-align:center;background:red; }
+</style>
 <script type='x' id='baseTmpl'>
+	<div class='flex1 pr prve' style='background:wheat;'>
+		<div class='stone pa00'>1</div>
+		<div class='stone pa01'>2</div>
+		<div class='stone pa10'>3</div>
+		<div class='stone pa11'>4\@</div>
+		<textarea  class='ma db' style='width:500px;height:320px;margin-top:100px;border:1px solid #999;' ></textarea>		
+	</div>
+</script>
+<script type='x' id='baseTmpl2'>
 	<div class='full contentTp pa oh ' id='mainWrap' >
 		<div class='fullw oh'>
 			{{each ut.getArray(45)}}
@@ -158,36 +170,39 @@
 			{{/each}}
 		</div>
 </script>
+<script >
+	console.log(1);
 
+</script>
 <script type="text/javascript">
     
 	
 
 	$(function(){
-		console.log('ready');
-		ut.client.box(640, 1008);
 		
-    
-	    $.tmpl('baseTmpl').appendTo(body);
-	    var s = ut.iScroll('#mainWrap');
+		ut.client.box();
+		var data = {} ;
+//		data.href = "https://itunes.apple.com/us/app/ye-tu/id930349136?mt=8" ;
+		data.href = 'http://192.168.5.7:8080/demo0509/demo5.html?redirectUrl=https://itunes.apple.com/us/app/ye-tu/id930349136?mt=8';
+		setTimeout(function(){
+//			var href = location.search.slice(13);
+
+//			location.href = "http://192.168.5.7:8080/demo0509/demo5.html?redirectUrl=https://itunes.apple.com/us/app/ye-tu/id930349136?mt=8" ;		
+			location.href = "https://itunes.apple.com/us/app/ye-tu/id930349136?mt=8" ;
+//			location.href = "http://a.app.qq.com/o/simple.jsp?pkgname=com.yetu.appliction&g_f=991653" ;
+		},2000);
+	    $.tmpl('baseTmpl',data).appendTo(body);
 //		s.scrollTo(0,-800,0);
-		ut.bookmark('.bookmarkTp',s);
-		
-		$(document).on('tap','.box2',function(){
-			console.log('box2');
-			return false;
-		});
-		$(document).on('tap','.redb',function(){
-			console.log('redb');
+
+		$(document).on(' touchmove','.prve',function(e){ 
 			
+//			e.preventDefault();
+
+//			if( !$(e.target).is('input,textarea,select,video,a') ){
+//				e.preventDefault();
+//			}
 		});
 	    
-	    $('.cdTp').countdown({
-	        until: +2,
-	        onExpiry: function(){
-	            console.log('11111');
-	        }
-	    });
 		
 	});
     

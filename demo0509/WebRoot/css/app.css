@@ -1,0 +1,92 @@
+/**
+*	app.css 管理项目的样式
+*	date 2016-12-02
+*/
+
+.input-box{ width:100%;background:white;height:80px;line-height:80px;margin-bottom:2px; }
+.input-key{ text-align:right; }
+.input-val{ text-align:left;border:0px;padding:10px;padding-left:2em;line-height:40px; }
+
+.select-val{ position : relative ; }
+.select-val select {
+   background: transparent; width: 100%;  font-size: 26px; line-height: 1.4;
+   border: 0;  border-radius: 0; padding-left:2em;
+   height: 100%;  text-align : center; -webkit-appearance: none;
+}
+.select-val:after{
+	content : ' ' ; position :absolute; display : block;
+	width:18px;height:18px;border:3px solid #d5d5d5;border-style:solid ;border-color:#555555 ;border-width:3px 3px 0 0;
+	-webkit-transform : rotateZ(135deg) ; top:22px;right:50px;
+}
+
+/** 文字颜色 **/
+
+.c-black-1	{ color: #000000 ; }
+.c-black-2	{ color: #666666 ; }
+.c-black-3	{ color: #bbbbbb ; }
+
+.c-white-1	{ color: #fffff ; }
+.c-red-1	{ color: #b71414 ; }
+.c-warn-1 	{ color: #b71414 ; }
+	
+.c-blue-1	{ color: #3460a7 ; }
+.c-blue-2	{ color: #1770aa ; }
+.c-blue-3	{ color: #17abad ; }
+.c-blue-4	{ color: #2f94ca ; }
+
+.c-green-1	{ color: #02ba00 ; }
+.c-green-2	{ color: #80b100 ; }
+
+/** 背景颜色 **/
+
+.b-white-1	{ background: #ffffff ; }
+.b-grey-1	{ backgroud: #efeff4 ; }
+.b-grey-1	{ backgroud: #dfdfdf ; }
+.b-grey-3	{ backgroud: #c8c6cc ; }
+
+.b-blue-1	{ color: #3460a7 ; }
+.b-blue-2	{ color: #1770aa ; }
+.b-blue-3	{ color: #17abad ; }
+.b-blue-4	{ color: #2f94ca ; }
+
+.b-green-1	{ color: #02ba00 ; }
+.b-green-2	{ color: #80b100 ; }
+
+.b-red-1	{ color: #b71414 ; }
+.b-warn-1 	{ color: #b71414 ; }
+
+
+
+a	{ color: #007aff ; }
+body	{ font-size: 28px ; line-height: 1.6 ; }
+.radius10	{ border-radius: 10px ; -webkit-border-radius: 10px ; }
+
+
+/** 文字控制 **/
+
+
+.fs36{ font-size: 36px; }
+.fs32{ font-size: 32px; }
+.fs28{ font-size: 28px; }
+.fs26{ font-size: 26px; }
+.fs22{ font-size: 22px; }
+
+.lh0{ line-height: 0; }
+.lh10{ line-height: 1; }
+.lh12{ line-height: 1.2; }
+.lh15{ line-height: 1.5; }
+.lh16{ line-height: 1.6; }
+.lh18{ line-height: 1.8; }
+.lh20{ line-height: 2; }
+
+/** icons **/
+
+
+
+
+
+
+
+
+
+
