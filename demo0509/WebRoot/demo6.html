@@ -19,7 +19,7 @@
 	<title>demo 范例</title>
 	<script type="text/javascript" src='js/require.min.js'></script>
 	<script type="text/javascript" src='js/jquery-1.10.2.min.js'></script>
-	<script type="text/javascript" debug='true' src='js/utils.js'></script>
+	<script type="text/javascript" src='js/utils.js'></script>
 	
 	<link rel='stylesheet' href='css/common.css'></link>
 	
@@ -38,25 +38,24 @@
 	.box1{ width:100%;height:80px;margin-bottom:20px;background:#fff;display:block; }
 	.box1:last-of-type { margin-bottom:0px;}
 	.btn{ width:120px;line-height:50px;background:green;border-radius:10px;margin:auto;color:white;text-align:center;}
+	.btn11{ width:200px;height:80px;background:blue ;margin: 40px auto; }
 </style>
 
 <script type='x' id='baseTmpl'>
 	<div class='pr oh full' id='mainWarp'>
 		<div >
-			<div class=' pr fullw' id='slider' >
+			<div class=' pr fullw dn' id='slider' >
 				<img style='width:100%;' title="标题1" src='./img/imgs/1.jpg'></img>
 				<a href='www.baidu.com'><img style='width:100%;' title="标题2"  src='./img/imgs/2.jpg'></img></a>
 				<img style='width:100%;' title="标题3" src='./img/imgs/3.jpg'></img>
 				<img style='width:100%;' title="标题4" src='./img/imgs/4.jpg'></img>
 			</div>
+			<div class='btn11'></div>
 			<div style='width:100%;padding:30px 0;background:wheat;'>
-				<div class='pr ma' style='width:320px;height:80px;margin-top:20px;'><input type='file' class='full'></input></div>
+				<div class='pr ma' style='width:420px;height:60px;margin-top:20px;font-size:24px;'><input type='text' class='full inpTp'></input></div>
 				<div class='btn btnTp' as='tr2'>发送</div>
 			</div>
-			{{each ut.getArray(10)}}
-				<span class='box1'>@{@last}</span>
-			{{/each}}
-			<div class='tac fs24 c-white loaderTp' style='line-height:60px;'>加载更多...</div>
+			
 		</div>
 	</div>
 </script>
@@ -64,60 +63,79 @@
 	<script type="text/javascript">
 		
 		
+		function clone(obj){
+		    var clone = {} ;
+		    for(var i in obj){
+		        clone[i] = obj[i] ;
+		    }
+		    return clone ;
+		};
+		
+		function analyse(st){
+			var $data = {a:{name:'a',b:{name:'b',c:{name:'c'}}},b:{name:'bb'}} ;
+			this.$data = st ;
+			var str = "return "
+                    +
+                  this.$data
+//                    .toString()
+//                    .replace(/\s/g,'')
+//                    .replace(/[']/g,'"')
+                    .replace(/(['"])?(?:[^'"]*[\u4E00-\u9FA5][^'"]*)+\1/g,function(all,$1){
+                            return $1 ? all : all.replace(/^|$/g,"'") ;
+                    }) 
+                    .replace(/\$p\b/g,function(){return "$parent";}) // $p==$parent
+                    //有点问题
+					// _  $ \w 为目标
+					.replace(/(['"])?[^'"]+\1/g,function(all,$1){
+                        return $1 ? all : all.replace(/([^$_\w])?[\s\n\r]*([$_\w]+)/g,function(str,$1,$2){
+                        	$1 = $1 || '' ;
+							console.log(str);
+							if(/[\{'"\.]/.test($1)){
+								return str ;
+							}
+							if($2 == '$data'){
+								return str ;
+							}
+							if( !isNaN(Number($2)) ){
+								return str ;
+							}
+							if($data && $data.hasOwnProperty($2)){
+								return $1 + "$data." + $2 ;
+							}else{
+								return str ;
+							}
+						})
+						
+                    })
+//                    .replace(/([^$\w])?[\s]*(([$\w]+)(\.[$\w]+)*)/g,function(all,$1,$2,$3,$4){
+//                        $1 = $1 || ''; //$1可能是undefined
+//                        return (/[\{'"]/.test($1) || $3=='$data' || !isNaN(Number($3)) )
+//                                ? 
+//                                all : ($1+ ( $data&&$data.hasOwnProperty($3) ? '$data.':'' ) + $2) ;
+//                    }) ;
+			console.log('字符集：：：',str);
+	        try{
+	            $data = new Function('$data',str)($data);
+	        }catch(e){
+	            console.log('异常:', this.$data.replace(/^(['"]?).*\1$/g,function(all,$1){
+	                return $1 ? all : all.replace(/^|$/g,"`") ;
+	            })) ;
+	            console.log(e);
+	        }
+	        return $data ;
+		};
+		
 		$(function(){
-			ut.client.box(640);
+			ut.client.box(640,1008);
 			$.tmpl('baseTmpl').appendTo(body);
-			var scroll = ut.iScroll('#mainWarp');
 			
-			var f = ut.flux($('#slider'),{
-				captions: true,
-				pagination: false,
-				transitions : ['dissolve'],
-				animDelay : '1600ms' ,
-//				bulletStyle : {background:'darkred'},
-				bulletActiveStyle : {background:'yellow'},
-				height:380
+			
+			$(document).on('tap','.btnTp',function(){
+				var str = $('.inpTp').val();
+				console.log('开始翻译>>>>>>');
+				var d = analyse(str);
+				console.log('result:::',d);
 			});
-			
-			$(document).on('change','input',function(){
-				var file = this.files[0];
-				file.name = "yinwen.text" ;
-				console.log(file);
-				var f  = $.extend(true,{},file) ;
-				alert(JSON.stringify(f));
-				
-//				var files = Array.prototype.slice.call(this.files);
-//				alert(JSON.stringify(files));
-//				files.forEach(function(file,i){
-//					var reader = new FileReader();
-//			        reader.onload = function () {
-//			            var result = this.result;
-//			            upload(result, file.type);
-//			        };
-//			        reader.readAsDataURL(file);
-//				});
-			});
-			
-			function upload(basestr, type){
-			    var xhr = new XMLHttpRequest();
-			    var text = window.atob(basestr.split(",")[1]);
-//				alert(text);
-			    var buffer = new Uint8Array(text.length);
-			    var pecent = 0;
-			    for (var i = 0; i < text.length; i++) {
-			        buffer[i] = text.charCodeAt(i);
-			    }
-			
-//			    xhr.open('post', '/uploadtest?filetype=' + type.split('/')[1]);
-//			    xhr.setRequestHeader('Content-Type', 'application/octet-stream');
-//			    xhr.onreadystatechange = function () {
-//			        if (xhr.readyState == 4 && xhr.status == 200) {
-//			            var jsonData = JSON.parse(xhr.responseText);
-//			            console.log(jsonData);
-//			        }
-//			    };
-//			    xhr.send(buffer.buffer); // 以ArrayBuffer的方式上传图片
-			}
 			
 
 		}) ;

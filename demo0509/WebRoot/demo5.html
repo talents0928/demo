@@ -123,26 +123,16 @@
 <style>
 	.stone{ width:80px;height:80px;line-height:80px;text-align:center;background:red; }
 </style>
+
 <script type='x' id='baseTmpl'>
-	<div class='flex1 pr prve' style='background:wheat;'>
-		<div class='stone pa00'>1</div>
-		<div class='stone pa01'>2</div>
-		<div class='stone pa10'>3</div>
-		<div class='stone pa11'>4\@</div>
-		<textarea  class='ma db' style='width:500px;height:320px;margin-top:100px;border:1px solid #999;' ></textarea>		
-	</div>
-</script>
-<script type='x' id='baseTmpl2'>
-	<div class='full contentTp pa oh ' id='mainWrap' >
+	<div class='fullw contentTp oh ' id='mainWrap' >
 		<div class='fullw oh'>
-			{{each ut.getArray(45)}}
+			{{each [].fill(45)}}
 				{{if @index==0}}
 					<div class='box1 pr' style='background:url(./img/imgs/@{@index%4+1}.jpg);background-size:100% 100%;'>
-						
 						<div class='fs30 auto2' style='font-weight:900;color:white;font-size:100px;'>
 							<span class='cdTp' cd='999'></span>
 						</div>
-
 					</div>
 				{{else @index==1}}
 				<div class='box2'>
@@ -158,11 +148,13 @@
 					阿列克谢耶维奇曾在自传中，写道：“如果你回头看看我们整个的历史，无论是苏联还是俄罗斯时代，都是尸骨遍地、献血横流，是一个刽子手和受害者之间的永恒对话。
 					“我认为自己来，阿列克谢耶维奇直言不讳地斥责“极权主义领袖极度依赖的集体主义文化。”
 				</div>
-				{{else @index==15}}
-				<div class='box3'><input type='text' style='width:80%;margin:auto;'></input></div>
+				{{else @index==7}}
+				<div class='boxxTp bb' style='background:green;padding:20px;'>
+					<input class='' style='border-radius:10px;border:1px solid #02bb00;width:75%;height:40px;margin:auto;margin-top:40px;'
+						 placeholder="请输入文件夹名称（15字以内）"></input>
+				</div>
 				{{else}}
 				<div class='box1 bookmarkTp' 
-					href = "www.baidu.com"
 					style='background:url(./img/imgs/@{@index%4+1}.jpg);background-size:100% 100%;'>
 					
 				</div>
@@ -170,40 +162,40 @@
 			{{/each}}
 		</div>
 </script>
-<script >
-	console.log(1);
+<script type='x' id='inputTmpl'>
+	<div class='full pa00 inputTp' style='border:1px solid red;background:white;z-index:99;'>
+		<div class='boxxTp bb' style='background:green;padding:20px;'>
+			<input class='' style='border-radius:10px;border:1px solid #02bb00;width:75%;height:40px;margin:auto;margin-top:40px;'
+				 placeholder="请输入文件夹名称（15字以内）"></input>
+		</div>
+		<div style='width:100px;height:100px;background:red;margin-top:400px;'></div>
+	</div>
 
 </script>
 <script type="text/javascript">
     
-	
 
 	$(function(){
 		
 		ut.client.box();
 		var data = {} ;
-//		data.href = "https://itunes.apple.com/us/app/ye-tu/id930349136?mt=8" ;
-		data.href = 'http://192.168.5.7:8080/demo0509/demo5.html?redirectUrl=https://itunes.apple.com/us/app/ye-tu/id930349136?mt=8';
-		setTimeout(function(){
-//			var href = location.search.slice(13);
-
-//			location.href = "http://192.168.5.7:8080/demo0509/demo5.html?redirectUrl=https://itunes.apple.com/us/app/ye-tu/id930349136?mt=8" ;		
-			location.href = "https://itunes.apple.com/us/app/ye-tu/id930349136?mt=8" ;
-//			location.href = "http://a.app.qq.com/o/simple.jsp?pkgname=com.yetu.appliction&g_f=991653" ;
-		},2000);
-	    $.tmpl('baseTmpl',data).appendTo(body);
-//		s.scrollTo(0,-800,0);
-
-		$(document).on(' touchmove','.prve',function(e){ 
-			
-//			e.preventDefault();
-
-//			if( !$(e.target).is('input,textarea,select,video,a') ){
-//				e.preventDefault();
-//			}
-		});
-	    
+		console.log(1323232399999232);
 		
+	    $.tmpl('baseTmpl',data).appendTo(body);
+		
+		$('#mainWrap').on('tap',function(){
+			var top = client.getY($(document).scrollTop());
+			 var ele = $.tmpl('inputTmpl').appendTo(body);
+			 elm.css({'top':top});
+		});
+//		
+//		$(document).on('tap','.inputTp',function(e){
+//			$('.inputTp').remove();
+//		});
+//		$(document).on('tap','.boxxTp',function(){
+//			return false;
+//		});
+//		
 	});
     
 </script>

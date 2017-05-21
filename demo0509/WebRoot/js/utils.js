@@ -753,7 +753,7 @@ ut.UA = function(){
 *	@parse modeH{int} 设计高度
 **/
 ut.client = window.client = (function(){
-	//date 2016-11-9
+	//date 2016-12-6
 	var client = { 
 		modeW : 640 , modeH : 1008 , error : 1.3 , perW : 0.72 ,
 		config : function(config){
@@ -881,6 +881,7 @@ ut.client = window.client = (function(){
 //				'min-height' : self.seeH/self.scaleH+'px',
 				overflow : 'hidden',
 				position : 'absolute',
+				top:0,left:0,
 				transformOrigin : '0 0',
 				transform : 'scale('+self.scaleW+','+self.scaleH+')'
 			},v.self)).addClass('flexColumn gboxLayer');
@@ -1502,6 +1503,8 @@ ut.manage = (function(){
  * copy touch.js 手势事件
  * 来自 Zepto.js
  */
+
+
 //Zepto.js
 //(c) 2010-2015 Thomas Fuchs
 //Zepto.js may be freely distributed under the MIT license.
@@ -1623,9 +1626,11 @@ ut.manage = (function(){
 		     (touch.y2 && Math.abs(touch.y1 - touch.y2) > 30))
 		
 		   swipeTimeout = setTimeout(function() {
-		     touch.el.trigger('swipe')
-		     touch.el.trigger('swipe' + (swipeDirection(touch.x1, touch.x2, touch.y1, touch.y2)))
-		     touch = {}
+				if (touch.el){
+					touch.el.trigger('swipe')
+					touch.el.trigger('swipe' + (swipeDirection(touch.x1, touch.x2, touch.y1, touch.y2)))
+				}
+				touch = {}
 		   }, 0)
 		
 		 // normal tap
@@ -1641,7 +1646,7 @@ ut.manage = (function(){
 		       // (cancelTouch cancels processing of single vs double taps for faster 'tap' response)
 		       var event = $.Event('tap')
 		       event.cancelTouch = cancelAll
-		       touch.el.trigger(event)
+		      if (touch.el) touch.el.trigger(event)
 		
 		       // trigger double tap immediately
 		       if (touch.isDoubleTap) {
@@ -1678,3 +1683,4 @@ ut.manage = (function(){
 		$.fn[eventName] = function(callback){ return this.on(eventName, callback) }
 	})
 })(jQuery)
+
